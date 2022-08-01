@@ -1,0 +1,19 @@
+<html>
+<head>
+<title>Buy now</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+<script src="https://js.stripe.com/v3/"></script>
+</head>
+<body style="margin-left:400px; margin-top:100px; font-size:20px;">
+{% if messages%}
+
+{% for message in messages%}
+{{ message }}
+{% endfor %}
+
+{% endif %}
+{{form.render}}
+
+</body>
+</html>
