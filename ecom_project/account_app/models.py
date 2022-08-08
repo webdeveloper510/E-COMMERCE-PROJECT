@@ -3,7 +3,7 @@ from django.contrib.auth.models import *
 
 #custom User Manager
 class UserManager(BaseUserManager):
-    def create_user(self, email, First_name, Last_name, tc, password=None, password2=None):
+    def create_user(self, email, First_name, Last_name,address,contact_number,alternative_contact_number,password=None, password2=None):
         """
         Creates and saves a User with the given email, First_name, Last_name, and password.
         """
@@ -12,23 +12,24 @@ class UserManager(BaseUserManager):
 
         user = self.model(
             email=self.normalize_email(email),
-            tc=tc,
             First_name=First_name,
-            Last_name=Last_name
+            Last_name=Last_name,
+            address=address,
+            contact_number=contact_number,
+            alternative_contact_number=alternative_contact_number
                )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, First_name, Last_name, tc, password=None):
+    def create_superuser(self, email, First_name, Last_name, password=None):
         """
         Creates and saves a superuser with the given email, tc, First_name, Last_name, and password.
         """
         user = self.create_user(
             email,
             password=password,
-            tc=tc,
             First_name=First_name,
             Last_name=Last_name,
         )
@@ -48,7 +49,9 @@ class User(AbstractBaseUser):
     )
     First_name = models.CharField(max_length=80)
     Last_name = models.CharField(max_length=80)
-    tc = models.BooleanField()
+    address = models.TextField(max_length=250)
+    contact_number = models.CharField(max_length=15)
+    alternative_contact_number = models.CharField(max_length=15)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -58,8 +61,7 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['First_name', 'Last_name','tc']
-    #REQUIRED_FIELDS = ['date_of_birth']
+    REQUIRED_FIELDS = ['First_name', 'Last_name']
 
     def __str__(self):
         return self.email
