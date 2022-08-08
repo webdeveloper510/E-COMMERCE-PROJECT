@@ -1,8 +1,7 @@
+from tokenize import TokenError
 from account_app.utils import Util
-from msilib.schema import Class
 from unittest.util import _MAX_LENGTH
 from wsgiref.validate import validator
-from colorama import Style
 from rest_framework import serializers
 from account_app.models import User
 from django.utils.encoding import smart_str,force_bytes, DjangoUnicodeDecodeError
@@ -13,19 +12,19 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
  password2=serializers.CharField(style={'input_type':'password'},write_only=True)
- #First_name = serializers.CharField(required = True,error_messages={"unique": 'Custom dfhdfgh message'})
  class Meta:
     model=User
-    fields=['id','First_name','Last_name','email','password','password2','tc']
+    fields=['id','email','is_verified','password','password2','First_name','Last_name','address','contact_number','alternative_contact_number']
     extra_kwargs={
      
         'First_name': {'error_messages': {'required': "Firstname is required",'blank':'please provide a firstname'}},
         'Last_name': {'error_messages': {'required': "Lastname is required",'blank':'please provide a lastname'}},
+        'address': {'error_messages': {'required': "Address is required",'blank':'please provide your complete address'}},
+        'contact_number': {'error_messages': {'required': "Your contact number is required",'blank':'please provide your contact number'}},
         'email': {'error_messages': {'required': "email is required",'blank':'please provide a email'}},
         'password': {'error_messages': {'required': "password is required",'blank':'please Enter a email'}},
         'password2': {'error_messages': {'required': "confirm password is required",'blank':'Confirm password could not blank'}},
-         'tc': {'error_messages': {'required': "this field is required",'blank':'please Enter a field'}}
-    }
+       }
 
     #validating password and confirm password
  def validate(self, attrs):
@@ -55,19 +54,8 @@ class UseProfileSerializer(serializers.ModelSerializer):
      fields=['id','First_name','Last_name','email']
 
 class UserChangePasswordSerializer(serializers.Serializer):
-  password=serializers.CharField(max_length=250,style={"input_type":"password"},write_only=True)
-  password2=serializers.CharField(max_length=250,style={"input_type":"password"},write_only=True)
-  class Meta:
-    fields=['password','password']
-  def validate(self, attrs):
-    password=attrs.get('password')
-    password2=attrs.get('password2')
-    user=self.context.get('user')
-    if password!=password2:
-     raise serializers.ValidationError('password and confirm password doesnot match')
-    user.set_password(password)
-    user.save()
-    return attrs
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
 
 class SendPasswordResetEmailSerializer(serializers.Serializer):
   email = serializers.EmailField(max_length=255)
@@ -121,3 +109,43 @@ class UserPasswordResetSerializer(serializers.Serializer):
     except DjangoUnicodeDecodeError as identifier:
         PasswordResetTokenGenerator().check_token(user, token)
         raise serializers.ValidationError('Token is not Valid or Expired')
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=True)
+    class Meta:
+        model = User
+        fields = ('First_name', 'Last_name', 'email','address','contact_number','alternative_contact_number')
+        extra_kwargs = {
+            'First_name': {'required': True},
+            'Last_name': {'required': True},
+        }
+
+    def validate_email(self, value):
+        user = self.context['request'].user
+        if User.objects.exclude(pk=user.pk).filter(email=value).exists():
+            raise serializers.ValidationError({"email": "This email is already in use."})
+        return value
+    
+    def update(self, instance, validated_data):
+        instance.First_name = validated_data['First_name']
+        instance.Last_name = validated_data['Last_name']
+        instance.email = validated_data['email']
+
+        instance.save()
+
+        return instance
+
+
+class LogoutUserSerializer(serializers.Serializer):
+    '''refresh_token = serializers.CharField()
+
+    def validate(self, attrs):
+      self.token = attrs['refresh_token']
+      return attrs
+
+    def save(self, **kwargs):
+      try:
+        refresh_token = (self.token).blacklist()
+      except TokenError:
+        self.fail('bad token')
+'''

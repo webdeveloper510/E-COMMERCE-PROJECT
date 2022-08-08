@@ -46,7 +46,15 @@ INSTALLED_APPS = [
     'corsheaders',
     'account_app',
     'payment_app',
+    'product_app',
+       
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication'],
+    'DEFAULT_PERMISSION_CLASSES': [
+       'rest_framework.permissions.IsAuthenticated']
+}
 
 REST_FRAMEWORK = {
       'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -98,7 +106,7 @@ DATABASES = {
     'PASSWORD': '',
     'HOST': 'localhost', # Or an IP Address that your DB is hosted on
     'PORT': '3306',
-       }
+    }
 }
 
 
@@ -191,3 +199,11 @@ BASE_URL='http://127.0.0.1:8000'
 #paypal
 PAYPAL_TEST = True
 PAYPAL_RECEIVER_EMAIL = 'sb-11jeo18056449@business.example.com'
+
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR,"static"
+]
+MEDIA_ROOT = BASE_DIR /"static/media"
+MEDIA_URL = "/media/"
+
