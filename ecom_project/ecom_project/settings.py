@@ -45,8 +45,15 @@ INSTALLED_APPS = [
     'corsheaders',
     'account_app',
     'payment_app',
-    'product_app'
+    'product_app',
+       
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication'],
+    'DEFAULT_PERMISSION_CLASSES': [
+       'rest_framework.permissions.IsAuthenticated']
+}
 
 REST_FRAMEWORK = {
       'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -98,11 +105,15 @@ DATABASES = {
     'PASSWORD': '',
     'HOST': 'localhost', # Or an IP Address that your DB is hosted on
     'PORT': '3306',
+<<<<<<< HEAD
     'OPTIONS': {
             'read_default_file': '/opt/lampp/etc/my.cnf',
         }
        }
        
+=======
+    }
+>>>>>>> 3d06719385c4e11a118dcfc569cef81d868f1234
 }
 
 
@@ -202,3 +213,4 @@ STATICFILES_DIRS = [
 ]
 MEDIA_ROOT = BASE_DIR /"static/media"
 MEDIA_URL = "/media/"
+

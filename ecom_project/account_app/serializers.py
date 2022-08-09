@@ -2,7 +2,6 @@ from tokenize import TokenError
 from account_app.utils import Util
 from unittest.util import _MAX_LENGTH
 from wsgiref.validate import validator
-from colorama import Style
 from rest_framework import serializers
 from account_app.models import User
 from django.utils.encoding import smart_str,force_bytes, DjangoUnicodeDecodeError
@@ -13,7 +12,6 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
  password2=serializers.CharField(style={'input_type':'password'},write_only=True)
- #First_name = serializers.CharField(required = True,error_messages={"unique": 'Custom dfhdfgh message'})
  class Meta:
     model=User
     fields=['id','First_name','Last_name','address','contact_number','alternative_contact_number','email','password','password2']
@@ -21,13 +19,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
      
         'First_name': {'error_messages': {'required': "Firstname is required",'blank':'please provide a firstname'}},
         'Last_name': {'error_messages': {'required': "Lastname is required",'blank':'please provide a lastname'}},
-        'address': {'error_messages': {'required': "address is required",'blank':'please provide a address'}},
-        'contact_number': {'error_messages': {'required': "contact number is required",'blank':'please provide a contact number'}},
-        'alternative_contact_number': {'error_messages': {'required': "alternative number is required",'blank':'please provide a alternative number'}},
+        'address': {'error_messages': {'required': "Address is required",'blank':'please provide your complete address'}},
+        'contact_number': {'error_messages': {'required': "Your contact number is required",'blank':'please provide your contact number'}},
         'email': {'error_messages': {'required': "email is required",'blank':'please provide a email'}},
         'password': {'error_messages': {'required': "password is required",'blank':'please Enter a email'}},
-        'password2': {'error_messages': {'required': "confirm password is required",'blank':'Confirm password could not blank'}}
-    }
+        'password2': {'error_messages': {'required': "confirm password is required",'blank':'Confirm password could not blank'}},
+       }
 
     #validating password and confirm password
  def validate(self, attrs):
@@ -149,7 +146,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     class Meta:
         model = User
-        fields = ('First_name', 'Last_name', 'email')
+        fields = ('First_name', 'Last_name', 'email','address','contact_number','alternative_contact_number')
         extra_kwargs = {
             'First_name': {'required': True},
             'Last_name': {'required': True},
@@ -179,6 +176,7 @@ class LogoutUserSerializer(serializers.Serializer):
 
     def save(self, **kwargs):
       try:
-        RefreshToken = (self.token).blacklist()
+        refresh_token = (self.token).blacklist()
       except TokenError:
         self.fail('bad token')
+
