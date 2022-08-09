@@ -3,7 +3,7 @@ from .views import *
 from payment_app import views
 
 urlpatterns = [
-    path('', views.payment, name='payment'),
+    path('payment/', views.payment, name='payment'),
     path('cancel/', CancelView.as_view(), name='cancel'),
     path('success/', SuccessView.as_view(), name='success'),
     path('create-checkout-session/<pk>/', CreateCheckoutSessionView.as_view(), name='create-checkout-session'),
