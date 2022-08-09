@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 from .models import Cart, DeliveryCost
 
 class DeliveryCostHelper:
@@ -68,42 +68,6 @@ class CartHelper:
     
 
 
-
-=======
-from .models import Cart, DeliveryCost
-
-class DeliveryCostHelper:
-
-    def __init__(self, cart_items):
-        self.cart_items = cart_items
-        self.calculator = False
-        self.number_of_deliveries = 0
-        self.number_of_products = 0
-        self.cost = 0
-
-    def calculate_delivery_cost(self):
-        try:
-            self.calculator = DeliveryCost.objects.get(status='Active')
-
-            delivery_categories = []
-
-            for cart_item in self.cart_items:
-                self.number_of_products += 1
-                if cart_item.item.category.id not in delivery_categories:
-                    delivery_categories.append(cart_item.item.category.id)
-                    self.number_of_deliveries += 1
-
-                self.cost = (self.calculator.cost_per_delivery * self.number_of_deliveries) + \
-                            (self.calculator.cost_per_product * self.number_of_products) + self.calculator.fixed_cost
-
-            return self.cost
-        except Exception as e:
-            print('Error when trying to getting coupon_discounts {0}'.format(str(e)))
-            return False
-
-
-class CartHelper:
-
     def __init__(self, user):
         self.user = user
         self.cart_base_total_amount = 0
@@ -144,5 +108,5 @@ class CartHelper:
 
 
 
->>>>>>> 110fbc4aa332b711b5cc4b027c9b7f36f7b01aa1
+
     

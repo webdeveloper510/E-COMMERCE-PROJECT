@@ -1,10 +1,7 @@
-<<<<<<< HEAD
+
+
 
 EMAIL_USER = 'gurpreet@codenomad.net'
 EMAIL_PASS = 'gurpreet22'
-=======
 
-EMAIL_USER = 'gurpreet@codenomad.net'
-EMAIL_PASS = 'gurpreet22'
->>>>>>> 110fbc4aa332b711b5cc4b027c9b7f36f7b01aa1
 EMAIL_FROM = 'gurpreet@codenomad.net'

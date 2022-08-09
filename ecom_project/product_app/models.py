@@ -60,4 +60,5 @@ class DeliveryCost(models.Model):
                                                     self.cost_per_product,
                                                     self.fixed_cost,
                                                     self.created_at,
+                                                    self.updated_at)
 

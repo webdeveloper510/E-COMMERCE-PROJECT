@@ -105,15 +105,12 @@ DATABASES = {
     'PASSWORD': '',
     'HOST': 'localhost', # Or an IP Address that your DB is hosted on
     'PORT': '3306',
-<<<<<<< HEAD
+
     'OPTIONS': {
             'read_default_file': '/opt/lampp/etc/my.cnf',
         }
        }
        
-=======
-    }
->>>>>>> 3d06719385c4e11a118dcfc569cef81d868f1234
 }
 
 
