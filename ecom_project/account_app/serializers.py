@@ -14,7 +14,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
  password2=serializers.CharField(style={'input_type':'password'},write_only=True)
  class Meta:
     model=User
+
     fields=['id','email','is_verified','password','password2','First_name','Last_name','address','contact_number','alternative_contact_number']
+
     extra_kwargs={
      
         'First_name': {'error_messages': {'required': "Firstname is required",'blank':'please provide a firstname'}},
@@ -56,6 +58,39 @@ class UseProfileSerializer(serializers.ModelSerializer):
 class UserChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
+
+#change password email 
+class SendChangePasswordEmailSerializer(serializers.Serializer):
+  email = serializers.EmailField(max_length=255)
+  class Meta:
+    fields = ['email']
+
+  def validate(self, attrs):
+    email = attrs.get('email')
+    if User.objects.filter(email=email).exists():
+      user = User.objects.get(email = email)
+      uid = urlsafe_base64_encode(force_bytes(user.id))#Encoding is the process of converting data into a format required for a number of information processing needs
+      print('Encoded UID', uid)
+      #token = PasswordResetTokenGenerator().make_token(user)
+      #print('Password Reset Token', token)
+      #link = 'http://localhost:3000/api/user/reset/'+uid+'/'+token #password reset link
+      #print('Password Reset Link', link)
+      # Send EMail
+      body = 'You recently changed the password associated with your account'
+      data = {
+        'subject':'Your password has been changed',
+        'body':body,
+        'to_email':user.email
+      }
+      Util.send_email(data)
+      return attrs
+    else:
+      raise serializers.ValidationError('You are not a Registered User')
+
+
+
+
+
 
 class SendPasswordResetEmailSerializer(serializers.Serializer):
   email = serializers.EmailField(max_length=255)
@@ -136,16 +171,4 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         return instance
 
 
-class LogoutUserSerializer(serializers.Serializer):
-    '''refresh_token = serializers.CharField()
 
-    def validate(self, attrs):
-      self.token = attrs['refresh_token']
-      return attrs
-
-    def save(self, **kwargs):
-      try:
-        refresh_token = (self.token).blacklist()
-      except TokenError:
-        self.fail('bad token')
-'''

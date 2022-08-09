@@ -1,4 +1,5 @@
 
 EMAIL_USER = 'gurpreet@codenomad.net'
 EMAIL_PASS = 'gurpreet22'
+
 EMAIL_FROM = 'gurpreet@codenomad.net'

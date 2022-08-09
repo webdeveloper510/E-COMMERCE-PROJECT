@@ -1,3 +1,4 @@
+
 from django.db import models
 from account_app.models import *
 import datetime
@@ -57,3 +58,5 @@ class DeliveryCost(models.Model):
                                                     self.fixed_cost,
                                                     self.created_at,
                                                     self.updated_at)
+
+

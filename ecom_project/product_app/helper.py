@@ -1,4 +1,6 @@
+
 from .models import *
+
 
 
 class DeliveryCostHelper:
@@ -53,7 +55,15 @@ class CartHelper:
 
         self.calculate_cart_base_total_amount()
         self.get_delivery_cost()
+
         
+
+        self.get_campaign_discounts()
+        self.get_coupon_discounts()
+        self.calculate_discount_amounts()
+        self.get_total_amount_after_discounts()
+        self.prepare_checkout_details()
+
 
         return self.checkout_details
 
@@ -63,4 +73,13 @@ class CartHelper:
 
     def calculate_cart_base_total_amount(self):
         for cart_item in self.cart_items:
+
             self.cart_base_total_amount += cart_item.item.price * cart_item.quantity
+
+
+    
+
+
+
+    
+
