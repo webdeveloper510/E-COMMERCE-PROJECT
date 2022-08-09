@@ -1,6 +1,9 @@
 from django.db import models
 from account_app.models import *
 import datetime
+from django.conf import settings
+from django.db import models
+from django.shortcuts import reverse
 
 class Category(models.Model):
       name = models.CharField(max_length=250)

@@ -19,4 +19,6 @@ urlpatterns = [
     path('', include('payment_app.urls')),
     path('',include(router.urls)),
     path('paypal/', include('paypal.standard.ipn.urls')),
+    path('', include(router.urls)),
+    path('auth/', include('rest_framework.urls')),
 ]
