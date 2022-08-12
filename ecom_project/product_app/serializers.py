@@ -33,6 +33,7 @@ class Variant_typeSerializer(serializers.ModelSerializer):
         model= Variant_type
         fields="__all__"
 
+<<<<<<< HEAD
 class VariantSerializer(serializers.ModelSerializer):
     class Meta:
         model= Variant
@@ -61,6 +62,8 @@ class TypesSerializer(serializers.ModelSerializer):
              "price":obj.price,
          }
 
+=======
+>>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model=Cart
@@ -73,4 +76,9 @@ class DeliveryCostSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeliveryCost
         fields = ['id', 'status', 'cost_per_delivery', 'cost_per_product', 'fixed_cost', 'created_at', 'updated_at']
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
 

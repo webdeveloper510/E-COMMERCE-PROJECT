@@ -2,9 +2,12 @@
 from django.db import models
 from account_app.models import *
 import datetime
+<<<<<<< HEAD
 from django.conf import settings
 from django.db import models
 from django.shortcuts import reverse
+=======
+>>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
 
 class Category(models.Model):
       name = models.CharField(max_length=250)
@@ -18,6 +21,7 @@ class Product(models.Model):
     description = models.TextField(max_length=500, null=False, blank= False)
     image = models.ImageField(upload_to='product_images/', blank=True, null=True)
 
+<<<<<<< HEAD
     def __str__(self):
         return self.name
     
@@ -48,15 +52,27 @@ class Cart(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
     type = models.ForeignKey(Types, on_delete=models.SET_NULL, null=True, blank=True)
+=======
+    def _str_(self):
+     return self.name
+
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    item = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
+>>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
     quantity = models.IntegerField(null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return "{} - {} - {} - {} - {}".format(self.user,
+<<<<<<< HEAD
                                                self.category,
                                                self.product,
                                                self.type,
+=======
+                                               self.item,
+>>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
                                                self.quantity,
                                                self.created_at,
                                                self.updated_at)
@@ -80,3 +96,7 @@ class DeliveryCost(models.Model):
                                                     self.created_at,
                                                     self.updated_at)
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4f3611108582a09a769829a9512efd2cf461b586

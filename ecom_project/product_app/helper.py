@@ -1,5 +1,11 @@
 
+<<<<<<< HEAD
 from .models import Cart, DeliveryCost
+=======
+from .models import *
+
+
+>>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
 
 class DeliveryCostHelper:
 
@@ -53,6 +59,7 @@ class CartHelper:
 
         self.calculate_cart_base_total_amount()
         self.get_delivery_cost()
+<<<<<<< HEAD
         
 
         return self.checkout_details
@@ -88,12 +95,21 @@ class CartHelper:
 
         self.calculate_cart_base_total_amount()
         self.get_delivery_cost()
+=======
+
+        
+
+>>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
         self.get_campaign_discounts()
         self.get_coupon_discounts()
         self.calculate_discount_amounts()
         self.get_total_amount_after_discounts()
         self.prepare_checkout_details()
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
         return self.checkout_details
 
     def get_delivery_cost(self):
@@ -102,11 +118,23 @@ class CartHelper:
 
     def calculate_cart_base_total_amount(self):
         for cart_item in self.cart_items:
+<<<<<<< HEAD
             self.cart_base_total_amount += cart_item.item.price * cart_item.quantity
 
+=======
+
+            self.cart_base_total_amount += cart_item.item.price * cart_item.quantity
+
+
+>>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
     
 
 
 
+<<<<<<< HEAD
 
     
+=======
+    
+
+>>>>>>> 4f3611108582a09a769829a9512efd2cf461b586

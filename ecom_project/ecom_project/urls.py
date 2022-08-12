@@ -8,12 +8,21 @@ router = DefaultRouter()
 
 #register class viewset
 router.register('category', views.CategoryViewSet, basename='category') 
+<<<<<<< HEAD
 router.register('product', views.ProductViewSet, basename='product')
 router.register('cart', views.CartViewSet ,basename='cart')
 router.register('delivery_cost', views.DeliveryCostViewSet,basename='delivery_cost')
 router.register('variant_type', views.Variant_typeViewSet,basename='variant_type')
 router.register('variant', views.VariantViewSet,basename='variant')
 router.register('types', views.TypesViewSet,basename='types')
+=======
+
+router.register('product', views.ProductViewSet, basename='product') 
+>>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
+
+router.register('cart', views.CartViewSet ,basename='cart')
+router.register('delivery_cost', views.DeliveryCostViewSet,basename='delivery_cost')
+
 
 
 urlpatterns = [
