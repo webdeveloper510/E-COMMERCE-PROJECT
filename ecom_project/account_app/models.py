@@ -32,8 +32,13 @@ class UserManager(BaseUserManager):
             password=password,
             First_name=First_name,
             Last_name=Last_name,
+            address="",
+            contact_number="",
+            alternative_contact_number=""
         )
         user.is_admin = True
+    
+        
         user.save(using=self._db)
         return user
 
@@ -50,8 +55,10 @@ class User(AbstractBaseUser):
     First_name = models.CharField(max_length=80)
     Last_name = models.CharField(max_length=80)
     address = models.TextField(max_length=250)
-    contact_number = models.CharField(max_length=12)
-    alternative_contact_number = models.CharField(max_length=12)
+
+    contact_number = models.CharField(max_length=15)
+    alternative_contact_number = models.CharField(max_length=15)
+
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -61,9 +68,11 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+
     REQUIRED_FIELDS = ['First_name', 'Last_name',]
 
-    def __str__(self):
+
+    def ___str__(self):
         return self.email
 
     def has_perm(self, perm, obj=None):
