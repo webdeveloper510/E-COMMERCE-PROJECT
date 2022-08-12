@@ -14,13 +14,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
  password2=serializers.CharField(style={'input_type':'password'},write_only=True)
  class Meta:
     model=User
-<<<<<<< HEAD
     fields=['id','First_name','Last_name','address','contact_number','alternative_contact_number','email','password','password2']
-=======
-
-    fields=['id','email','is_verified','password','password2','First_name','Last_name','address','contact_number','alternative_contact_number']
-
->>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
     extra_kwargs={
      
         'First_name': {'error_messages': {'required': "Firstname is required",'blank':'please provide a firstname'}},
@@ -95,10 +89,6 @@ class SendChangePasswordEmailSerializer(serializers.Serializer):
 
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
 class SendPasswordResetEmailSerializer(serializers.Serializer):
   email = serializers.EmailField(max_length=255)
   class Meta:
@@ -177,7 +167,6 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
         return instance
 
-<<<<<<< HEAD
 class LogoutUserSerializer(serializers.Serializer):
     refresh = serializers.CharField()
 
@@ -191,7 +180,3 @@ class LogoutUserSerializer(serializers.Serializer):
       except TokenError:
         self.fail('bad token')
 
-=======
-
-
->>>>>>> 4f3611108582a09a769829a9512efd2cf461b586

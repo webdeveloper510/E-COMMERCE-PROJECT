@@ -3,29 +3,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from account_app.renderer import UserRenderer
 from rest_framework.permissions import IsAuthenticated
-<<<<<<< HEAD
 
 
 from rest_framework import generics
 from django.core.mail import send_mail
 from .models import *
-from .serializers import *
-
-=======
-from rest_framework import generics
->>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
-
-from rest_framework import generics
-from django.core.mail import send_mail
-
 from .serializers import *
 
 
@@ -92,21 +78,13 @@ class UserChangePasswordView(generics.UpdateAPIView):
                 'status': 'success',
                 'code': status.HTTP_200_OK,
                 'message': 'Password updated successfully',
-<<<<<<< HEAD
                 'data': []
-=======
-
->>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
             }
 
             return Response(response)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
 # changed password email view      
 class SendChangePasswordEmailView(APIView):
     renderer_classes=[UserRenderer]
@@ -117,10 +95,6 @@ class SendChangePasswordEmailView(APIView):
      return Response({errors:serializer.errors},status=status.HTTP_400_BAD_REQUEST)
            
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
 class SendPasswordResetEmailView(APIView):
     renderer_classes=[UserRenderer]
     def post(self, request, format=None):
@@ -128,13 +102,6 @@ class SendPasswordResetEmailView(APIView):
      if serializer.is_valid(raise_exception=True):
       return Response({'msg':'Password Reset link send. Please check your Email','status':'status.HTTP_200_OK'})
      return Response({errors:serializer.errors},status=status.HTTP_400_BAD_REQUEST)
-<<<<<<< HEAD
-=======
-
-      
-     
-
->>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
 class UserPasswordResetView(APIView):
   renderer_classes = [UserRenderer]
   def post(self, request, uid, token, format=None):
@@ -172,12 +139,4 @@ class LogoutUser(APIView):
   def post(self, request, format=None):
     serializer = LogoutUserSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-<<<<<<< HEAD
     return Response({'msg':'Logout Successfully'},status=status.HTTP_200_OK)
-=======
-
-
-
-    return Response({'msg':'Logout Successfully'},status=status.HTTP_200_OK)
-
->>>>>>> 4f3611108582a09a769829a9512efd2cf461b586

@@ -106,19 +106,11 @@ DATABASES = {
     'HOST': 'localhost', # Or an IP Address that your DB is hosted on
     'PORT': '3306',
 
-<<<<<<< HEAD
     #'OPTIONS': {
      #       'read_default_file': '/opt/lampp/etc/my.cnf',
       #  }
        }
        
-=======
-    'OPTIONS': {
-            'read_default_file': '/opt/lampp/etc/my.cnf',
-        }
-
-    }
->>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
 }
 
 

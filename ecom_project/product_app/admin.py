@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from django.contrib import admin
 from .models import *
 from django.contrib.auth.admin import UserAdmin as BaseCategoryAdmin
@@ -27,24 +26,3 @@ class CheckoutsModelAdmin(admin.ModelAdmin):
 @admin.register(Types)
 class CheckoutsModelAdmin(admin.ModelAdmin):
   list_display = ('id', 'variant','category','price')
-=======
-
-from django.contrib import admin
-from django.contrib import admin
-from .models import *
-
-
-admin.site.register(Category)
-admin.site.register(Product)
-admin.site.register(Cart)
-admin.site.register(DeliveryCost)
-
-
-
-
-
-
-
-
-
->>>>>>> 4f3611108582a09a769829a9512efd2cf461b586
