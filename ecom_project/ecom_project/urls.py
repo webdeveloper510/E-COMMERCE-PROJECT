@@ -11,7 +11,10 @@ router.register('category', views.CategoryViewSet, basename='category')
 router.register('product', views.ProductViewSet, basename='product')
 router.register('cart', views.CartViewSet ,basename='cart')
 router.register('delivery_cost', views.DeliveryCostViewSet,basename='delivery_cost')
-
+#router.register('variant-type', views.Variant_typeViewSet,basename='variant_type')
+#router.register('variant', views.VariantViewSet,basename='variant')
+#router.register('type', views.TypesViewSet,basename='types')
+router.register('attribute', views.AttributeViewSet,basename='attribute')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -1,14 +1,10 @@
-
 from django.shortcuts import render
 from .serializers import *
 from rest_framework import viewsets,status
 from .helper import *
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
-
-
-
+from django.db.models import Avg
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().order_by('id')
@@ -18,6 +14,24 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all().order_by('category_id')
     serializer_class = ProductSerializer
+
+class AttributeViewSet(viewsets.ModelViewSet):
+    queryset = Attribute.objects.all().order_by('id')
+    serializer_class = AttributeSerializer
+     
+''' 
+class Variant_typeViewSet(viewsets.ModelViewSet):
+    queryset = Variant_type.objects.all().order_by('id')
+    serializer_class = Variant_typeSerializer
+
+class VariantViewSet(viewsets.ModelViewSet):
+    queryset = Variant.objects.all().order_by('id')
+    serializer_class = VariantSerializer
+
+class TypesViewSet(viewsets.ModelViewSet):
+    queryset = Types.objects.all().order_by('id')
+    serializer_class = TypesSerializer
+     ''' 
 
 class CartViewSet(viewsets.ModelViewSet):
     queryset = Cart.objects.all().order_by('id')

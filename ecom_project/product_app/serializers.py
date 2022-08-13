@@ -1,4 +1,3 @@
-
 from rest_framework import serializers
 from .models import *
 
@@ -6,6 +5,7 @@ class CategorySerializer(serializers.ModelSerializer):
      class Meta:
         model= Category
         fields = '__all__'
+        
            
      def create(self, validate_data):
         #print(validate_data)
@@ -14,11 +14,39 @@ class CategorySerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model= Product
-        fields = '__all__'
+        fields="__all__"
+    '''
+    def to_representation(self, obj):
+        return {
+             "category": obj.category.name,
+             "descrption":obj.description,
+             "image":obj.description,
+        }
+      '''  
   
     def create(self, validate_data):
      return Product.objects.create(**validate_data)
+''' 
+class Variant_typeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Variant_type
+        fields = "__all__"
 
+class VariantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Variant
+        fields = "__all__"
+
+class TypesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Variant
+        fields = "__all__"
+ ''' 
+class AttributeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attribute
+        fields = "__all__"
+        
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model=Cart
