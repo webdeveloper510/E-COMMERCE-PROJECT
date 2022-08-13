@@ -5,6 +5,8 @@ from django.contrib.auth.admin import UserAdmin as BaseCategoryAdmin
 
 admin.site.register(Cart)
 admin.site.register(DeliveryCost)
+admin.site.register(ProductVariant)
+admin.site.register(ProductAttribute)
 
 @admin.register(Category)
 class CategoryModelAdmin(admin.ModelAdmin):
@@ -16,13 +18,13 @@ class ProductModelAdmin(admin.ModelAdmin):
   list_display = ('id', 'name')
 
 @admin.register(Variant_type)
-class VariantsModelAdmin(admin.ModelAdmin):
+class Variant_typeModelAdmin(admin.ModelAdmin):
   list_display = ('id','type')
 
 @admin.register(Variant)
-class CheckoutsModelAdmin(admin.ModelAdmin):
+class VariantModelAdmin(admin.ModelAdmin):
   list_display = ('id', 'variant_type')
 
 @admin.register(Types)
-class CheckoutsModelAdmin(admin.ModelAdmin):
+class TypesModelAdmin(admin.ModelAdmin):
   list_display = ('id', 'variant','category','price')

@@ -61,6 +61,21 @@ class TypesSerializer(serializers.ModelSerializer):
              "price":obj.price,
          }
 
+
+
+class ProductVariantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= ProductVariant
+        fields="__all__"
+
+
+
+class ProductAttributeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= ProductAttribute
+        fields="__all__"
+
+
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model=Cart

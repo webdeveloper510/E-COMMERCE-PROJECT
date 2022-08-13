@@ -4,7 +4,6 @@ from account_app.models import *
 import datetime
 from django.conf import settings
 from django.db import models
-from django.shortcuts import reverse
 
 class Category(models.Model):
       name = models.CharField(max_length=250)
@@ -43,6 +42,20 @@ class Types(models.Model):
         def __str__(self):
           return (self.price)
     
+
+class ProductAttribute(models.Model):
+  
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    attr_type = models.ForeignKey(Variant_type, on_delete=models.PROTECT, blank=True, null=True)
+    attr_name = models.CharField(max_length=155, blank=True)
+
+
+class ProductVariant(models.Model):
+    
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    variant = models.ManyToManyField(ProductAttribute)
+    price = models.DecimalField(max_digits=25, decimal_places=2)
+
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)

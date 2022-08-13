@@ -33,7 +33,17 @@ class TypesViewSet(viewsets.ModelViewSet):
     value_of_name = sample_instance.price
     print(value_of_name)
     serializer_class = TypesSerializer 
-    
+
+
+class ProductVariantViewSet(viewsets.ModelViewSet):
+    queryset = ProductVariant.objects.all().order_by('id')
+    serializer_class = ProductVariantSerializer    
+
+
+class ProductAttributeViewSet(viewsets.ModelViewSet):
+    queryset = ProductAttribute.objects.all().order_by('id')
+    serializer_class = ProductAttributeSerializer 
+
 
 class CartViewSet(viewsets.ModelViewSet):
     queryset = Cart.objects.all().order_by('id')
