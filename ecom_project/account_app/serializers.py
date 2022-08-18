@@ -171,4 +171,3 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         return instance
 
 
-

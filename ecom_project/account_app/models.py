@@ -32,8 +32,13 @@ class UserManager(BaseUserManager):
             password=password,
             First_name=First_name,
             Last_name=Last_name,
+            address="",
+            contact_number="",
+            alternative_contact_number=""
         )
         user.is_admin = True
+    
+        
         user.save(using=self._db)
         return user
 

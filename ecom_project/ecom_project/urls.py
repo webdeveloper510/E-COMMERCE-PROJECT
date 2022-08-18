@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path,include
 from payment_app.views import *
-from product_app import views
+from product_app import views, serializers
 from rest_framework.routers import DefaultRouter
 
 #create router object
@@ -9,12 +9,15 @@ router = DefaultRouter()
 
 #register class viewset
 router.register('category', views.CategoryViewSet, basename='category') 
-
 router.register('product', views.ProductViewSet, basename='product') 
-
+router.register('variant-type', views.Variant_typeViewSet,basename='variant_type')
+router.register('variant', views.VariantViewSet,basename='variant')
+router.register('product-attribute', views.ProductAttributeViewSet,basename='ProductAttribute')
+router.register('product-variant', views.ProductVariantViewSet,basename='ProductVariant')
 router.register('cart', views.CartViewSet ,basename='cart')
 router.register('delivery_cost', views.DeliveryCostViewSet,basename='delivery_cost')
-
+router.register('type', views.TypesViewSet,basename='types')
+router.register('price', views.PriceViewSet, basename='price')
 
 
 urlpatterns = [
