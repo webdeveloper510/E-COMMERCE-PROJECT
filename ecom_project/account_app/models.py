@@ -72,7 +72,7 @@ class User(AbstractBaseUser):
     REQUIRED_FIELDS = ['First_name', 'Last_name',]
 
 
-    def __str__(self):
+    def ___str__(self):
         return self.email
 
     def has_perm(self, perm, obj=None):

@@ -1,7 +1,5 @@
 
-from .models import *
-
-
+from .models import Cart, DeliveryCost
 
 class DeliveryCostHelper:
 
@@ -55,15 +53,7 @@ class CartHelper:
 
         self.calculate_cart_base_total_amount()
         self.get_delivery_cost()
-
         
-
-        self.get_campaign_discounts()
-        self.get_coupon_discounts()
-        self.calculate_discount_amounts()
-        self.get_total_amount_after_discounts()
-        self.prepare_checkout_details()
-
 
         return self.checkout_details
 
@@ -73,13 +63,50 @@ class CartHelper:
 
     def calculate_cart_base_total_amount(self):
         for cart_item in self.cart_items:
-
             self.cart_base_total_amount += cart_item.item.price * cart_item.quantity
 
+    
+
+
+    def __init__(self, user):
+        self.user = user
+        self.cart_base_total_amount = 0
+        self.cart_final_total_amount = 0
+        self.campaign_discount_amounts = []
+        self.campaign_discount_amount = 0
+        self.coupon_discount_amount = 0
+        self.delivery_cost = 0
+        self.cart_items = []
+        self.discounts = {}
+        self.checkout_details = {'products': [], 'total': [], 'amount': []}
+
+    def prepare_cart_for_checkout(self):
+        self.cart_items = Cart.objects.filter(user=self.user)
+
+        if not self.cart_items:
+            return False
+
+        self.calculate_cart_base_total_amount()
+        self.get_delivery_cost()
+        self.get_campaign_discounts()
+        self.get_coupon_discounts()
+        self.calculate_discount_amounts()
+        self.get_total_amount_after_discounts()
+        self.prepare_checkout_details()
+
+        return self.checkout_details
+
+    def get_delivery_cost(self):
+        delivery_helper = DeliveryCostHelper(cart_items=self.cart_items)
+        self.delivery_cost = delivery_helper.calculate_delivery_cost()
+
+    def calculate_cart_base_total_amount(self):
+        for cart_item in self.cart_items:
+            self.cart_base_total_amount += cart_item.item.price * cart_item.quantity
 
     
 
 
 
-    
 
+    
