@@ -6,6 +6,7 @@ class CategorySerializer(serializers.ModelSerializer):
      class Meta:
         model= Category
         fields = '__all__'
+        
            
      def create(self, validate_data):
         #print(validate_data)
@@ -35,7 +36,27 @@ class ProductSerializer(serializers.ModelSerializer):
   '''
     def create(self, validate_data):
      return Product.objects.create(**validate_data)
+''' 
+class Variant_typeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Variant_type
+        fields = "__all__"
 
+class VariantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Variant
+        fields = "__all__"
+
+class TypesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Variant
+        fields = "__all__"
+ ''' 
+class AttributeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attribute
+        fields = "__all__"
+        
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model=Cart

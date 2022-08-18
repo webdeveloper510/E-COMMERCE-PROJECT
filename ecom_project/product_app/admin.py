@@ -34,3 +34,28 @@ class PriceModelAdmin(admin.ModelAdmin):
   Model = Price
   fields = ['id', 'type_id', 'value', 'total']
   list_display = ('id', 'type_id','value')
+
+
+@admin.register(ProductAttribute)
+class AttributeModelAdmin(admin.ModelAdmin):
+  list_display = ('id', 'variant_type','variant','price')
+
+
+
+
+
+''' 
+@admin.register(Variant_type)
+class VariantsModelAdmin(admin.ModelAdmin):
+  list_display = ('id','type')
+
+@admin.register(Variant)
+class CheckoutsModelAdmin(admin.ModelAdmin):
+  list_display = ('id', 'variant_type')
+
+@admin.register(Types)
+class CheckoutsModelAdmin(admin.ModelAdmin):
+  list_display = ('id', 'variant','category','price')
+''' 
+
+   

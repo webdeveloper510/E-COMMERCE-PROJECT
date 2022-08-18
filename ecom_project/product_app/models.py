@@ -69,6 +69,7 @@ class Types(models.Model):
     
 
         
+
 '''
     price = models.FloatField(null=False, blank= False, default=30.30)
     length = models.DecimalField(default=30.30, max_digits=5, decimal_places=1)
@@ -78,9 +79,29 @@ class Types(models.Model):
     coating = models.CharField(max_length=90)
     printed_sides = models.CharField(max_length=90)
     quantity = models.IntegerField(default=1)
-
+   
     def __str__(self):
-     return self.name
+        return self.name
+''' 
+class Variant_type(models.Model):
+        type = models.CharField(max_length=250)
+        
+class Variant(models.Model):
+        name = models.CharField(max_length=250)
+        variant_type = models.ForeignKey(Variant_type, on_delete=models.CASCADE)
+
+        def __str__(self):
+         return self.name
+class Types(models.Model):
+        variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
+        category = models.ForeignKey(Category, on_delete=models.CASCADE)
+        price = models.CharField(max_length=50)
+
+''' 
+class Attribute(models.Model):
+        variant_type = models.CharField( max_length=250)
+        variant=models.CharField(max_length=250)
+        price=models.CharField(max_length=240)
 
 
 TITLE_CHOICES = [
@@ -191,4 +212,4 @@ class OrderItem(models.Model):
 
     def get_cost(self):
         return self.price * self.quantity
-        '''
+'''
