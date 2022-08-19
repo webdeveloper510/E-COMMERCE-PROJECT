@@ -67,9 +67,31 @@ class DeliveryCostViewSet(viewsets.ViewSet):
     queryset = DeliveryCost.objects.all().order_by('id')
     serializer_class = DeliveryCostSerializer
 
+
 class PriceViewSet(viewsets.ModelViewSet):
     queryset = Price.objects.all().order_by('id')
+    serializer_class = PriceSerializer
+
+
+class TotalPriceViewSet(viewsets.ModelViewSet):
+    queryset = Total_Price.objects.all().order_by('id')
+    serializer_class = Total_PriceSerializer
+    total_variant_price = Price.objects.all().aggregate(total_variant_price=Sum('variant_price'))['total_variant_price']
+    print(total_variant_price)
     
+'''
+class PriceViewSet(viewsets.ModelViewSet):  
+    queryset = Price.objects.all().order_by('id')
+    p_queryset = ProductAttribute.objects.all().order_by('id')
+    price_instance = Price.objects.get(id=1)
+    product_instance = ProductAttribute.objects.get(id=1)
+    type = price_instance.type_id
+    value = price_instance.value
+    price = product_instance.price
+    total_price = price * value
+    #total_price = total_price + total_price
+    print(total_price)
+    #print(price)
     serializer_class = PriceSerializer
 
     http_method_names = ['get']
@@ -83,7 +105,7 @@ class PriceViewSet(viewsets.ModelViewSet):
 
     
 
-'''
+
 
 def total_price(self):
         total = self.total_price + self.total_price 
@@ -237,3 +259,66 @@ class PriceViewSet(viewsets.ViewSet):
             return Response({"message": "Got some data!", "data": request.data})
         return Response({"message": "Hello, world!"})
 '''
+
+
+class Product_order(viewsets.ViewSet):
+    #http_method_names = ['get', 'post']
+    @csrf_exempt   
+
+    def list(self, request):
+        Price_data = Price.objects.all()
+        serializer = PriceSerializer(Price_data, many=True)
+        return Response(serializer.data)
+  
+    def create(self, request):
+        serializer = PriceSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg':'Data Created'})
+        return Response(serializer.errors)
+
+
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            price_instance = Price.objects.get(id=id)
+            product_instance = ProductAttribute.objects.get(id=id)
+            type = price_instance.type_id
+            value = price_instance.value
+            price = product_instance.price
+            variant_price = price * value
+            return Response({'type_id':type, 'value':value, 'price':price, 'variant_price':variant_price })
+            
+    def destroy(self, request, pk):
+        id = pk
+        Product_data = Price.objects.get(pk=id)
+        Product_data.delete()
+        return Response({'msg':'Data Deleted'})
+
+    
+    
+
+class Total_Price(viewsets.ViewSet):
+    @csrf_exempt   
+
+    def list(self, request):
+        Total_Price_data = Total_Price.objects.all()
+        serializer = Total_PriceSerializer(Total_Price_data, many=True)
+        return Response(serializer.data)
+  
+    def create(self, request):
+        serializer = Total_PriceSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg':'Data Created'})
+        return Response(serializer.errors)
+
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            Total_Price_data = Total_Price.objects.get(id=id)
+            serializer = Total_PriceSerializer(Total_Price_data)
+            return Response(serializer.data)
+
+           
+    #Price.objects.annotate(total=F('type_id') * F('price'))  

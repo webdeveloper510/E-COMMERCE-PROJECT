@@ -4,7 +4,6 @@ from .models import *
 
 
 admin.site.register(Cart)
-admin.site.register(DeliveryCost)
 admin.site.register(ProductAttribute)
 admin.site.register(ProductVariant)
 
@@ -32,5 +31,11 @@ class CheckoutsModelAdmin(admin.ModelAdmin):
 @admin.register(Price)
 class PriceModelAdmin(admin.ModelAdmin):
   Model = Price
-  fields = ['id', 'type_id', 'value', 'total']
-  list_display = ('id', 'type_id','value')
+  #fields = ['id', 'type_id', 'value', 'variant_price']
+  list_display = ('id', 'type_id','value','variant_price','total_variant_price')
+
+
+@admin.register(Total_Price)
+class Total_PriceModelAdmin(admin.ModelAdmin):
+  Model = Total_Price
+  list_display = ('id', 'cost_per_delivery','cost_per_product','tax','total_cost')

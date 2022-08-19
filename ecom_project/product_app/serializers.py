@@ -79,4 +79,9 @@ class TypesSerializer(serializers.ModelSerializer):
 class PriceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Price
-        fields = ['id', 'type_id', 'value']
+        fields = "__all__"
+
+class Total_PriceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Total_Price
+        fields = "__all__"

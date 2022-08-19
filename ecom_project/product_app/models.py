@@ -49,27 +49,43 @@ class ProductAttribute(models.Model):
 class ProductVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     variant = models.ManyToManyField(ProductAttribute)
-    price = models.DecimalField(max_digits=25, decimal_places=2)
+    price = models.CharField(max_length=50)
     
 
 class Price(models.Model):
     type_id = models.CharField(max_length=50)
-    value = models.DecimalField(max_digits=25, decimal_places=2)
-    DisplayFields = ['id', 'type_id', 'value', 'total']
-    
-    @property
-    def price(self):
-        total = Price.objects.annotate(F('type_id') * F('price'))
-        return total
+    value = models.CharField(max_length=50)
+    variant_price = models.IntegerField(verbose_name='variant_price')
+    total_variant_price = models.IntegerField(verbose_name='total_variant_price')
+
+    def total_amount_spent(self):
+        total_variant_price = [int(Price.variant_price) for price in Price.objects.all()]
+        return sum(total_variant_price)
+
 
 class Types(models.Model):
         variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
         category = models.ForeignKey(Category, on_delete=models.CASCADE)
         price = models.CharField(max_length=50)
+
+class Total_Price(models.Model):
+    cost_per_delivery = models.FloatField(null=True)
+    cost_per_product = models.FloatField(null=True)
+    tax = models.FloatField(null=True)
+    total_cost = models.FloatField(null=True)
     
 
+
+    '''
+    def get_total_price(self):
+        total_cost =  Total_Price.objects.annotate(total_cost=F('cost_per_delivery') + F('price') +  F('cost_per_product') + F('tax'))  
+        cost_per_product =  sum(Price.get_variant_cost() for item in self.variant_cost.all())
+        print(total_cost)
+        return total_cost
+
+
         
-'''
+
     price = models.FloatField(null=False, blank= False, default=30.30)
     length = models.DecimalField(default=30.30, max_digits=5, decimal_places=1)
     width = models.DecimalField(default=30.30, max_digits=5, decimal_places=1)
@@ -124,11 +140,6 @@ class Cart(models.Model):
     type_id = models.CharField(max_length=50)
     value = models.DecimalField(max_digits=25, decimal_places=2)
 
-    '''
-    quantity = models.IntegerField(null=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-'''
     def __str__(self):
         return "{} - {} - {} - {} - {}".format(self.user,
                                                self.type_id,
@@ -150,17 +161,11 @@ class DeliveryCost(models.Model):
                                                     self.updated_at)
 
 
-
-
 '''
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='orders')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='orders')
-    length = models.DecimalField(default=30.30, max_digits=5, decimal_places=1)
-    height = models.DecimalField(default=30.30, max_digits=5, decimal_places=1)
-    paper = models.CharField(max_length=90)
-    coating = models.CharField(max_length=90)
-    printed_sides = models.CharField(max_length=90)
     quantity = models.IntegerField(default=1)
     paid = models.BooleanField(default=False)
    
@@ -191,4 +196,6 @@ class OrderItem(models.Model):
 
     def get_cost(self):
         return self.price * self.quantity
-        '''
+
+
+'''

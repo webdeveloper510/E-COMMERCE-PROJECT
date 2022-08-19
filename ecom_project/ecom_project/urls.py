@@ -18,6 +18,9 @@ router.register('cart', views.CartViewSet ,basename='cart')
 router.register('delivery_cost', views.DeliveryCostViewSet,basename='delivery_cost')
 router.register('type', views.TypesViewSet,basename='types')
 router.register('price', views.PriceViewSet, basename='price')
+router.register('product-order', views.Product_order, basename='product-order')
+router.register('total-price', views.Total_Price, basename='total-price')
+router.register('totalprice', views.TotalPriceViewSet, basename='total-price')
 
 
 urlpatterns = [
