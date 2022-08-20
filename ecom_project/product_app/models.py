@@ -1,9 +1,9 @@
-
 from django.db import models
 from account_app.models import *
 import datetime
 from ecom_project import settings
 from django.db.models import F, Sum
+from rest_framework.response import Response
 
 class Category(models.Model):
       name = models.CharField(max_length=250)
@@ -33,50 +33,54 @@ class Variant(models.Model):
         def __str__(self):
          return "{} - {} -".format(self.variant_name,self.variant_type)
 
-
 class ProductAttribute(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     variant_name = models.ForeignKey(Variant, on_delete=models.CASCADE)
-    variant_type = models.ForeignKey(Variant_type, on_delete=models.PROTECT, blank=True, null=True)
-    price = models.DecimalField(max_digits=25, decimal_places=2)
+    price = models.FloatField(null=True)
 
     def __str__(self):
         return "{} - {} -".format(self.category,self.product,self.variant_name,
-                                  self.variant_type,self.price)
-
-
-class ProductVariant(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    variant = models.ManyToManyField(ProductAttribute)
-    price = models.CharField(max_length=50)
-    
+                                  self.price)
 
 class Price(models.Model):
-    type_id = models.CharField(max_length=50)
-    value = models.CharField(max_length=50)
-    variant_price = models.IntegerField(verbose_name='variant_price')
-    total_variant_price = models.IntegerField(verbose_name='total_variant_price')
+    type_id = models.FloatField(blank=True)
+    value = models.FloatField(blank=True)
+    variant_price = models.FloatField(blank=True)
 
-    def total_amount_spent(self):
-        total_variant_price = [int(Price.variant_price) for price in Price.objects.all()]
-        return sum(total_variant_price)
-
-
-class Types(models.Model):
-        variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
-        category = models.ForeignKey(Category, on_delete=models.CASCADE)
-        price = models.CharField(max_length=50)
-
-class Total_Price(models.Model):
-    cost_per_delivery = models.FloatField(null=True)
-    cost_per_product = models.FloatField(null=True)
-    tax = models.FloatField(null=True)
-    total_cost = models.FloatField(null=True)
+        
+class Totalprice(models.Model): 
+    cost_per_delivery = models.FloatField(blank=True)
+    cost_per_product = models.FloatField(blank=True)
+    tax = models.FloatField(blank=True)
+    total_variant_price = models.FloatField(blank=True)
+    total_cost = models.FloatField(blank=True)
+   
     
-
-
+    @property
+    def save(self):
+        self.total_cost = self.cost_per_delivery + self.cost_per_product + self.tax
+        return super(Totalprice, self).save()
     '''
+class Order(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    price = models.IntegerField()
+    address = models.CharField(max_length=50, default='', blank=True)
+    phone = models.CharField(max_length=50, default='', blank=True)
+    date = models.DateField(default=datetime.datetime.today)
+    status = models.BooleanField(default=False)
+  
+    def placeOrder(self):
+        self.save()
+  
+    @staticmethod
+    def get_orders_by_customer(customer_id):
+        return Order.objects.filter(customer=customer_id).order_by('-date')
+
+
+
     def get_total_price(self):
         total_cost =  Total_Price.objects.annotate(total_cost=F('cost_per_delivery') + F('price') +  F('cost_per_product') + F('tax'))  
         cost_per_product =  sum(Price.get_variant_cost() for item in self.variant_cost.all())
@@ -108,7 +112,15 @@ TITLE_CHOICES = [
         )
     ),
 ]
-
+class ProductVariant(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    variant = models.ManyToManyField(ProductAttribute)
+    price = models.CharField(max_length=50)
+    
+class Types(models.Model):
+        variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
+        category = models.ForeignKey(Category, on_delete=models.CASCADE)
+        price = models.CharField(max_length=50)
 
 class Variants(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -133,7 +145,7 @@ class Checkout(models.Model):
         total_price  = self.price * self.value
         return total_price
 
-'''
+
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
@@ -160,22 +172,19 @@ class DeliveryCost(models.Model):
                                                     self.created_at,
                                                     self.updated_at)
 
-
 '''
+
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='orders')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='orders')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='orders')
     quantity = models.IntegerField(default=1)
     paid = models.BooleanField(default=False)
-   
     price = models.FloatField(null=False, blank= False, default=30.30)
     value = models.CharField(max_length=250)
-    quantity = models.IntegerField(null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    class Meta:
-        ordering = ('-created',)
+    
 
     def __str__(self):
         return f'{self.user} - {str(self.id)}'
@@ -187,7 +196,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey(Food, on_delete=models.CASCADE, related_name='order_items')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_items')
     price = models.IntegerField()
     quantity = models.PositiveSmallIntegerField(default=1)
 
@@ -198,4 +207,3 @@ class OrderItem(models.Model):
         return self.price * self.quantity
 
 
-'''
