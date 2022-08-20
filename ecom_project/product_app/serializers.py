@@ -53,21 +53,6 @@ class TypesSerializer(serializers.ModelSerializer):
         fields = "__all__"
  ''' 
 
-        
-class CartSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Cart
-        fields="__all__"
-
-    def create(self, validate_data):
-     return Cart.objects.create(**validate_data)    
-
-class DeliveryCostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DeliveryCost
-        fields = ['id', 'cost_per_delivery', 'cost_per_product', 'fixed_cost']
-
-
 class Variant_typeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Variant_type
@@ -83,6 +68,27 @@ class ProductAttributeSerializer(serializers.ModelSerializer):
         model= ProductAttribute
         fields="__all__"
 
+
+class PriceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Price
+        fields = "__all__"
+
+class TotalpriceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Totalprice
+        fields = "__all__"
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = "__all__"
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = "__all__"
+'''
 class ProductVariantSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductVariant
@@ -94,7 +100,18 @@ class TypesSerializer(serializers.ModelSerializer):
         model = Types
         fields = "__all__"
 
-class PriceSerializer(serializers.ModelSerializer):
+class CartSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Price
-        fields = ['id', 'type_id', 'value']
+        model=Cart
+        fields="__all__"
+
+    def create(self, validate_data):
+     return Cart.objects.create(**validate_data)    
+
+class DeliveryCostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeliveryCost
+        fields = ['id', 'cost_per_delivery', 'cost_per_product', 'fixed_cost']
+
+
+'''
