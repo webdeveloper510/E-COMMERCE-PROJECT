@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import F, Sum
 
 
+
 class Variant_typeViewSet(viewsets.ModelViewSet):
     queryset = Variant_type.objects.all().order_by('id')
     serializer_class = Variant_typeSerializer
@@ -19,8 +20,8 @@ class VariantViewSet(viewsets.ModelViewSet):
 
 class ProductAttributeViewSet(viewsets.ModelViewSet):
     queryset = ProductAttribute.objects.all().order_by('id')
-    sample_instance = ProductAttribute.objects.get(id=4)
-    value_of_name = sample_instance.price
+    # sample_instance = ProductAttribute.objects.get(id=4)
+    # value_of_name = sample_instance.price
     #print(value_of_name)
     serializer_class = ProductAttributeSerializer
 

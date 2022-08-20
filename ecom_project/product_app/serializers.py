@@ -52,10 +52,7 @@ class TypesSerializer(serializers.ModelSerializer):
         model = Variant
         fields = "__all__"
  ''' 
-class AttributeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Attribute
-        fields = "__all__"
+
         
 class CartSerializer(serializers.ModelSerializer):
     class Meta:

@@ -55,12 +55,13 @@ class ProductVariant(models.Model):
 class Price(models.Model):
     type_id = models.CharField(max_length=50)
     value = models.DecimalField(max_digits=25, decimal_places=2)
-    DisplayFields = ['id', 'type_id', 'value', 'total']
+    variant_price = models.DecimalField(max_digits=25, decimal_places=2)
+    #DisplayFields = ['id', 'type_id', 'value', 'total']
     
-    @property
-    def price(self):
-        total = Price.objects.annotate(F('type_id') * F('price'))
-        return total
+    # @property
+    # def price(self):
+    #     total = Price.objects.annotate(F('type_id') * F('price'))
+    #     return total
 
 class Types(models.Model):
         variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
@@ -83,19 +84,9 @@ class Types(models.Model):
     def __str__(self):
         return self.name
 ''' 
-class Variant_type(models.Model):
-        type = models.CharField(max_length=250)
-        
-class Variant(models.Model):
-        name = models.CharField(max_length=250)
-        variant_type = models.ForeignKey(Variant_type, on_delete=models.CASCADE)
 
-        def __str__(self):
-         return self.name
-class Types(models.Model):
-        variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
-        category = models.ForeignKey(Category, on_delete=models.CASCADE)
-        price = models.CharField(max_length=50)
+        
+
 
 ''' 
 class Attribute(models.Model):
