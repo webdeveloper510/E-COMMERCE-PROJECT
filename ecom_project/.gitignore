@@ -3,7 +3,9 @@ __pycache__/
 payment_app/__pycache__
 payment_app/migrations/__pycache__
 ecom_project/__pycache__
+ecom_project/ecom_project/__pycache__
 product_app/__pycache__
+account_app/__pycache__
 *.py[cod]
 *$py.class
 
