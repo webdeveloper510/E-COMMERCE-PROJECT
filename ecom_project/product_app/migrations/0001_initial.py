@@ -54,38 +54,29 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Totalprice',
+            name='Variant',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('cost_per_delivery', models.FloatField(blank=True)),
-                ('cost_per_product', models.FloatField(blank=True)),
-                ('tax', models.FloatField(blank=True)),
-                ('total_cost', models.FloatField(blank=True)),
+                ('variant_name', models.CharField(max_length=250)),
             ],
         ),
         migrations.CreateModel(
             name='Variant_type',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('type', models.CharField(max_length=250)),
-            ],
-        ),
-        migrations.CreateModel(
-            name='Variant',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('variant_name', models.CharField(max_length=250)),
-                ('variant_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='product_app.variant_type')),
+                ('variant_type_name', models.CharField(max_length=250)),
+                ('variant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='product_app.variant')),
             ],
         ),
         migrations.CreateModel(
             name='ProductAttribute',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('price', models.FloatField(null=True)),
+                ('unit', models.FloatField(default=1)),
+                ('price', models.FloatField(default=100)),
                 ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='product_app.category')),
                 ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='product_app.product')),
-                ('variant_name', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='product_app.variant')),
+                ('variant_type_name', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='product_app.variant_type')),
             ],
         ),
         migrations.CreateModel(

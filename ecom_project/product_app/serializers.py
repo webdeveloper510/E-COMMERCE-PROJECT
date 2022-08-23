@@ -1,4 +1,3 @@
-
 from rest_framework import serializers
 from .models import *
 
@@ -9,31 +8,14 @@ class CategorySerializer(serializers.ModelSerializer):
         
            
      def create(self, validate_data):
-        #print(validate_data)
-        return Category.objects.create(**validate_data)
+         return Category.objects.create(**validate_data)
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model= Product
         fields = '__all__'
         
-    '''def to_representation(self, obj):
-        return {
-            "category": obj.category.name,
-            "category_id": obj.category.id,
-            "name": obj.name,
-            "description": obj.description,
-            "price": obj.price,
-            "length": obj.length,
-            "width": obj.width,
-            "depth": obj.depth,
-            "paper": obj.paper,
-            "coating": obj.coating,
-            "printed_sides": obj.printed_sides,
-            "quantity": obj.quantity,
-         }
-    
-  '''
+
     def create(self, validate_data):
      return Product.objects.create(**validate_data)
 ''' 
@@ -53,65 +35,44 @@ class TypesSerializer(serializers.ModelSerializer):
         fields = "__all__"
  ''' 
 
+class VariantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Variant
+        fields = "__all__"
+
 class Variant_typeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Variant_type
         fields = "__all__"
 
-class VariantSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Variant
-        fields = "__all__"
+    def to_representation(self, obj):
+        return {
+            "variant_type_id": obj.id,
+            "variant_id": obj.variant.id,
+            "variant_name": obj.variant.variant_name,
+            "variant_type_name":obj.variant_type_name,
+             }   
 
 class ProductAttributeSerializer(serializers.ModelSerializer):
     class Meta:
         model= ProductAttribute
         fields="__all__"
 
+    def to_representation(self, obj):
+        return {
+            "id": obj.id,
+            "category_id": obj.category.id,
+            "category_name": obj.category.name,
+            "product_id": obj.product.id,
+            "product_name": obj.product.name,
+            "variant_type_id": obj.variant_type_name.id,
+            "variant_type_name": obj.variant_type_name.variant_type_name,
+            "price":obj.price,
+            "unit":obj.unit,
+             }   
+
 
 class PriceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Price
-        fields = "__all__"
-
-class TotalpriceSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Totalprice
-        fields = "__all__"
-
-class OrderSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Order
-        fields = "__all__"
-
-class OrderItemSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = OrderItem
-        fields = "__all__"
-'''
-class ProductVariantSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductVariant
+        model= Price
         fields="__all__"
-
-
-class TypesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Types
-        fields = "__all__"
-
-class CartSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=Cart
-        fields="__all__"
-
-    def create(self, validate_data):
-     return Cart.objects.create(**validate_data)    
-
-class DeliveryCostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DeliveryCost
-        fields = ['id', 'cost_per_delivery', 'cost_per_product', 'fixed_cost']
-
-
-'''

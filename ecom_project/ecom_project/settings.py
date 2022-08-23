@@ -211,3 +211,11 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = BASE_DIR /"static/media"
 MEDIA_URL = "/media/"
 
+STATIC_ROOT = "app-root/repo/wsgi/static"
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = (
+    ('assets', 'app-root/repo/wsgi/openshift/static'),
+
+    )
