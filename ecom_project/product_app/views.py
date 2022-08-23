@@ -56,6 +56,8 @@ class Variant_type_list_ViewSet(viewsets.ViewSet):
     def types(self, request, *args, **kwargs):
         variant_name = request.data.get('variant_name')
         variant = Variant.objects.get(variant_name=variant_name)
-        list = Variant_type.objects.filter(variant=variant).values('variant_type_name')
+        list = Variant_type.objects.filter(variant=variant).values('variant_type_name','id')
         return Response({'Variant_name':variant_name,"Variant_type_name_list":list})
     
+
+   
