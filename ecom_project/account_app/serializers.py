@@ -11,34 +11,34 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
- password2=serializers.CharField(style={'input_type':'password'},write_only=True)
- class Meta:
-    model=User
+    password2=serializers.CharField(style={'input_type':'password'},write_only=True)
+    class Meta:
+        model=User
 
-    fields=['id','email','is_verified','password','password2','First_name','Last_name','address','contact_number','alternative_contact_number']
+        fields=['id','email','password','password2','First_name','Last_name','address','contact_number','alternative_contact_number']
 
-    extra_kwargs={
-     
-        'First_name': {'error_messages': {'required': "Firstname is required",'blank':'please provide a firstname'}},
-        'Last_name': {'error_messages': {'required': "Lastname is required",'blank':'please provide a lastname'}},
-        'address': {'error_messages': {'required': "Address is required",'blank':'please provide your complete address'}},
-        'contact_number': {'error_messages': {'required': "Your contact number is required",'blank':'please provide your contact number'}},
-        'email': {'error_messages': {'required': "email is required",'blank':'please provide a email'}},
-        'password': {'error_messages': {'required': "password is required",'blank':'please Enter a email'}},
-        'password2': {'error_messages': {'required': "confirm password is required",'blank':'Confirm password could not blank'}},
-       }
+        extra_kwargs={
+        
+            'First_name': {'error_messages': {'required': "Firstname is required",'blank':'please provide a firstname'}},
+            'Last_name': {'error_messages': {'required': "Lastname is required",'blank':'please provide a lastname'}},
+            'address': {'error_messages': {'required': "Address is required",'blank':'please provide your complete address'}},
+            'contact_number': {'error_messages': {'required': "Your contact number is required",'blank':'please provide your contact number'}},
+            'email': {'error_messages': {'required': "email is required",'blank':'please provide a email'}},
+            'password': {'error_messages': {'required': "password is required",'blank':'please Enter a email'}},
+            'password2': {'error_messages': {'required': "confirm password is required",'blank':'Confirm password could not blank'}},
+          }
 
-    #validating password and confirm password
- def validate(self, attrs):
-   password=attrs.get('password')
-   password2=attrs.get('password2')
-   if password!=password2:
-    raise serializers.ValidationError('password and confirm password doesnot match')
+        #validating password and confirm password
+    def validate(self, attrs):
+      password=attrs.get('password')
+      password2=attrs.get('password2')
+      if password!=password2:
+        raise serializers.ValidationError('password and confirm password doesnot match')
 
-   return attrs
+      return attrs
 
- def create(self, validated_data):
-   return User.objects.create_user(** validated_data)
+    def create(self, validated_data):
+      return User.objects.create_user(** validated_data)
 
 class UserLoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=250)

@@ -1,3 +1,4 @@
+from unicodedata import category
 from django.shortcuts import render
 from .serializers import *
 from rest_framework import viewsets,status
@@ -16,334 +17,47 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all().order_by('category_id')
     serializer_class = ProductSerializer
 
-
-class Variant_typeViewSet(viewsets.ModelViewSet):
-    queryset = Variant_type.objects.all().order_by('id')
-    serializer_class = Variant_typeSerializer
-
 class VariantViewSet(viewsets.ModelViewSet):
     queryset = Variant.objects.all().order_by('id')
     serializer_class = VariantSerializer
 
+class Variant_typeViewSet(viewsets.ModelViewSet):
+    queryset = Variant_type.objects.filter(variant_id=2).order_by('id')
+    serializer_class = Variant_typeSerializer
+    
 class ProductAttributeViewSet(viewsets.ModelViewSet):
     queryset = ProductAttribute.objects.all().order_by('id')
     serializer_class = ProductAttributeSerializer
-
-class PriceViewSet(viewsets.ViewSet):
-    @csrf_exempt   
-    def list(self, request):
-        Price_data = Price.objects.all()
-        serializer = PriceSerializer(Price_data, many=True)
-        return Response(serializer.data)
-
-    def create(self, request):
-        serializer = PriceSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg':'Data Created'})
-        return Response(serializer.errors)
-
-    def retrieve(self, request, pk=None):
-        id = pk
-        if id is not None:
-            price_instance = Price.objects.get(id=id)
-            type = price_instance.type_id
-            value = price_instance.value
-            product_instance = ProductAttribute.objects.get(id=type)
-            price = product_instance.price
-            variant_price = price * value
-            +print(variant_price)
-            total = Price.objects.aggregate(Sum("variant_price"))
-            print(total)
-            return Response({'type_id':type, 'value':value, 'price':price, 'variant_price':variant_price})
-
-
-
-    def update(self, request, pk):
-        id = pk
-        Price_data = Price.objects.get(pk=id)
-        serializer = PriceSerializer(Price_data, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg':'Data updated'})
-        return Response(serializer.errors)
     
-    def partial_update(self, request, pk):
-        id = pk
-        Price_data = Price.objects.get(pk=id)
-        serializer = PriceSerializer(Price_data, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg':'Partially data updated'})
-        return Response(serializer.errors)
-
-    def destroy(self, request, pk):
-        id = pk
-        Price_data = Price.objects.get(pk=id)
-        Price_data.delete()
-        return Response({'msg':'Data Deleted'})
-
-          
-class TotalpriceViewSet(viewsets.ModelViewSet):
-    queryset = Totalprice.objects.all().order_by('id')
-    serializer_class = TotalpriceSerializer
-    #total_cost = Totalprice.objects.all().aggregate(Sum('cost_per_delivery'), Sum('cost_per_product'),
-                                                   # Sum('tax'))
-    #print(total_cost)    
-         
-class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all().order_by('id')
-    serializer_class = OrderSerializer
-
-class OrderItemViewSet(viewsets.ModelViewSet):
-    queryset = OrderItem.objects.all().order_by('id')
-    serializer_class = OrderItemSerializer
-'''
-
-
-class ProductVariantViewSet(viewsets.ModelViewSet):
-    queryset = ProductVariant.objects.all().order_by('id')
-    serializer_class = ProductVariantSerializer
-
-class TypesViewSet(viewsets.ModelViewSet):
-    queryset = Types.objects.all().order_by('id')
-    serializer_class = TypesSerializer
-
-
-class TotalPrice(viewsets.ViewSet):
-    @csrf_exempt   
-
-    def list(self, request):
-        TotalPrice_data = TotalPrice.objects.all()
-        serializer = TotalPriceSerializer(TotalPrice_data, many=True)
-        return Response(serializer.data)
   
-    def create(self, request):
-        serializer = TotalPriceSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg':'Data Created'})
-        return Response(serializer.errors)
-
-    def retrieve(self, request, pk=None):
-        id = pk
-        if id is not None:
-            TotalPrice_data = TotalPrice.objects.get(id=id)
-            serializer = TotalPriceSerializer(TotalPrice_data)
-            return Response(serializer.data)
-'''
- 
-    
-    #total_cost = Totalprice.objects.all().aggregate(total_cost=Sum(F('cost_per_delivery'), F('cost_per_product'), F('tax')))
-    #print(total_cost)
-       #Price.objects.annotate(total=F('type_id') * F('price'))  
-
-
-
-'''
-class PriceViewSet(viewsets.ModelViewSet):  
-    queryset = Price.objects.all().order_by('id')
-    p_queryset = ProductAttribute.objects.all().order_by('id')
-    price_instance = Price.objects.get(id=1)
-    product_instance = ProductAttribute.objects.get(id=1)
-    type = price_instance.type_id
-    value = price_instance.value
-    price = product_instance.price
-    total_price = price * value
-    #total_price = total_price + total_price
-    print(total_price)
-    #print(price)
-    serializer_class = PriceSerializer
-
-    http_method_names = ['get']
-    def retrieve(self, request, pk=None):
-        instance = self.get_object()
-        # query = request.GET.get('query', None)  # read extra data
-        return Response(self.serializer_class(instance).data,
-                        status=status.HTTP_200_OK)
-
-
-
-    
-
-
-
-def total_price(self):
-        total = self.total_price + self.total_price 
-        return total
-    #Price.objects.annotate(total=F('type_id') * F('price'))  
-
-
-
-    @action(detail=True, methods=['get'])
-    def get_price(self, request, pk=type):
-        id=type
-        if id is not None:
-            price_instance = Price.objects.get(id=id)
-            price = price_instance.price
-            serializer_class = PriceSerializer
-            print(price)
-            return Response({'msg':'Data Created'})
-
-    
-   def retrieve(self, queryset, request, pk=None):
-        type = pk
-        id=type
-        if id is not None:
-            price_instance = Price.objects.get(id=id)
-            price = price_instance.price
-            serializer_class = PriceSerializer
-            print(price)
-            return Response({'msg':'Data Created'})
-
-    def cart(request):
-            total = Cart.objects.annotate(
-                price=Sum(F('orderitem__item__price') * F('orderitem__quantity'))
-            ).get(
-                order_user=request.user
-            )
-            cart.total = cart.price
-            cart.save()
-   
-   
-
-
-class CategoryViewSet(viewsets.ViewSet):
-    #http_method_names = ['get', 'post']
-    @csrf_exempt   
-    def list(self, request):
-        Category_data = Category.objects.all()
-        serializer = CategorySerializer(Category_data, many=True)
-        return Response(serializer.data)
-
-    def create(self, request):
-        serializer = CategorySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg':'Data Created'})
-        return Response(serializer.errors)
-
-    def retrieve(self, request, pk=None):
-        id = pk
-        if id is not None:
-            Category_data = Category.objects.get(id=id)
-            serializer = CategorySerializer(Category_data)
-            return Response(serializer.data)
-
-    def update(self, request, pk):
-        id = pk
-        Category_data = Category.objects.get(pk=id)
-        serializer = CategorySerializer(Category_data, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg':'Data updated'})
-        return Response(serializer.errors)
-    
-    def partial_update(self, request, pk):
-        id = pk
-        Category_data = Category.objects.get(pk=id)
-        serializer = CategorySerializer(Category_data, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg':'Partially data updated'})
-        return Response(serializer.errors)
-
-    def destroy(self, request, pk):
-        id = pk
-        Category_data = Category.objects.get(pk=id)
-        Category_data.delete()
-        return Response({'msg':'Data Deleted'})
-
-
-
-class ProductViewSet(viewsets.ViewSet):
-    #http_method_names = ['get', 'post']
-    @csrf_exempt   
-
-    def list(self, request):
-        Product_data = Product.objects.all()
-        serializer = ProductSerializer(Product_data, many=True)
-        return Response(serializer.data)
-  
-    def create(self, request):
-        serializer = ProductSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg':'Data Created'})
-        return Response(serializer.errors)
-
-    def retrieve(self, request, pk=None):
-        id = pk
-        if id is not None:
-            Product_data = Product.objects.get(id=id)
-            serializer = ProductSerializer(Product_data)
-            return Response(serializer.data)
-
-    def update(self, request, pk):
-        id = pk
-        Product_data = Product.objects.get(pk=id)
-        serializer = ProductSerializer(Product_data, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg':'Data updated'})
-        return Response(serializer.errors)
-    
-    def partial_update(self, request, pk):
-        id = pk
-        Product_data = Product.objects.get(pk=id)
-        serializer = ProductSerializer(Product_data, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg':'Partially data updated'})
-        return Response(serializer.errors)
-
-    def destroy(self, request, pk):
-        id = pk
-        Product_data = Product.objects.get(pk=id)
-        Product_data.delete()
-        return Response({'msg':'Data Deleted'})
-
-
-    def retrieve(self, request, *args, **kwargs):
-        params = kwargs
-        print(params['pk'])
-        Product_data = Product.objects.filter(name=params['pk'])
-        serializer = ProductSerializer(Product_data, many=True)
-        return Response(serializer.data)
-
-      
-  
-class PriceViewSet(viewsets.ViewSet):
-    @api_view(['GET', 'POST'])
-    def hello_world(request):
+class CalculatePriceViewSet(viewsets.ViewSet):
+    @csrf_exempt 
+    @action(detail=False, methods=['post','get'])
+    def price(self, request, *args, **kwargs):
+        
         if request.method == 'POST':
-            return Response({"message": "Got some data!", "data": request.data})
-        return Response({"message": "Hello, world!"})
+          return Response({'msg':"success"})
 
-class CartViewSet(viewsets.ModelViewSet):
-    queryset = Cart.objects.all().order_by('id')
-    serializer_class = CartSerializer
-    @action(methods=['get'], detail=False, url_path='checkout/(?P<userId>[^/.]+)', url_name='checkout')
-    def checkout(self, request, *args, **kwargs):
+        elif request.method == 'GET':
+            attributes = request.data.get('attributes')
+            category_id = request.data.get('category_id')
+            product_id = request.data.get('product_id')
+            totalprice = 0
+            oneunitprice = 0
+            for x in attributes:
+                productattributes = ProductAttribute.objects.filter(category=category_id,product=product_id,variant_type_name=x["variant_type_id"]).values()
+                oneunitprice = productattributes[0]["price"]/productattributes[0]["unit"]
+                totalprice = totalprice + (oneunitprice*x["value"])
+            return Response({'msg':"success","total":totalprice})
 
-        try:
-            user = User.objects.get(pk=int(kwargs.get('userId')))
-        except Exception as e:
-            return Response(status=status.HTTP_404_NOT_FOUND,
-                            data={'Error': str(e)})
 
-        cart_helper = CartHelper(user)
-        checkout_details = cart_helper.prepare_cart_for_checkout()
-
-        if not checkout_details:
-            return Response(status=status.HTTP_404_NOT_FOUND,
-                            data={'error': 'Cart of user is empty.'})
-
-        return Response(status=status.HTTP_200_OK, data={'checkout_details': checkout_details})
-
-class DeliveryCostViewSet(viewsets.ViewSet):
-    queryset = DeliveryCost.objects.all().order_by('id')
-    serializer_class = DeliveryCostSerializer
-
-'''
+class Variant_type_list_ViewSet(viewsets.ViewSet):
+    @action(detail=False, methods=['get','post'])
+    def types(self, request, *args, **kwargs):
+        variant_name = request.data.get('variant_name')
+        variant = Variant.objects.get(variant_name=variant_name)
+        list = Variant_type.objects.filter(variant=variant).values('variant_type_name','id')
+        return Response({'Variant_name':variant_name,"Variant_type_name_list":list})
     
+
+   
