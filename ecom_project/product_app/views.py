@@ -7,7 +7,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 #from product_app.helper import *
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import F, Sum
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().order_by('id')
@@ -29,14 +28,20 @@ class ProductAttributeViewSet(viewsets.ModelViewSet):
     queryset = ProductAttribute.objects.all().order_by('id')
     serializer_class = ProductAttributeSerializer
     
-  
+class HeightViewSet(viewsets.ModelViewSet):
+    queryset = Height.objects.all().order_by('id')
+    serializer_class = HeightSerializer
+    
+class WidthViewSet(viewsets.ModelViewSet):
+    queryset = Width.objects.all().order_by('id')
+    serializer_class = WidthSerializer
+    
 class CalculatePriceViewSet(viewsets.ViewSet):
     @csrf_exempt 
     @action(detail=False, methods=['post','get'])
     def price(self, request, *args, **kwargs):
-        
         if request.method == 'POST':
-          return Response({'msg':"success"})
+          return Response({'msg':"success",'status':'status.HTTP_200_OK'})
 
         elif request.method == 'GET':
             attributes = request.data.get('attributes')
@@ -48,7 +53,7 @@ class CalculatePriceViewSet(viewsets.ViewSet):
                 productattributes = ProductAttribute.objects.filter(category=category_id,product=product_id,variant_type_name=x["variant_type_id"]).values()
                 oneunitprice = productattributes[0]["price"]/productattributes[0]["unit"]
                 totalprice = totalprice + (oneunitprice*x["value"])
-            return Response({'msg':"success","total":totalprice})
+            return Response({'status':'status.HTTP_200_OK',"total":totalprice})
 
 
 class Variant_type_list_ViewSet(viewsets.ViewSet):
@@ -57,7 +62,11 @@ class Variant_type_list_ViewSet(viewsets.ViewSet):
         variant_name = request.data.get('variant_name')
         variant = Variant.objects.get(variant_name=variant_name)
         list = Variant_type.objects.filter(variant=variant).values('variant_type_name','id')
-        return Response({'Variant_name':variant_name,"Variant_type_name_list":list})
-    
+        attributes = ProductAttribute.objects.all().values('category_id','product_id','variant_type_name_id')
+        return Response({'Variant_name':variant_name,"product_attributes":attributes,"Variant_type_list":list})
+       
+class TypeViewSet(viewsets.ModelViewSet):
+    queryset = Type.objects.all().order_by('id')
+    serializer_class = TypeSerializer
 
-   
+    

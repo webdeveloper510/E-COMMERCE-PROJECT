@@ -12,9 +12,13 @@ router.register('category', views.CategoryViewSet, basename='category')
 router.register('product', views.ProductViewSet, basename='product') 
 router.register('variant', views.VariantViewSet,basename='variant')
 router.register('variant-type', views.Variant_typeViewSet,basename='variant_type')
+router.register('height', views.HeightViewSet,basename='height')
+router.register('width', views.WidthViewSet,basename='width')
 router.register('product-attribute', views.ProductAttributeViewSet,basename='ProductAttribute')#router.register('calculateprice', views.CalculatePriceViewSet,basename='calculatePrice')
 router.register('calculateprice', views.CalculatePriceViewSet, basename='calculatePrice')
 router.register('list', views.Variant_type_list_ViewSet, basename='list_of_array')
+router.register('type', views.TypeViewSet, basename = 'Type')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

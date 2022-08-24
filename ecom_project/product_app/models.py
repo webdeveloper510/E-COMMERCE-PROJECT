@@ -4,6 +4,7 @@ import datetime
 from ecom_project import settings
 from django.db.models import F, Sum
 from rest_framework.response import Response
+from django import forms
 
 class Category(models.Model):
       name = models.CharField(max_length=250)
@@ -22,13 +23,18 @@ class Product(models.Model):
 
 class Variant(models.Model):
         variant_name = models.CharField(max_length=250)
-
+       
         def __str__(self):
          return "{} -".format(self.variant_name)
 
+# type_choices = [
+#     ('Coating', ( ('coating 1','coating 1'),('coating 2','coating 2') )),
+#     ('Paper', ( ('glossy', 'glossy'),('cardstock','cardstock') ) ),
+#     ('Printed Sides', ( ('all', 'all'), ('inside','inside') ) ),
+# ]
 class Variant_type(models.Model):
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
-    variant_type_name = models.CharField(max_length=250)
+    variant_type_name = models.CharField(max_length = 90 )
 
     def __str__(self):
          return "{} - {} -".format(self.variant, self.variant_type_name)
@@ -37,7 +43,7 @@ class ProductAttribute(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     variant_type_name = models.ForeignKey(Variant_type, on_delete=models.CASCADE)
-    unit = models.FloatField(default=1)
+    unit = models.FloatField(default=1.0)
     price = models.FloatField(default=100)
 
     def __str__(self):
@@ -45,8 +51,27 @@ class ProductAttribute(models.Model):
                                     self.unit, self.price)
 
 
-class Price(models.Model):
+class Height(models.Model):
+    variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
     price = models.FloatField(default=100)
+    unit_mm = models.FloatField(default=100)
 
     def __str__(self):
-        return "{} ".format(self.price)
+         return "{} - {} -".format(self.variant, self.price,self.unit_mm)
+        
+
+class Width(models.Model):
+    variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
+    price = models.FloatField(default=100)
+    unit_mm = models.FloatField(default=100)
+
+    def __str__(self):
+         return "{} - {} -".format(self.variant, self.price,self.unit_mm)
+        
+class Type(models.Model):
+    # type = models.ManyToManyField(Variant_type)
+    type = models.ForeignKey(Variant_type, on_delete=models.CASCADE)
+    status = models.BooleanField()
+
+    def __str__(self):
+        return "{}-{}".format(self.type,self.status)

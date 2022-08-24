@@ -23,7 +23,15 @@ class Variant_typeModelAdmin(admin.ModelAdmin):
 class ProductAttributeModelAdmin(admin.ModelAdmin):
   list_display = ('id','category','product','variant_type_name','unit','price')
 
-
-@admin.register(Price)
+@admin.register(Height)
 class PriceModelAdmin(admin.ModelAdmin):
-  list_display = ('id','price')
+  list_display = ('id','variant','price','unit_mm')
+
+@admin.register(Width)
+class PriceModelAdmin(admin.ModelAdmin):
+  list_display = ('id','variant','price','unit_mm')
+
+@admin.register(Type)
+class TypeModelAdmin(admin.ModelAdmin):
+  list_display = ('id','type','status')
+
