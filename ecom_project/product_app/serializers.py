@@ -27,6 +27,7 @@ class VariantSerializer(serializers.ModelSerializer):
          return {
             "variant_name": obj.variant_name,
             "variant_Type": obj.type.name,
+            "variant_price":obj.price
                        }   
 
 class Variant_typeSerializer(serializers.ModelSerializer):
@@ -80,7 +81,6 @@ class WidthSerializer(serializers.ModelSerializer):
         fields="__all__"
 
 class TypeSerializer(serializers.ModelSerializer):
-      #  type = Variant_typeSerializer(many=True) 
         class Meta:
             model= Type
             fields = "__all__"
@@ -88,7 +88,7 @@ class TypeSerializer(serializers.ModelSerializer):
         def to_representation(self, obj):
          return {
             "id": obj.id,
-            "variant_name": obj.type.variant_type_name,
-            "status": obj.status
+            "variant_type": obj.variant_type.variant_name,
+            "field_type": obj.field_type
           }   
 

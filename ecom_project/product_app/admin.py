@@ -13,7 +13,7 @@ class ProductModelAdmin(admin.ModelAdmin):
 
 @admin.register(Variant)
 class VariantModelAdmin(admin.ModelAdmin):
-  list_display = ('id','variant_name')
+  list_display = ('id','variant_name','price')
 
 @admin.register(Variant_type)
 class Variant_typeModelAdmin(admin.ModelAdmin):
@@ -33,5 +33,5 @@ class PriceModelAdmin(admin.ModelAdmin):
 
 @admin.register(Type)
 class TypeModelAdmin(admin.ModelAdmin):
-  list_display = ('id','type','status')
+  list_display = ('id','variant_type','field_type')
 

@@ -23,15 +23,13 @@ class Product(models.Model):
 
 class Variant(models.Model):
         variant_name = models.CharField(max_length=250)
-       
-        def __str__(self):
-         return "{} -".format(self.variant_name)
+        ft = models.FloatField()
+        price = models.FloatField(default=100)
 
-# type_choices = [
-#     ('Coating', ( ('coating 1','coating 1'),('coating 2','coating 2') )),
-#     ('Paper', ( ('glossy', 'glossy'),('cardstock','cardstock') ) ),
-#     ('Printed Sides', ( ('all', 'all'), ('inside','inside') ) ),
-# ]
+        def __str__(self):
+         return "{} -{}".format(self.variant_name,self.price)
+
+
 class Variant_type(models.Model):
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
     variant_type_name = models.CharField(max_length = 90 )
@@ -67,11 +65,18 @@ class Width(models.Model):
 
     def __str__(self):
          return "{} - {} -".format(self.variant, self.price,self.unit_mm)
-        
+
+field_choices = (
+    ('dropdown','dropdown'),
+    ('checkbox', 'checkbox'),
+    ('inputbox','inputbox'),
+    ('Charfield','charfield'),
+    ('Foriegnkey','foriegnkey'),
+    ('integerfield','integerfield')
+)
 class Type(models.Model):
-    # type = models.ManyToManyField(Variant_type)
-    type = models.ForeignKey(Variant_type, on_delete=models.CASCADE)
-    status = models.BooleanField()
+    variant_type = models.ForeignKey(Variant, on_delete=models.CASCADE)
+    field_type = models.CharField(max_length=90, choices=field_choices, default='select')
 
     def __str__(self):
         return "{}-{}".format(self.type,self.status)
