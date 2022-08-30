@@ -18,6 +18,17 @@ class ProductSerializer(serializers.ModelSerializer):
     def create(self, validate_data):
      return Product.objects.create(**validate_data)
 
+class ElementsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Elements
+        fields="__all__"
+
+        def to_representation(self, obj):
+         return {
+            "id": obj.id,
+            "element": obj.element,
+          }   
+
 class VariantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Variant
@@ -25,10 +36,11 @@ class VariantSerializer(serializers.ModelSerializer):
 
         def to_representation(self, obj):
          return {
+            "element_id":obj.element.id,
+            "element":obj.element.element,
+            "variant_id": obj.id,
             "variant_name": obj.variant_name,
-            "variant_Type": obj.type.name,
-            "variant_price":obj.price
-                       }   
+               }   
 
 class Variant_typeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,10 +49,11 @@ class Variant_typeSerializer(serializers.ModelSerializer):
 
     def to_representation(self, obj):
         return {
-            "variant_type_id": obj.id,
             "variant_id": obj.variant.id,
             "variant_name": obj.variant.variant_name,
+            "variant_type_id": obj.id,
             "variant_type_name":obj.variant_type_name,
+            "field_type":obj.variant.field_type
              }   
 
 class ProductAttributeSerializer(serializers.ModelSerializer):
@@ -62,18 +75,7 @@ class ProductAttributeSerializer(serializers.ModelSerializer):
              }   
 
 
-class HeightSerializer(serializers.ModelSerializer):
-    class Meta:
-        model= Height
-        fields="__all__"
 
-        def to_representation(self, obj):
-         return {
-            "id": obj.id,
-            "unit_mm": obj.unit_mm,
-            "price": obj.price,
-            "variant_name": obj.variant.variant_name,
-          }   
 
 class WidthSerializer(serializers.ModelSerializer):
     class Meta:
