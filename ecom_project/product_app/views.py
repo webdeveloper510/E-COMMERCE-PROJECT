@@ -99,17 +99,16 @@ class CalculatePriceViewSet(viewsets.ViewSet):
                 #     element_name = x['variant__element__element']
                 elements = Elements.objects.filter(id=e_id).values('element','id')
                 
-                if value != 0:
-                    if id == name[0]['id'] and elements[0]['id'] == e_id:
-                        picture_height = value
-                        print('picture_height--- ', picture_height)
-                                                                        
-                    if id == name[0]['id'] and elements[0]['id'] == e_id:
-                        picture_width = value
-                        picture_size = picture_height * picture_width
+                if id == name[0]['id'] and elements[0]['id'] == e_id:
+                    picture_height = value
+                    print('picture_height--- ', picture_height)
+                                                                    
+                if id == name[0]['id'] and elements[0]['id'] == e_id:
+                    picture_width = value
+                    picture_size = picture_height * picture_width
 
-                        print("picture_width ----", picture_width)
-                        print("picture_size---- ", picture_size)
+                    print("picture_width ----", picture_width)
+                    print("picture_size---- ", picture_size)
                         
 
                 # if id == n['id'] and n['variant__element'] == e_id:  
