@@ -168,3 +168,4 @@ class TypeViewSet(viewsets.ModelViewSet):
 #                 one_unit_price = productattributes[0]["price"]/productattributes[0]["unit"]
 #                 totalprice = totalprice + (one_unit_price*x["value"])
 #             return Response({'status':'status.HTTP_200_OK',"total":totalprice})
+122
