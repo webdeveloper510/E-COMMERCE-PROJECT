@@ -35,10 +35,29 @@ class TypesSerializer(serializers.ModelSerializer):
         fields = "__all__"
  ''' 
 
+class ElementsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Elements
+        fields="__all__"
+
+        def to_representation(self, obj):
+         return {
+            "id": obj.id,
+            "element": obj.element,
+          }   
+
 class VariantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Variant
         fields = "__all__"
+
+        def to_representation(self, obj):
+         return {
+            "element_id":obj.element.id,
+            "element":obj.element.element,
+            "variant_id": obj.id,
+            "variant_name": obj.variant_name,
+               }   
 
 class Variant_typeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,10 +66,11 @@ class Variant_typeSerializer(serializers.ModelSerializer):
 
     def to_representation(self, obj):
         return {
-            "variant_type_id": obj.id,
             "variant_id": obj.variant.id,
             "variant_name": obj.variant.variant_name,
+            "variant_type_id": obj.id,
             "variant_type_name":obj.variant_type_name,
+            "field_type":obj.variant.field_type
              }   
 
 class ProductAttributeSerializer(serializers.ModelSerializer):
@@ -72,7 +92,22 @@ class ProductAttributeSerializer(serializers.ModelSerializer):
              }   
 
 
-class PriceSerializer(serializers.ModelSerializer):
+
+
+class WidthSerializer(serializers.ModelSerializer):
     class Meta:
-        model= Price
+        model= Width
         fields="__all__"
+
+class TypeSerializer(serializers.ModelSerializer):
+        class Meta:
+            model= Type
+            fields = "__all__"
+
+        def to_representation(self, obj):
+         return {
+            "id": obj.id,
+            "variant_type": obj.variant_type.variant_name,
+            "field_type": obj.field_type
+          }   
+
