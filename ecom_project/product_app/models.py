@@ -31,7 +31,6 @@ class Variant(models.Model):
         element = models.ForeignKey(Elements, on_delete=models.CASCADE)
         variant_name = models.CharField(max_length=250)
         field_type = models.CharField(max_length=250)
-        
         def __str__(self):
          return "{} -{}".format(self.variant_name,self.element)
 

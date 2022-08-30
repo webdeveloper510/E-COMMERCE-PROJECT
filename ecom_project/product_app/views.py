@@ -59,14 +59,16 @@ class Send_listViewSet(viewsets.ViewSet):
         types = Variant_type.objects.all().values('variant_type_name')
         serializer_class = VariantSerializer
 
-        dropdown = Variant.objects.all().values('id','variant_name','field_type') 
+        dropdown = Variant.objects.all().values('id','variant_name','field_type','element__id','element__element') 
         array = []
         for x in dropdown:
             variant_id = x['id']
             variant_name= x['variant_name']
             field_Type = x['field_type']
+            element_id = x['element__id']
+            element_name = x['element__element']
             dropdown_options = Variant_type.objects.filter(variant=variant_id).values('id','variant_type_name')
-            queryset = {'Field Type':field_Type,'Title':variant_name,'variant_id':variant_id,'options':dropdown_options}
+            queryset = {'Field Type':field_Type,'Title':variant_name,'variant_id':variant_id,'element_name':element_name,'element_id':element_id,'options':dropdown_options}
             array.append(queryset)
         return Response({'list':array})
 
@@ -88,24 +90,27 @@ class CalculatePriceViewSet(viewsets.ViewSet):
                 e_id = x['element_id']
                 id = x['variant_type_id']
                 value = x['value']
-                name = Variant_type.objects.filter(id=id).values('variant_type_name', 'id','variant','variant__variant_name','variant__element','variant__element__element')
-                print(name[0]['variant__element'])
-                # for n in name:
-                #     v_t_id = n['id']
-                #     element_id = n['variant__element'] 
-
-                if id == name[0]['id'] and name[0]['variant__element'] == e_id:
-                    picture_height = value
-                    print("picture height --", picture_height)
+                name = Variant_type.objects.filter(id=id).values('variant_type_name', 'id','variant','variant__variant_name','variant__element','variant__element__element','variant__field_type')
+                # print(elements[0]['element'])
+                # for x in name:
+                #     type_name = x['variant_type_name']
+                #     variant_type_id = x['id']
+                #     element_id = x['variant__element']
+                #     element_name = x['variant__element__element']
+                elements = Elements.objects.filter(id=e_id).values('element','id')
                 
-                if id == name[0]['id'] and name[0]['variant__element'] == e_id:
-                    picture_width = value
-                    picture_size = picture_height * picture_width
-                    picture_size_feet = picture_size / 12
+                if value != 0:
+                    if id == name[0]['id'] and elements[0]['id'] == e_id:
+                        picture_height = value
+                        print('picture_height--- ', picture_height)
+                                                                        
+                    if id == name[0]['id'] and elements[0]['id'] == e_id:
+                        picture_width = value
+                        picture_size = picture_height * picture_width
 
-                    print("picture_width ----", picture_width)
-                    print("picture_size---- ", picture_size)
-                    
+                        print("picture_width ----", picture_width)
+                        print("picture_size---- ", picture_size)
+                        
 
                 # if id == n['id'] and n['variant__element'] == e_id:  
                 #     picture_height = value
