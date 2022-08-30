@@ -101,13 +101,14 @@ DATABASES = {
     'default': {
     'ENGINE': 'django.db.backends.mysql', 
     'NAME': 'django_account_db',
-    'USER': 'admin',
-    'PASSWORD': 'Admin@123',
+    'USER': 'root',
+    'PASSWORD': '',
     'HOST': 'localhost', # Or an IP Address that your DB is hosted on
     'PORT': '3306',
-    # 'OPTIONS': {
-    #         'read_default_file': '/opt/lampp/etc/my.cnf',
-    #     }
+    'OPTIONS': {
+            'sql_mode': 'traditional'
+           # 'read_default_file': '/opt/lampp/etc/my.cnf',
+        }
        }
        
 
