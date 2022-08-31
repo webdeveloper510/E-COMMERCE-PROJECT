@@ -30,7 +30,7 @@ class ProductAttributeViewSet(viewsets.ModelViewSet):
     queryset = ProductAttribute.objects.all().order_by('id')
     serializer_class = ProductAttributeSerializer
     
-class ElementsViewSet(viewsets.ModelViewSet):
+class ElementsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Elements.objects.all().order_by('id')
     serializer_class = ElementsSerializer
     
@@ -70,164 +70,9 @@ class Send_listViewSet(viewsets.ViewSet):
             array.append(queryset)
         return Response({'list':array})
 
-# class CalculatePriceViewSet(viewsets.ViewSet):
-#     @csrf_exempt 
-#     @action(detail=False, methods=['post','get'])
-#     def price(self, request, *args, **kwargs):
-#         if request.method == 'POST':
-#             attributes = request.data.get('attributes')
-#             category_id = request.data.get('category_id')
-#             product_id = request.data.get('product_id')
-#             frame_feet_size = 0
-#             frame_height = 0
-#             frame_height_feet = 0
-#             for x in attributes:
-#                 e_id = x['element_id']
-#                 id = x['variant_type_id']
-#                 value = x['value']
-#                 name = Variant_type.objects.filter(id=id).values('variant_type_name', 'id','variant','variant__variant_name','variant__element','variant__element__element')
-#                 print(name[0]['variant__element'])
-#                 for n in name:
-#                     v_t_id = n['id']
-#                     element_id = n['variant__element'] 
 
-#                 if id == name[0]['id'] and name[0]['variant__element'] == e_id:
-#                     picture_height = value
-#                     print("picture height --", picture_height)
-                
-#                 if id == name[0]['id'] and name[0]['variant__element'] == e_id:
-#                     picture_width = value
-#                     picture_size = picture_height * picture_width
-#                     picture_size_feet = picture_size / 12
-
-#                     print("picture_width ----", picture_width)
-#                     print("picture_size---- ", picture_size)
-                    
-
-                # if id == n['id'] and n['variant__element'] == e_id:  
-                #     picture_height = value
-                #     print("picture height ----",picture_height)
-
-                # elif id == n['id'] and n['variant__element'] == e_id:  
-                #     picture_width = value
-                #     picture_size = picture_height * picture_width
-                #     picture_size_feet = picture_size / 12
-                #     print("picture_width ----",picture_width)
-                #     print("picture_size ----",picture_size)
-
-                # else:
-                #     print(000000000000000000000000)
-
-                #     print("picture height "+ str(picture_height))
-                #     print("picture_width "+ str(picture_width))
-                #     print("picture_size "+ str(picture_size))
-                 
-                # if id == variant_type_id and element_id == e_id:
-                #     frame_height = value
-                           
-                # if id == variant_type_id and element_id == e_id:
-                #     frame_width = value
-                #     frame_size = frame_height * frame_width
-
-                #     frame_height_size = (picture_height+(2*frame_height))
-                #     frame_height_feet_size = frame_height_size / 12
-
-                #     frame_width_size = (picture_width+(2*frame_width)) 
-                #     frame_width_feet_size = frame_width_size / 12
-                     
-                #     frame_feet_size = frame_height_feet_size * frame_width_feet_size
-                    
-                #     print("frame_height "+ str(frame_height))
-                #     print("frame_height_feet "+ str(frame_height_feet))
-                #     print("frame_width "+ str(frame_width))
-                #     print("frame_size "+ str(frame_size))
-                #     print("frame_feet_size "+ str(frame_feet_size))
-                
-                # if id == variant_type_id and element_id == 1:
-                #     melamine_base_price = ProductAttribute.objects.filter(variant_type_name_id=id).values('price')
-                #     print("melamine price per : " + str(melamine_base_price))
-                #     melamine_base_price = melamine_base_price[0]['price']
-                #     melamine_base_price = frame_feet_size*melamine_base_price
-                #     print("final melamine price is : " + str(melamine_base_price))
-
-                # if id == variant_type_id and element_id == 1:
-                #     melamine_front_price = ProductAttribute.objects.filter(variant_type_name_id=id).values('price')
-                #     melamine_front_price = melamine_front_price[0]['price']
-                #     print("melamine_front_price : "+ str(melamine_front_price))
-                #     melamine_front_price = frame_feet_size*melamine_front_price
-
-                # if id == variant_type_id and element_id == 1:
-                #     melamine_back_price = ProductAttribute.objects.filter(variant_type_name_id=id).values('price')
-                #     melamine_back_price = melamine_back_price[0]['price']
-                #     print(melamine_back_price)
-                #     melamine_back_price = frame_feet_size*melamine_back_price
-
-                #     print("melamine_base_price "+ str(melamine_base_price))
-                #     print("melamine_front_price "+ str(melamine_front_price))
-                #     print("melamine_back_price "+ str(melamine_back_price))
-                
-                #     if picture_width >=0 and picture_width <=24: 
-                #         stand_offs_quantity = 2 + 2
-                    
-                #     elif picture_width >=25 and picture_width <=36: 
-                #         stand_offs_quantity = 3 + 3
-                    
-                #     elif picture_width >=37 and picture_width <=48: 
-                #         stand_offs_quantity = 4 + 4
-                    
-                #     elif picture_width >=49 and picture_size_feet <=60: 
-                #         stand_offs_quantity = 5 + 5 
-                    
-                #     else: 
-                #         print (0)
-                    
-                    # print("hiiiii")
-                    # stand_offs_price = ProductAttribute.objects.filter(variant_type_name_id=id).values('price')
-                    # print("stand_offs_price per piece " + str(stand_offs_price))
-                    # stand_offs_price = stand_offs_price[0]['price']
-                    # stand_offs_price = stand_offs_price * stand_offs_quantity
-                    # print(stand_offs_price)
-                    
-                    # total = melamine_base_price + melamine_front_price + melamine_back_price + stand_offs_price
-                
-                    # print("stand_offs_quantity "+ str(stand_offs_quantity))
-                    # print("stand_offs_price "+ str(stand_offs_price))
-                    # print("total " + str(total))
-
-            # return Response({'status':'status.HTTP_200_OK',"picture_height": 0,
-            # "picture_width" : picture_width, "picture_size":picture_size, "picture_size_feet":picture_size_feet, "frame_width_size":frame_width_size,
-            # "frame_height_size":frame_height_size, "frame_height_feet_size":frame_height_feet_size,
-            # "frame_width_feet_size":frame_width_feet_size, "frame_feet_size":frame_feet_size,
-            # "melamine_base_price": melamine_base_price, "melamine_front_price": melamine_front_price,
-            # "melamine_back_price":melamine_back_price, "stand_offs_price": stand_offs_price, "total":total
-            # })
-                
-
-
-# class CalculatePriceViewSet(viewsets.ViewSet):
-#     @csrf_exempt 
-#     @action(detail=False, methods=['post','get'])
-#     def price(self, request, *args, **kwargs):
-#         if request.method == 'POST':
-#           return Response({'msg':"success",'status':'status.HTTP_200_OK'})
-
-#         elif request.method == 'GET':
-#             attributes = request.data.get('attributes')
-#             category_id = request.data.get('category_id')
-#             product_id = request.data.get('product_id')
-#             totalprice = 0
-#             one_unit_price = 0
-#             for x in attributes:
-#                 productattributes = ProductAttribute.objects.filter(category=category_id,product=product_id,variant_type_name=x["variant_type_id"]).values()
-#                 one_unit_price = productattributes[0]["price"]/productattributes[0]["unit"]
-#                 totalprice = totalprice + (one_unit_price*x["value"])
-#             return Response({'status':'status.HTTP_200_OK',"total":totalprice})
-
-
-
-
-   
 class CalculatePriceViewSet(viewsets.ViewSet):
+    back_price = ""
     @csrf_exempt 
     @action(detail=False, methods=['post','get'])
     def price(self, request, *args, **kwargs):
@@ -238,12 +83,11 @@ class CalculatePriceViewSet(viewsets.ViewSet):
             frame_feet_size = 0
             frame_height = 0
             frame_height_feet = 0
-            stand_offs_quantity = 0
             for x in attributes:
                 id = x['variant_type_id']
                 value = x['value']
 
-                name = Variant_type.objects.filter(id=id).values('variant_type_name', 'id','variant','variant__variant_name','variant__element','variant__element__element')
+                name = Variant_type.objects.filter(id=id).values('variant_type_name', 'variant_id','id','variant','variant__variant_name','variant__element','variant__element__element')
                 
                 if id == name[0]['id'] and name[0]['variant__element__element']  == 'Picture height':
                     picture_height = value
@@ -259,74 +103,42 @@ class CalculatePriceViewSet(viewsets.ViewSet):
                     frame_feet_size = (picture_height+(2 * frame_height)) * ((picture_width + (2 * frame_width))) /12
 
                 if id == name[0]['id'] and name[0]['variant__element__element']  == 'Base color':
-                    b__price = ProductAttribute.objects.filter(id=name[0]['id']).values('price')
+                    b__price = ProductAttribute.objects.filter(variant_type_name_id=name[0]['id']).values('price')
                     base_price = frame_feet_size * b__price[0]['price']
 
                 if id == name[0]['id'] and name[0]['variant__element__element']  == 'Front color':
-                    f__price = ProductAttribute.objects.filter(id=name[0]['id']).values('price')
-                    front_price = frame_feet_size * f__price[0]['price']
+                    f_price = ProductAttribute.objects.filter(variant_type_name_id=name[0]['id']).values('price')
+                    front_price = frame_feet_size * f_price[0]['price']
                 
                 if id == name[0]['id'] and name[0]['variant__element__element']  == 'Back color':
-                    bck_price = ProductAttribute.objects.filter(id=name[0]['id']).values('price')
+                    bck_price = ProductAttribute.objects.filter(variant_type_name_id=name[0]['id']).values('price')
                     back_price = frame_feet_size * bck_price[0]['price']
 
-                    if picture_width >=0 and picture_width <=24: 
-                        stand_offs_quantity = 2 + 2
+                if picture_width >=0 and picture_width <=24: 
+                    stand_offs_quantity = 2 + 2
+                
+                if picture_width >=25 and picture_width <=36: 
+                    stand_offs_quantity = 3 + 3
+                
+                if picture_width >=37 and picture_width <=48: 
+                    stand_offs_quantity = 4 + 4
+                
+                if picture_width >=49 and picture_width <=60: 
+                    stand_offs_quantity = 5 + 5 
                     
-                    elif picture_width >=25 and picture_width <=36: 
-                        stand_offs_quantity = 3 + 3
-                    
-                    elif picture_width >=37 and picture_width <=48: 
-                        stand_offs_quantity = 4 + 4
-                    
-                    elif picture_width >=49 and picture_width <=60: 
-                        stand_offs_quantity = 5 + 5 
-                    
-                    else:
-                        print(0000000)
-
-                if id == name[0]['id'] and name[0]['variant__element__element']  == 'Stand offs':
-                    s_price = ProductAttribute.objects.filter(id=name[0]['id']).values('price')
+                if id == name[0]['id'] and name[0]['variant__element__element']  == 'Stand off':
+                    s_price = ProductAttribute.objects.filter(variant_type_name_id=name[0]['id']).values('price')
                     stand_offs_price = stand_offs_quantity * s_price[0]['price']
                     
+            total = base_price + front_price + back_price + stand_offs_price
+   
             return Response({'status':'status.HTTP_200_OK',"picture_height": picture_height,
              "picture_width":picture_width,"frame_height":frame_height,"frame_width":frame_width,
              "frame_feet_size":frame_feet_size, "base_price":(b__price[0]['price'],base_price),
-             "front_price":(f__price[0]['price'],front_price),"back_price":(bck_price[0]['price'],back_price),
-             "stand_offs_quantity":stand_offs_quantity,"stand_offs_price":(s_price[0]['price'],stand_offs_price)
+             "front_price":(f_price[0]['price'],front_price),"back_price":(bck_price[0]['price'],back_price),
+             "stand_offs_quantity":stand_offs_quantity,"stand_offs_price":(s_price[0]['price'],stand_offs_price),
+             "total":total,
             })
 
                   
-            #         if picture_size_feet >=0 and picture_size_feet <=24: 
-            #             stand_offs_quantity = 2 + 2
-                    
-            #         elif picture_size_feet >=25 and picture_size_feet <=36: 
-            #             stand_offs_quantity = 3 + 3
-                    
-            #         elif picture_size_feet >=37 and picture_size_feet <=48: 
-            #             stand_offs_quantity = 4 + 4
-                    
-            #         elif picture_size_feet >=49 and picture_size_feet <=60: 
-            #             stand_offs_quantity = 5 + 5 
-                    
-            #         else: 
-            #             print (0)
-                    
-            #         stand_offs_price = Variant.objects.filter(variant_name='stand offs').values('price')
-            #         stand_offs_price = stand_offs_price[0]['price']
-            #         stand_offs_price = stand_offs_price * stand_offs_quantity
-            #         print(stand_offs_price)
-                    
-            #         total = melamine_base_price + melamine_front_price + melamine_back_price + stand_offs_price
-                
-            #         print("stand_offs_quantity "+ str(stand_offs_quantity))
-            #         print("stand_offs_price "+ str(stand_offs_price))
-            #         print("total " + str(total))
-
-            # return Response({'status':'status.HTTP_200_OK',"picture_height": picture_height,
-            # "picture_width" : picture_width, "picture_size":picture_size, "picture_size_feet":picture_size_feet, "frame_width_size":frame_width_size,
-            # "frame_height_size":frame_height_size, "frame_height_feet_size":frame_height_feet_size,
-            # "frame_width_feet_size":frame_width_feet_size, "frame_feet_size":frame_feet_size,
-            # "melamine_base_price": melamine_base_price, "melamine_front_price": melamine_front_price,
-            # "melamine_back_price":melamine_back_price, "stand_offs_price": stand_offs_price, "total":total})
-                
+            
