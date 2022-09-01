@@ -13,12 +13,9 @@ router.register('product', views.ProductViewSet, basename='product')
 router.register('elements', views.ElementsViewSet,basename='elements')
 router.register('variant', views.VariantViewSet,basename='variant')
 router.register('variant-type', views.Variant_typeViewSet,basename='variant_type')
-router.register('width', views.WidthViewSet,basename='width')
 router.register('product-attribute', views.ProductAttributeViewSet,basename='ProductAttribute')#router.register('calculateprice', views.CalculatePriceViewSet,basename='calculatePrice')
 router.register('calculateprice', views.CalculatePriceViewSet, basename='calculatePrice')
-router.register('list', views.Variant_type_list_ViewSet, basename='list_of_array')
-router.register('type', views.TypeViewSet, basename = 'Type')
-router.register('dict', views.Send_listViewSet, basename = 'list')
+router.register('list', views.Send_listViewSet, basename = 'Send_listViewSet')
 
 
 

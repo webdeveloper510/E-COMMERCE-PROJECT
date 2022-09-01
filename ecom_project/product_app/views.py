@@ -1,14 +1,9 @@
 from unicodedata import category
-from django.shortcuts import render
 from .serializers import *
-from rest_framework import viewsets,status
+from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-#from product_app.helper import *
 from django.views.decorators.csrf import csrf_exempt
-from distutils import errors
-from django.shortcuts import get_object_or_404
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().order_by('id')
@@ -18,6 +13,10 @@ class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all().order_by('category_id')
     serializer_class = ProductSerializer
 
+class ElementsViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Elements.objects.all().order_by('id')
+    serializer_class = ElementsSerializer
+    
 class VariantViewSet(viewsets.ModelViewSet):
     queryset = Variant.objects.all().order_by('id')
     serializer_class = VariantSerializer
@@ -29,36 +28,11 @@ class Variant_typeViewSet(viewsets.ModelViewSet):
 class ProductAttributeViewSet(viewsets.ModelViewSet):
     queryset = ProductAttribute.objects.all().order_by('id')
     serializer_class = ProductAttributeSerializer
-    
-class ElementsViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Elements.objects.all().order_by('id')
-    serializer_class = ElementsSerializer
-    
-class WidthViewSet(viewsets.ModelViewSet):
-    queryset = Width.objects.all().order_by('id')
-    serializer_class = WidthSerializer
-
-class Variant_type_list_ViewSet(viewsets.ViewSet):
-    @action(detail=False, methods=['get','post'])
-    def types(self, request, *args, **kwargs):
-        variant_name = request.data.get('variant_name')
-        variant = Variant.objects.get(variant_name=variant_name)
-        list = Variant_type.objects.filter(variant=variant).values('variant_type_name','id')
-        attributes = ProductAttribute.objects.all().values('category_id','product_id','variant_type_name_id')
-        return Response({'Variant_name':variant_name,"product_attributes":attributes,"Variant_type_list":list})
-       
-class TypeViewSet(viewsets.ModelViewSet):
-    queryset = Type.objects.all().order_by('id')
-    serializer_class = TypeSerializer
-
+          
 class Send_listViewSet(viewsets.ViewSet):
-    @action(detail=False, methods=['post','get'])
-    def dict(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs):
         queryset = Variant.objects.all().values('variant_name','field_type')
-        serializer_class = VariantSerializer
         types = Variant_type.objects.all().values('variant_type_name')
-        serializer_class = VariantSerializer
-
         dropdown = Variant.objects.all().values('id','variant_name','field_type') 
         array = []
         for x in dropdown:
@@ -70,12 +44,11 @@ class Send_listViewSet(viewsets.ViewSet):
             array.append(queryset)
         return Response({'list':array})
 
-
 class CalculatePriceViewSet(viewsets.ViewSet):
     back_price = ""
-    @csrf_exempt 
-    @action(detail=False, methods=['post','get'])
-    def price(self, request, *args, **kwargs):
+    # @csrf_exempt 
+    # @action(detail=False, methods=['post','get'])
+    def list(self, request, *args, **kwargs):
         if request.method == 'POST':
             attributes = request.data.get('attributes')
             category_id = request.data.get('category_id')
@@ -83,19 +56,18 @@ class CalculatePriceViewSet(viewsets.ViewSet):
             frame_feet_size = 0
             frame_height = 0
             frame_height_feet = 0
+            picture_height = 0
             for x in attributes:
                 id = x['variant_type_id']
                 value = x['value']
-
                 name = Variant_type.objects.filter(id=id).values('variant_type_name', 'variant_id','id','variant','variant__variant_name','variant__element','variant__element__element')
-                
-                if id == name[0]['id'] and name[0]['variant__element__element']  == 'Picture height':
+                if id == name[0]['id'] and name[0]['variant__element__element']  == 'Picture length':
                     picture_height = value
 
                 if id == name[0]['id'] and name[0]['variant__element__element']  == 'Picture width':
                     picture_width = value
 
-                if id == name[0]['id'] and name[0]['variant__element__element'] == 'Frame height':
+                if id == name[0]['id'] and name[0]['variant__element__element'] == 'Frame length':
                     frame_height = value
                            
                 if id == name[0]['id'] and name[0]['variant__element__element']  == 'Frame width':
@@ -139,6 +111,3 @@ class CalculatePriceViewSet(viewsets.ViewSet):
              "stand_offs_quantity":stand_offs_quantity,"stand_offs_price":(s_price[0]['price'],stand_offs_price),
              "total":total,
             })
-
-                  
-            

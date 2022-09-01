@@ -52,25 +52,3 @@ class ProductAttribute(models.Model):
         return "{} - {} -".format(self.category,self.product,self.variant_type_name,
                                     self.unit, self.price)
 
-
-
-
-class Width(models.Model):
-    variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
-    price = models.FloatField(default=100)
-    unit_mm = models.FloatField(default=100)
-
-    def __str__(self):
-         return "{} - {} -".format(self.variant, self.price,self.unit_mm)
-
-field_choices = (
-    ('dropdown','dropdown'),
-    ('checkbox', 'checkbox'),
-    ('inputbox','inputbox'),
-    ('Charfield','charfield'),
-    ('Foriegnkey','foriegnkey'),
-    ('integerfield','integerfield')
-)
-class Type(models.Model):
-    variant_type = models.ForeignKey(Variant, on_delete=models.CASCADE)
-    field_type = models.CharField(max_length=90, choices=field_choices, default='select')

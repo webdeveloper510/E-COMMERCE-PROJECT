@@ -77,20 +77,3 @@ class ProductAttributeSerializer(serializers.ModelSerializer):
 
 
 
-class WidthSerializer(serializers.ModelSerializer):
-    class Meta:
-        model= Width
-        fields="__all__"
-
-class TypeSerializer(serializers.ModelSerializer):
-        class Meta:
-            model= Type
-            fields = "__all__"
-
-        def to_representation(self, obj):
-         return {
-            "id": obj.id,
-            "variant_type": obj.variant_type.variant_name,
-            "field_type": obj.field_type
-          }   
-
