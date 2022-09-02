@@ -45,6 +45,7 @@ class Send_listViewSet(viewsets.ViewSet):
             array.append(queryset)
         return Response({'list':array})
 
+
 class CalculatePriceViewSet(viewsets.ViewSet):
     @csrf_exempt 
     @action(detail=False, methods=['post','get'])
@@ -53,10 +54,8 @@ class CalculatePriceViewSet(viewsets.ViewSet):
             attributes = request.data.get('attributes')
             category_id = request.data.get('category_id')
             product_id = request.data.get('product_id')
-            frame_feet_size = 0
-            frame_length = 0
-            frame_length_feet = 0
-            picture_length = 0
+            frame_feet_size, frame_length, frame_width, picture_length, picture_width = 0, 0,0,0,0
+            base_price, back_price, front_price, stand_offs_quantity, stand_offs_price, total = 0,0,0,0,0,0
             for x in attributes:
                 id = x['variant_type_id']
                 value = x['value']
@@ -72,8 +71,12 @@ class CalculatePriceViewSet(viewsets.ViewSet):
                            
                 if id == name[0]['id'] and name[0]['variant__element__element']  == 'Frame width':
                     frame_width = value
-                    frame_feet_size = (picture_length+(2 * frame_length)) * ((picture_width + (2 * frame_width))) /12
-
+                    frame_feet_length = picture_length + (2 * frame_length)
+                    frame_feet_length = frame_feet_length / 12
+                    frame_feet_width =  picture_width + (2 * frame_width)
+                    # frame_feet_width = frame_feet_width / 12
+                    frame_feet_size = frame_feet_length * frame_feet_width
+                  
                 if id == name[0]['id'] and name[0]['variant__element__element']  == 'Base color':
                     b__price = ProductAttribute.objects.filter(variant_type_name_id=name[0]['id']).values('price')
                     base_price = frame_feet_size * b__price[0]['price']
@@ -106,6 +109,7 @@ class CalculatePriceViewSet(viewsets.ViewSet):
    
             return Response({'status':'status.HTTP_200_OK',"picture_length": picture_length,
              "picture_width":picture_width,"frame_length":frame_length,"frame_width":frame_width,
+             "frame_feet_length":frame_feet_length,"frame_feet_width":frame_feet_width,
              "frame_feet_size":frame_feet_size, "base_price":(b__price[0]['price'],base_price),
              "front_price":(f_price[0]['price'],front_price),"back_price":(bck_price[0]['price'],back_price),
              "stand_offs_quantity":stand_offs_quantity,"stand_offs_price":(s_price[0]['price'],stand_offs_price),

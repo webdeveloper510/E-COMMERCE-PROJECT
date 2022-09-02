@@ -51,6 +51,7 @@ class Variant_typeSerializer(serializers.ModelSerializer):
         return {
             "variant_id": obj.variant.id,
             "variant_name": obj.variant.variant_name,
+            "element_id":obj.variant.element.id,
             "variant_type_id": obj.id,
             "variant_type_name":obj.variant_type_name,
             "field_type":obj.variant.field_type
