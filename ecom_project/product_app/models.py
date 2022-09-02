@@ -1,10 +1,5 @@
 from django.db import models
 from account_app.models import *
-import datetime
-from ecom_project import settings
-from django.db.models import F, Sum
-from rest_framework.response import Response
-from django import forms
 
 class Category(models.Model):
       name = models.CharField(max_length=250)
