@@ -1,4 +1,3 @@
-from unicodedata import category
 from .serializers import *
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -41,7 +40,7 @@ class Send_listViewSet(viewsets.ViewSet):
             field_Type = x['field_type']
             element_id = x['element__id']
             dropdown_options = Variant_type.objects.filter(variant=variant_id).values('id','variant_type_name')
-            queryset = {'Field Type':field_Type,'Title':variant_name,'variant_id':variant_id,'element_id':element_id,'options':dropdown_options}
+            queryset = {'Field_type':field_Type,'Title':variant_name,'variant_id':variant_id,'element_id':element_id,'options':dropdown_options}
             array.append(queryset)
         return Response({'list':array})
 
@@ -54,7 +53,7 @@ class CalculatePriceViewSet(viewsets.ViewSet):
             attributes = request.data.get('attributes')
             category_id = request.data.get('category_id')
             product_id = request.data.get('product_id')
-            frame_feet_size, frame_length, frame_width, picture_length, picture_width = 0, 0,0,0,0
+            frame_feet_size, frame_length, frame_width, picture_length, picture_width = 0,0,0,0,0
             base_price, back_price, front_price, stand_offs_quantity, stand_offs_price, total = 0,0,0,0,0,0
             for x in attributes:
                 id = x['variant_type_id']
@@ -74,7 +73,7 @@ class CalculatePriceViewSet(viewsets.ViewSet):
                     frame_feet_length = picture_length + (2 * frame_length)
                     frame_feet_length = frame_feet_length / 12
                     frame_feet_width =  picture_width + (2 * frame_width)
-                    # frame_feet_width = frame_feet_width / 12
+                    frame_feet_width = frame_feet_width / 12
                     frame_feet_size = frame_feet_length * frame_feet_width
                   
                 if id == name[0]['id'] and name[0]['variant__element__element']  == 'Base color':
