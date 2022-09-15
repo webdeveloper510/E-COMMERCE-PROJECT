@@ -15,14 +15,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model=User
 
-        fields=['id','email','password','password2','First_name','Last_name','address','contact_number','alternative_contact_number']
+        fields=['id','email','password','password2','First_name','Last_name']
 
         extra_kwargs={
         
             'First_name': {'error_messages': {'required': "Firstname is required",'blank':'please provide a firstname'}},
             'Last_name': {'error_messages': {'required': "Lastname is required",'blank':'please provide a lastname'}},
-            'address': {'error_messages': {'required': "Address is required",'blank':'please provide your complete address'}},
-            'contact_number': {'error_messages': {'required': "Your contact number is required",'blank':'please provide your contact number'}},
             'email': {'error_messages': {'required': "email is required",'blank':'please provide a email'}},
             'password': {'error_messages': {'required': "password is required",'blank':'please Enter a email'}},
             'password2': {'error_messages': {'required': "confirm password is required",'blank':'Confirm password could not blank'}},
@@ -88,10 +86,6 @@ class SendChangePasswordEmailSerializer(serializers.Serializer):
       raise serializers.ValidationError('You are not a Registered User')
 
 
-
-
-
-
 class SendPasswordResetEmailSerializer(serializers.Serializer):
   email = serializers.EmailField(max_length=255)
   class Meta:
@@ -102,17 +96,18 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
     if User.objects.filter(email=email).exists():
       user = User.objects.get(email = email)
       uid = urlsafe_base64_encode(force_bytes(user.id))#Encoding is the process of converting data into a format required for a number of information processing needs
+      print(user.id)
       print('Encoded UID', uid)
       token = PasswordResetTokenGenerator().make_token(user)
       print('Password Reset Token', token)
-      link = 'http://localhost:3000/api/user/reset/'+uid+'/'+token #password reset link
+      link = 'http://localhost:3000/reset/'+uid+'/'+token #password reset link
       print('Password Reset Link', link)
       # Send EMail
       body = 'Click Following Link to Reset Your Password '+link
       data = {
         'subject':'Reset Your Password',
         'body':body,
-        'to_email':user.email
+        'to_email':user.email 
       }
       Util.send_email(data)
       return attrs
@@ -149,7 +144,7 @@ class UpdateUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     class Meta:
         model = User
-        fields = ('First_name', 'Last_name', 'email','address','contact_number','alternative_contact_number')
+        fields = ('First_name', 'Last_name', 'email')
         extra_kwargs = {
             'First_name': {'required': True},
             'Last_name': {'required': True},

@@ -1,5 +1,4 @@
-
-<html>
+<!-- <html>
 
 <head>
 <title>Buy now</title>
@@ -17,18 +16,31 @@
 {% for price in prices %}
 
 <div>
-<h5>${{ price.price }}</h5>
+<h5>INR {{ price.price }}</h5>
 <form action="{% url 'create-checkout-session' price.id %}" method="POST">
 {% csrf_token %}
 <button type="submit">Checkout</button>
 </form>
 </div>
+
 {% endfor %}
-
-
 </div>
 </div>
 </section>
 </body>
 
-</html>
+</html> -->
+
+
+<!-- templates/home.html -->
+<h2>Pay Rs. 566.00</h2>
+<form action="{% url 'charge' %}" method="post">  
+     {% csrf_token %}  
+     <script src="https://checkout.stripe.com/checkout.js"
+          class="stripe-button"          
+          data-key="{{ key }}"          
+          data-description="Payment gateway"          
+          data-amount="770.0"          
+          data-locale="auto">
+     </script>
+</form>

@@ -51,7 +51,7 @@ class UserLoginView(APIView):
 class UserProfileView(APIView):
      renderer_classes=[UserRenderer]
      permission_classes=[IsAuthenticated]
-     def get(self,request,format=None):
+     def post(self,request,format=None):
        serializer=UseProfileSerializer(request.user)
        return Response(serializer.data,status=status.HTTP_201_CREATED)
 
@@ -65,7 +65,7 @@ class UserChangePasswordView(generics.UpdateAPIView):
         obj = self.request.user
         return obj
 
-    def update(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         serializer = self.get_serializer(data=request.data)
 
@@ -78,8 +78,7 @@ class UserChangePasswordView(generics.UpdateAPIView):
                 'status': 'success',
                 'code': status.HTTP_200_OK,
                 'message': 'Password updated successfully',
-                'data': []
-            }
+                }
 
             return Response(response)
 
@@ -100,7 +99,7 @@ class SendPasswordResetEmailView(APIView):
     def post(self, request, format=None):
      serializer = SendPasswordResetEmailSerializer(data=request.data)
      if serializer.is_valid(raise_exception=True):
-      return Response({'msg':'Password Reset link send. Please check your Email','status':'status.HTTP_200_OK'})
+       return Response({'msg':'Password Reset link send. Please check your Email','status':'status.HTTP_200_OK'})
      return Response({errors:serializer.errors},status=status.HTTP_400_BAD_REQUEST)
 
 class UserPasswordResetView(APIView):
@@ -120,7 +119,7 @@ class UpdateProfileView(generics.UpdateAPIView):
        data = User.objects.all()
        return data
 
-    def update(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
        partial = kwargs.pop('partial', False)
        instance = self.get_object()
        serializer = self.get_serializer(instance, data=request.data, partial=partial)

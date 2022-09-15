@@ -27,3 +27,11 @@ class Variant_typeModelAdmin(admin.ModelAdmin):
 class ProductAttributeModelAdmin(admin.ModelAdmin):
   list_display = ('id','category','product','variant_type_name','unit','price')
 
+@admin.register(Order)
+class OrderModelAdmin(admin.ModelAdmin):
+  list_display = ('id','item','quantity','user_id','name','email','contact','street_address','apartment',
+  'zip_code','state','city','total')
+
+@admin.register(Shipping)
+class ShippingModelAdmin(admin.ModelAdmin):
+  list_display = ('id','percentage')

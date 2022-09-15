@@ -14,7 +14,6 @@ class ProductSerializer(serializers.ModelSerializer):
         model= Product
         fields = '__all__'
         
-
     def create(self, validate_data):
      return Product.objects.create(**validate_data)
 
@@ -75,6 +74,15 @@ class ProductAttributeSerializer(serializers.ModelSerializer):
             "unit":obj.unit,
              }   
 
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Order
+        fields="__all__"
+
+class ShippingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Shipping
+        fields="__all__"
 
 
 

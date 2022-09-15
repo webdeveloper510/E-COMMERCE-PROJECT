@@ -3,7 +3,7 @@ from django.contrib.auth.models import *
 
 #custom User Manager
 class UserManager(BaseUserManager):
-    def create_user(self, email, First_name, Last_name, address, contact_number, alternative_contact_number, password=None, password2=None):
+    def create_user(self, email, First_name, Last_name, password=None, password2=None):
         """
         Creates and saves a User with the given email, First_name, Last_name, and password.
         """
@@ -14,10 +14,7 @@ class UserManager(BaseUserManager):
             email=self.normalize_email(email),
             First_name=First_name,
             Last_name=Last_name,
-            address = address,
-            contact_number =contact_number,
-            alternative_contact_number =alternative_contact_number
-               )
+                         )
 
         user.set_password(password)
         user.save(using=self._db)
@@ -32,10 +29,7 @@ class UserManager(BaseUserManager):
             password=password,
             First_name=First_name,
             Last_name=Last_name,
-            address="",
-            contact_number="",
-            alternative_contact_number=""
-        )
+           )
         user.is_admin = True
     
         
@@ -54,11 +48,6 @@ class User(AbstractBaseUser):
     )
     First_name = models.CharField(max_length=80)
     Last_name = models.CharField(max_length=80)
-    address = models.TextField(max_length=250)
-
-    contact_number = models.CharField(max_length=15)
-    alternative_contact_number = models.CharField(max_length=15)
-
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework_simplejwt',
     'rest_framework',
     'corsheaders',
     'account_app',
@@ -51,9 +52,16 @@ INSTALLED_APPS = [
 ]
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication'],
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+
+],
     'DEFAULT_PERMISSION_CLASSES': [
-       'rest_framework.permissions.IsAuthenticated']
+       'rest_framework.permissions.IsAuthenticated',
+       'rest_framework.permissions.IsAdminUser',
+
+       ]
 }
 
 REST_FRAMEWORK = {
@@ -160,9 +168,9 @@ AUTH_USER_MODEL = 'account_app.User'
 #Email Configration
 EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
+EMAIL_PORT = 587 #465#
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
+EMAIL_HOST_PASSWORD =   os.environ.get('EMAIL_PASS')
 EMAIL_USE_TLS = True
 PASSWORD_RESET_TIMEOUT= 900  #900 sec=15 minutes
 
@@ -189,15 +197,17 @@ SIMPLE_JWT = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    "http://127.0.0.1:8000",
     "http://127.0.0.1:3000",
+    
 ]
 
 #payment_app
 #API keys
-API_PUBLISH_KEY='pk_test_51LPgvJSCZHeL5pu7gAZj0T4rKVgF7sz5bMw33dwmb6Op8roRAQrndgwigkWg18KcyCZxzdvEcZ7HMQdqR7djgqB800VE0ceDOE'
-API_SECRET_KEY='sk_test_51LPgvJSCZHeL5pu7SqTRBpyfjYVYhGdBlo5SUHN5SvepjI1src0BRZbw01Ts5wivliYs8ID6MtTLVviRDhxmCb1I00x3mr3DGr'
+API_PUBLISH_KEY='pk_test_51LP6MMSCnvWG1d6Fq3POi6yEd3yO304Dvw5TfHOewgPGd9bNOKXqS7UV6f7xHQbEPnjWopouupJvevCXwXi43qpS00ndH68wiW'
+API_SECRET_KEY='sk_test_51LP6MMSCnvWG1d6FzwQaRLvblc5nkOlbAS7DkLHmZ7QKJbUbJ49gZdf2VeubLjywf7j40ZpvSqcYuCZlsrKz4mNN00NQtleV3S'
+STRIPE_WEBHOOK_SECRET='whsec_ea311fb6d6f257370ca7f1ef22b814e81aadc4a69bf35bed15ed06c156151665'
 BASE_URL='http://127.0.0.1:8000'
-
 
 #paypal
 PAYPAL_TEST = True

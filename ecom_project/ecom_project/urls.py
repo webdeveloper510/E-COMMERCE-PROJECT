@@ -16,6 +16,9 @@ router.register('variant-type', views.Variant_typeViewSet,basename='variant_type
 router.register('product-attribute', views.ProductAttributeViewSet,basename='ProductAttribute')
 router.register('calculateprice', views.CalculatePriceViewSet, basename='calculatePrice')
 router.register('list', views.Send_listViewSet, basename = 'Send_listViewSet')
+router.register('product_list', views.product_listViewSet, basename = 'product_listViewSet')
+router.register('order', views.OrderViewSet, basename = 'list_OrderViewSet')
+router.register('shipping', views.ShippingViewSet, basename = 'ShippingViewSet')
 
 
 urlpatterns = [

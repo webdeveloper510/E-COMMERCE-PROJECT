@@ -1,8 +1,13 @@
+from functools import total_ordering
+from re import A
 from .serializers import *
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.authentication import BasicAuthentication
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().order_by('id')
@@ -27,9 +32,29 @@ class Variant_typeViewSet(viewsets.ModelViewSet):
 class ProductAttributeViewSet(viewsets.ModelViewSet):
     queryset = ProductAttribute.objects.all().order_by('id')
     serializer_class = ProductAttributeSerializer
-          
+
+class product_listViewSet(viewsets.ViewSet):
+    # permission_classes = [IsAuthenticated]
+    @csrf_exempt 
+    @action(detail=False, methods=['post','get'])
+    def post(self, request, *args, **kwargs):
+      if request.method == 'POST':
+        queryset = Product.objects.all().values('id','name','description','category__id','category__name') 
+        array = []
+        for x in queryset:
+            category_id = x['category__id']
+            category_name= x['category__name']
+            product_id = x['id']
+            product_name = x['name']
+            queryset = {'category_id':x['category__id'],'category_name':x['category__name'],'product_id':x['id'],'product_name':x['name']}
+            array.append(queryset)
+      return Response(array)
+
 class Send_listViewSet(viewsets.ViewSet):
-    def list(self, request, *args, **kwargs):
+    @csrf_exempt 
+    @action(detail=False, methods=['post','get'])
+    def post(self, request, *args, **kwargs):
+      if request.method == 'POST':
         queryset = Variant.objects.all().values('variant_name','field_type')
         types = Variant_type.objects.all().values('variant_type_name')
         dropdown = Variant.objects.all().values('id','variant_name','field_type','element__id') 
@@ -42,75 +67,129 @@ class Send_listViewSet(viewsets.ViewSet):
             dropdown_options = Variant_type.objects.filter(variant=variant_id).values('id','variant_type_name')
             queryset = {'Field_type':field_Type,'Title':variant_name,'variant_id':variant_id,'element_id':element_id,'options':dropdown_options}
             array.append(queryset)
-        return Response({'list':array})
+      return Response(array)
 
-
+total = 0
 class CalculatePriceViewSet(viewsets.ViewSet):
     @csrf_exempt 
     @action(detail=False, methods=['post','get'])
-    def price(self, request, *args, **kwargs):
+    def price(self, request, format=None):
+        global total
         if request.method == 'POST':
             attributes = request.data.get('attributes')
             category_id = request.data.get('category_id')
             product_id = request.data.get('product_id')
-            frame_feet_size, frame_length, frame_width, picture_length, picture_width = 0,0,0,0,0
-            base_price, back_price, front_price, stand_offs_quantity, stand_offs_price, total = 0,0,0,0,0,0
+            quantity = request.data.get('quantity')
             for x in attributes:
                 id = x['variant_type_id']
                 value = x['value']
-                name = Variant_type.objects.filter(id=id).values('variant_type_name', 'variant_id','id','variant','variant__variant_name','variant__element','variant__element__element')
-                if id == name[0]['id'] and name[0]['variant__element__element']  == 'Picture length':
-                    picture_length = value
 
-                if id == name[0]['id'] and name[0]['variant__element__element']  == 'Picture width':
+                name = Variant_type.objects.filter(id=id).values('variant_type_name', 'variant_id','id','variant','variant__variant_name','variant__element','variant__element__element')
+                
+                if id == name[0]['id'] and name[0]['variant__element__element']  == 'Frame length':
+                    frame_length = value
+
+                elif id == name[0]['id'] and name[0]['variant__element__element']  == 'Frame width':
+                    frame_width = value
+
+                elif id == name[0]['id'] and name[0]['variant__element__element'] == 'Picture length':
+                    picture_length = value
+                           
+                elif id == name[0]['id'] and name[0]['variant__element__element']  == 'Picture width':
                     picture_width = value
 
-                if id == name[0]['id'] and name[0]['variant__element__element'] == 'Frame length':
-                    frame_length = value
-                           
-                if id == name[0]['id'] and name[0]['variant__element__element']  == 'Frame width':
-                    frame_width = value
                     frame_feet_length = picture_length + (2 * frame_length)
                     frame_feet_length = frame_feet_length / 12
+
                     frame_feet_width =  picture_width + (2 * frame_width)
                     frame_feet_width = frame_feet_width / 12
                     frame_feet_size = frame_feet_length * frame_feet_width
-                  
-                if id == name[0]['id'] and name[0]['variant__element__element']  == 'Base color':
-                    b__price = ProductAttribute.objects.filter(variant_type_name_id=name[0]['id']).values('price')
+
+                elif id == name[0]['id'] and name[0]['variant__element__element']  == 'Base color':
+                    b__price = ProductAttribute.objects.filter(variant_type_name_id=name[0]['id'],category_id=category_id,product_id=product_id).values('price')
                     base_price = frame_feet_size * b__price[0]['price']
 
-                if id == name[0]['id'] and name[0]['variant__element__element']  == 'Front color':
-                    f_price = ProductAttribute.objects.filter(variant_type_name_id=name[0]['id']).values('price')
+                elif id == name[0]['id'] and name[0]['variant__element__element']  == 'Front color':
+                    f_price = ProductAttribute.objects.filter(variant_type_name_id=name[0]['id'],category_id=category_id,product_id=product_id).values('price')
                     front_price = frame_feet_size * f_price[0]['price']
                 
-                if id == name[0]['id'] and name[0]['variant__element__element']  == 'Back color':
-                    bck_price = ProductAttribute.objects.filter(variant_type_name_id=name[0]['id']).values('price')
+                elif id == name[0]['id'] and name[0]['variant__element__element']  == 'Back color':
+                    bck_price = ProductAttribute.objects.filter(variant_type_name_id=name[0]['id'],category_id=category_id,product_id=product_id).values('price')
                     back_price = frame_feet_size * bck_price[0]['price']
-
-                if picture_width >=0 and picture_width <=24: 
-                    stand_offs_quantity = 2 + 2
                 
-                if picture_width >=25 and picture_width <=36: 
-                    stand_offs_quantity = 3 + 3
-                
-                if picture_width >=37 and picture_width <=48: 
-                    stand_offs_quantity = 4 + 4
-                
-                if picture_width >=49 and picture_width <=60: 
-                    stand_offs_quantity = 5 + 5 
+                    if picture_width >=0 and picture_width <=24: 
+                        stand_offs_quantity = 2 + 2
                     
-                if id == name[0]['id'] and name[0]['variant__element__element']  == 'Stand off':
-                    s_price = ProductAttribute.objects.filter(variant_type_name_id=name[0]['id']).values('price')
+                    if picture_width >=25 and picture_width <=36: 
+                        stand_offs_quantity = 3 + 3
+                    
+                    if picture_width >=37 and picture_width <=48: 
+                        stand_offs_quantity = 4 + 4
+                    
+                    if picture_width >=49 and picture_width <=60: 
+                        stand_offs_quantity = 5 + 5 
+                
+                elif id == name[0]['id'] and name[0]['variant__element__element']  == 'Stand off':
+                    s_price = ProductAttribute.objects.filter(variant_type_name_id=name[0]['id'],category_id=category_id,product_id=product_id).values('price')
                     stand_offs_price = stand_offs_quantity * s_price[0]['price']
-                    
             total = base_price + front_price + back_price + stand_offs_price
-   
-            return Response({'status':'status.HTTP_200_OK',"picture_length": picture_length,
-             "picture_width":picture_width,"frame_length":frame_length,"frame_width":frame_width,
-             "frame_feet_length":frame_feet_length,"frame_feet_width":frame_feet_width,
-             "frame_feet_size":frame_feet_size, "base_price":(b__price[0]['price'],base_price),
-             "front_price":(f_price[0]['price'],front_price),"back_price":(bck_price[0]['price'],back_price),
-             "stand_offs_quantity":stand_offs_quantity,"stand_offs_price":(s_price[0]['price'],stand_offs_price),
-             "total":total,
+            return Response({"frame_length":frame_length,"frame_width":frame_width,
+            "picture_length":picture_length,"picture_width":picture_width,"frame_feet_length":frame_feet_length,
+            "frame_feet_width":frame_feet_width,"frame_feet_size":frame_feet_size,
+            "base_price":(b__price[0]['price'],base_price),"front_price":(f_price[0]['price'],front_price),
+            "back_price":(bck_price[0]['price'],back_price),"stand_offs_quantity":stand_offs_quantity,
+            "stand_offs_price":(s_price[0]['price'],stand_offs_price),"Total":total
             })
+        return total
+
+    # def list(self, request, format=None):
+    #     return Response()
+
+class OrderViewSet(viewsets.ViewSet):
+    @csrf_exempt 
+    @action(detail=False, methods=['post','get'])
+    def post(self, request, format=None):
+        if request.method == 'POST':
+            user_id = request.data.get('user_id')
+            item = request.data.get('item')
+            email = request.data.get('email')
+            contact = request.data.get('contact')
+            quantity = request.data.get('quantity')
+            name = request.data.get('name')
+            street_address = request.data.get('street_address')
+            apartment = request.data.get('apartment')
+            city = request.data.get('city')
+            state = request.data.get('state')
+            zip_code = request.data.get('zip_code')
+            total = request.data.get('total')
+            order_data = Order.objects.create(item = item, user_id = user_id, email = email, 
+                                            contact=contact, quantity = quantity,name=name,
+                                            street_address = street_address, apartment=apartment,
+                                            city =city, state=state, zip_code=zip_code,total=total)
+            serializer = OrderSerializer(data=order_data)
+            order_data.save()   
+            return JsonResponse({"item":item, "user_id":user_id, "email":email, "contact":contact,
+                                 "quantity":quantity, "name":name, "street_address":street_address,
+                                 "apartment":apartment, "city":city, "state":state,"zip_code":zip_code})
+
+ 
+class ShippingViewSet(viewsets.ViewSet):
+    @csrf_exempt 
+    @action(detail=False, methods=['post'])
+    def ship(self, request, *args, **kwargs):
+        percentage = Shipping.objects.all().values('percentage')
+        shipping_price = total + percentage[0]['percentage']
+        return Response(shipping_price)
+
+   
+
+
+
+    # def list(self, request, format=None):
+    #     if request.method == 'POST':
+    #        a = list_OrderViewSet.post(self, request, format=None)
+    #        return JsonResponse({a})
+
+# class OrderViewSet(viewsets.ModelViewSet):
+#     queryset = Order.objects.all().order_by('id')
+#     serializer_class = OrderSerializer
