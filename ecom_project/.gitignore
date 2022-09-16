@@ -2,7 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+account_app/migrations/
+payment_app/migrations/
+product_app/migrations/
 # C extensions
 *.so
 
