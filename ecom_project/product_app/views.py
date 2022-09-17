@@ -133,6 +133,7 @@ class CalculatePriceViewSet(viewsets.ViewSet):
                     s_price = ProductAttribute.objects.filter(variant_type_name_id=name[0]['id'],category_id=category_id,product_id=product_id).values('price')
                     stand_offs_price = stand_offs_quantity * s_price[0]['price']
             total = base_price + front_price + back_price + stand_offs_price
+
             return Response({"frame_length":frame_length,"frame_width":frame_width,
             "picture_length":picture_length,"picture_width":picture_width,"frame_feet_length":frame_feet_length,
             "frame_feet_width":frame_feet_width,"frame_feet_size":frame_feet_size,
@@ -141,7 +142,7 @@ class CalculatePriceViewSet(viewsets.ViewSet):
             "stand_offs_price":(s_price[0]['price'],stand_offs_price),"Total":total
             })
         return total
-
+print("check --------------------------", total)
     # def list(self, request, format=None):
     #     return Response()
 
@@ -176,9 +177,11 @@ class OrderViewSet(viewsets.ViewSet):
 class ShippingViewSet(viewsets.ViewSet):
     @csrf_exempt 
     @action(detail=False, methods=['post'])
-    def ship(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
+        global total
+        print("total ---- ", total)
         percentage = Shipping.objects.all().values('percentage')
-        shipping_price = total + percentage[0]['percentage']
+        shipping_price =  total + percentage[0]['percentage']
         return Response(shipping_price)
 
    
