@@ -5,6 +5,7 @@ __pycache__/
 account_app/migrations/
 payment_app/migrations/
 product_app/migrations/
+ecom_project/settings.py
 # C extensions
 *.so
 

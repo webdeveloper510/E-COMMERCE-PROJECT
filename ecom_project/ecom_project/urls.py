@@ -19,6 +19,7 @@ router.register('list', views.Send_listViewSet, basename = 'Send_listViewSet')
 router.register('product_list', views.product_listViewSet, basename = 'product_listViewSet')
 router.register('order', views.OrderViewSet, basename = 'list_OrderViewSet')
 router.register('shipping', views.ShippingViewSet, basename = 'ShippingViewSet')
+router.register('dashboard', views.DashboardViewSet, basename = 'DashboardViewSet')
 
 
 urlpatterns = [
@@ -29,4 +30,6 @@ urlpatterns = [
     path('paypal/', include('paypal.standard.ipn.urls')),
     path('', include(router.urls)),
     path('auth/', include('rest_framework.urls')),
+    path('webhook/', webhook),
+
 ]

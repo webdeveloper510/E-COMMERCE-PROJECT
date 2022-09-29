@@ -1,5 +1,3 @@
-from functools import total_ordering
-from re import A
 from .serializers import *
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -142,7 +140,6 @@ class CalculatePriceViewSet(viewsets.ViewSet):
             "stand_offs_price":(s_price[0]['price'],stand_offs_price),"Total":total
             })
         return total
-print("check --------------------------", total)
     # def list(self, request, format=None):
     #     return Response()
 
@@ -152,10 +149,10 @@ class OrderViewSet(viewsets.ViewSet):
     def post(self, request, format=None):
         if request.method == 'POST':
             user_id = request.data.get('user_id')
-            item = request.data.get('item')
+            item = request.data.get('items')
+            status = request.data.get('status')
             email = request.data.get('email')
             contact = request.data.get('contact')
-            quantity = request.data.get('quantity')
             name = request.data.get('name')
             street_address = request.data.get('street_address')
             apartment = request.data.get('apartment')
@@ -163,36 +160,70 @@ class OrderViewSet(viewsets.ViewSet):
             state = request.data.get('state')
             zip_code = request.data.get('zip_code')
             total = request.data.get('total')
-            order_data = Order.objects.create(item = item, user_id = user_id, email = email, 
-                                            contact=contact, quantity = quantity,name=name,
-                                            street_address = street_address, apartment=apartment,
-                                            city =city, state=state, zip_code=zip_code,total=total)
+            for i in item:
+                price = i['price']
+                quantity = i['quantity']
+                value = i['value']
+                print("value", value)
+                order_data = Order.objects.create(item = i['value'], status = status, user_id = user_id,
+                                                 email = email, contact=contact, quantity = quantity, 
+                                                 name=name, street_address = street_address, 
+                                                 apartment=apartment, city =city, state=state, 
+                                                 zip_code=zip_code,total=total)
             serializer = OrderSerializer(data=order_data)
-            order_data.save()   
-            return JsonResponse({"item":item, "user_id":user_id, "email":email, "contact":contact,
-                                 "quantity":quantity, "name":name, "street_address":street_address,
+            order_data.save()  
+            return JsonResponse({"item":item, "status":status, "user_id":user_id, "email":email, "contact":contact,
+                                 "quantity":1, "name":name, "street_address":street_address,
                                  "apartment":apartment, "city":city, "state":state,"zip_code":zip_code})
 
- 
 class ShippingViewSet(viewsets.ViewSet):
     @csrf_exempt 
     @action(detail=False, methods=['post'])
-    def post(self, request, *args, **kwargs):
-        global total
-        print("total ---- ", total)
-        percentage = Shipping.objects.all().values('percentage')
-        shipping_price =  total + percentage[0]['percentage']
-        return Response(shipping_price)
+    def ship(self, request, *args, **kwargs):
+        global total_price
+        if request.method == 'POST':
+            percentage = Shipping.objects.all().values('percentage')
+            total_price =  total + percentage[0]['percentage']
+            total_price
+            data = Shipping.objects.create(total_price = total_price)
+            serializer = ShippingSerializer(data= data)
+            data.save()
+            return Response(total_price)
+        return total_price
 
-   
 
+class DashboardViewSet(viewsets.ViewSet):
+    @csrf_exempt 
+    @action(detail=False, methods=['post'])
+    def users(self, request, *args, **kwargs):
+            users = User.objects.all().filter(is_admin=0).count()
+            print(users)
+            return Response(users)
+    
+    @csrf_exempt 
+    @action(detail=False, methods=['post'])
+    def email(self, request, *args, **kwargs):
+            email = User.objects.all().filter(is_admin=0).values('email')
+            print(email)
+            return Response(email)
 
+    @csrf_exempt 
+    @action(detail=False, methods=['post'])
+    def pending(self, request, *args, **kwargs):
+            pending_order = Order.objects.all().filter(status = 'pending').values('item').count()
+            print(pending_order)
+            return Response(pending_order)
 
-    # def list(self, request, format=None):
-    #     if request.method == 'POST':
-    #        a = list_OrderViewSet.post(self, request, format=None)
-    #        return JsonResponse({a})
+    @csrf_exempt
+    @action(detail=False, methods=['post'])
+    def order(self, request, *args, **kwargs):
+        order = Order.objects.all().values('item')
+        print('order items', order)
+        return Response(order)
 
-# class OrderViewSet(viewsets.ModelViewSet):
-#     queryset = Order.objects.all().order_by('id')
-#     serializer_class = OrderSerializer
+    @csrf_exempt
+    @action(detail=False, methods=['post'])
+    def order(self, request, *args, **kwargs):
+        order = Order.objects.all().values('item')
+        print('order items', order)
+        return Response(order)

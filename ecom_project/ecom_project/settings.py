@@ -95,6 +95,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
             ],
         },
     },
@@ -204,8 +205,8 @@ CORS_ALLOWED_ORIGINS = [
 
 #payment_app
 #API keys
-API_PUBLISH_KEY='pk_test_51LP6MMSCnvWG1d6Fq3POi6yEd3yO304Dvw5TfHOewgPGd9bNOKXqS7UV6f7xHQbEPnjWopouupJvevCXwXi43qpS00ndH68wiW'
-API_SECRET_KEY='sk_test_51LP6MMSCnvWG1d6FzwQaRLvblc5nkOlbAS7DkLHmZ7QKJbUbJ49gZdf2VeubLjywf7j40ZpvSqcYuCZlsrKz4mNN00NQtleV3S'
+API_PUBLISH_KEY='pk_test_51LixZiJTvBqbiOKnPcS69thhnqhwWqXz4RZteSKyoBjG1CytGinFMveOjGlNUqE7F9AZYpJRasUy1uwhxSrpZvoO008CcnCRNR'
+API_SECRET_KEY='sk_test_51LixZiJTvBqbiOKnTOF6W6uR1T0f8DMSg6vcAIgyUbTsglCBVOtFy3EK0RlNOVet8OIaXczjMx24otCXwbBd2Msm00PQNhYgJr'
 STRIPE_WEBHOOK_SECRET='whsec_ea311fb6d6f257370ca7f1ef22b814e81aadc4a69bf35bed15ed06c156151665'
 BASE_URL='http://127.0.0.1:8000'
 
@@ -220,11 +221,9 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = BASE_DIR /"static/media"
 MEDIA_URL = "/media/"
 
-STATIC_ROOT = "app-root/repo/wsgi/static"
-
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    ('assets', 'app-root/repo/wsgi/openshift/static'),
+STATICFILES_DIRS = [
+     BASE_DIR,"static"
+]
 
-    )

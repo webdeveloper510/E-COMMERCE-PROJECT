@@ -33,14 +33,14 @@
 
 
 <!-- templates/home.html -->
-<h2>Pay Rs. 566.00</h2>
+
 <form action="{% url 'charge' %}" method="post">  
      {% csrf_token %}  
      <script src="https://checkout.stripe.com/checkout.js"
           class="stripe-button"          
           data-key="{{ key }}"          
           data-description="Payment gateway"          
-          data-amount="770.0"          
+          data-amount= {{ total_price }}
           data-locale="auto">
      </script>
 </form>

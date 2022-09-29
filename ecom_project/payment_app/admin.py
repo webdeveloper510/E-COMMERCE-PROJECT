@@ -3,3 +3,4 @@ from .models import *
 
 admin.site.register(stripe_Product)
 admin.site.register(Price)
+admin.site.register(stripe_charge)
