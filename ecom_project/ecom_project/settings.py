@@ -213,6 +213,8 @@ BASE_URL='http://127.0.0.1:8000'
 #paypal
 PAYPAL_TEST = True
 PAYPAL_RECEIVER_EMAIL = 'sb-11jeo18056449@business.example.com'
+CLIENT_ID= "AZbSbes1HlwmiI-7wGONJKIA8XTptRIxkKrZ1HSha7mVStBhTr98OVifJxEe2dYjOtxNo3laHlMFzeg1"
+CLIENT_SECRET = "EPaeMSiQtZ22OWOd4y8cDDOSh3dSgKlvE7kWXdcowdO0IbFf4_1_iHlrNOQnSje8vL6Kf1lhxWmOc4f6"
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
@@ -227,3 +229,4 @@ STATICFILES_DIRS = [
      BASE_DIR,"static"
 ]
 
+SITE_URL = 'http://localhost:3000'

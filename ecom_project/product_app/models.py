@@ -71,14 +71,16 @@ class Order(models.Model):
         
 class Shipping(models.Model):
     percentage = models.FloatField(default=0)
-    total_price = models.CharField(max_length=60)
-      
+     
     def __str__(self):
-        return "{} - {} -".format(self.percentage, self.total_price)
+        return "{} - {} -".format(self.percentage)
 
 class Order_item(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    item = models.CharField(max_length=250)
+    user = models.CharField(max_length=200)
+    product_name = models.CharField(max_length= 90)
+    item = models.TextField(max_length=900)
+    status = models.CharField(max_length=90)
+
       
     def __str__(self):
-        return "{} - {} -".format(self.user, self.item)
+        return "{} - {} -".format(self.user, self.item, self.product_name, self.status)

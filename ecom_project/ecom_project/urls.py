@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import path,include
-from payment_app.views import *
 from product_app import views, serializers
 from rest_framework.routers import DefaultRouter
 from product_app.views import *
@@ -30,6 +29,6 @@ urlpatterns = [
     path('paypal/', include('paypal.standard.ipn.urls')),
     path('', include(router.urls)),
     path('auth/', include('rest_framework.urls')),
-    path('webhook/', webhook),
+    # path('webhook/', webhook),
 
 ]

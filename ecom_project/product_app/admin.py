@@ -34,8 +34,8 @@ class OrderModelAdmin(admin.ModelAdmin):
 
 @admin.register(Shipping)
 class ShippingModelAdmin(admin.ModelAdmin):
-  list_display = ('id','percentage','total_price')
+  list_display = ('id','percentage')
 
 @admin.register(Order_item)
 class Order_itemModelAdmin(admin.ModelAdmin):
-  list_display = ('id','user','item')
+  list_display = ('id','user','item','product_name','status')

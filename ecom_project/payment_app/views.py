@@ -1,233 +1,206 @@
+from http.client import HTTPResponse
+from xmlrpc.client import ResponseError
 import stripe
 from django.conf import settings
 from django.shortcuts import redirect
 from django.views import View
-from product_app.models import Order, Shipping
 from django.views.generic import TemplateView
 import uuid
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
-from .models import *
 from paypal.standard.forms import PayPalPaymentsForm
 from django.conf import settings
-from product_app.views import ShippingViewSet
-
+from product_app.views import *
+from base64 import b64encode
+import base64
+import requests
+from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+import requests
+import json
+from django.views.decorators.csrf import csrf_exempt
 
 #stripe
 stripe.api_key = settings.API_SECRET_KEY
 
-price = 0
-class HomePageView(TemplateView):    
-    template_name = 'home.html'
-    def get_context_data(self, *args, **kwargs): 
-            global price, total_price
-            price = ShippingViewSet().ship(self.request)
-            total_price = str(int(round(price, 2) * 100))
-            context =super().get_context_data(**kwargs)        
-            context['key'] = settings.API_PUBLISH_KEY   
-            context['total_price'] = total_price
-            return context
+# create a stripe customer
+@csrf_exempt
+@api_view(['POST'])
+def home(request):
+    global customer_id
+    try:
+        # description = request.data.get('description')
+        # name = request.data.get('name')
+        email = request.data.get('email')
 
-def charge(request):
-      if request.method == 'POST':
-        order_data = Order.objects.all()
-        for x in order_data:
-            order_id = x.id
-            # print(order_id)
-        charge = stripe.Charge.create(
-            currency= 'usd',
-            amount = total_price,
-            description= 'Payment gateway',
-            source= request.POST['stripeToken'],
-            metadata= {'order_id': order_id},
-
+        data = stripe.Customer.create(
+            # description= description,
+            # name= name,
+            email= email,
         )
-        # print(charge)
-        s_amount = charge['amount'] 
-        order = charge['order']
-        customer_id = charge['id']
-        name = charge['billing_details']['name']
-        phone = charge['billing_details']['phone']
-        country = charge['billing_details']['address']['country']
-        city = charge['billing_details']['address']['city']
-        postal_code = charge['billing_details']['address']['postal_code']
-        state = charge['billing_details']['address']['state']
-        payment_method = charge['payment_method']
-        status = charge['status']
-        charge_data = stripe_charge.objects.create(amount = s_amount,order= order,customer_id=customer_id,name=name,
-                       phone=phone,country=country,city=city,postal_code=postal_code,
-                       state=state,payment_method=payment_method,status=status)
-        charge_data.save()
-        return render(request, 'charge.html')
+    except Exception as error:
+        print("error is",error)
+
+    customer_id = data['id']
+    return Response(data)
+
+#create card token  
+@csrf_exempt
+@api_view(['POST'])
+def card_token(request):
+        global card_id, card_token
+        number = request.data.get('number')
+        exp_month = request.data.get('exp_month')
+        exp_year = request.data.get('exp_year')
+        cvc = request.data.get('cvc')
+
+        print(number,exp_month, exp_year, cvc )
+        data = stripe.Token.create(
+        card={
+            "number": number,
+            "exp_month": exp_month,
+            "exp_year": exp_year,
+            "cvc": cvc,
+        },
+        )
+        card_token = data['id']
+        card_id = data['card']['id']
+        return Response({card_token, card_id})
+
+#create card source
+@csrf_exempt
+@api_view(['POST'])
+def card(request):
+        print(customer_id, card_token)
+        data = stripe.Customer.create_source(
+             customer_id,
+            source = card_token
+            )
+        return Response(data)
+
+#Payment intent
+@csrf_exempt
+@api_view(['POST'])
+def payment_intent(request):
+        payment_intent = stripe.PaymentIntent.create(
+            customer = 'cus_MZMngHOpJ4WDLz',
+            amount= 4000,
+            currency="usd",
+            payment_method_types=["card"],
+            payment_method = "card_1LrJUbJTvBqbiOKnTQunPNtn",
+            confirmation_method = 'automatic',
+            confirm=True,
+            # source = 'card_1LrJUbJTvBqbiOKnTQunPNtn'
+            )
+        return Response(payment_intent)
+
+  
+@csrf_exempt
+@api_view(['POST'])
+def charge(request):
+        data = stripe.Charge.create(
+            amount= 3000,
+            currency="usd",
+            source= card_token,
+            description="My First Test Charge",
+            )
+        return Response(data)
 
 
 
 #paypal
-class CheckoutView(View):
- def paypal_home(self, request):
-    host = request.get_host()
-    print('price is --', price)
-    paypal_dict = {
-        'business': settings.PAYPAL_RECEIVER_EMAIL,
-        'amount':  '2',
-        'item_name': 'Order {}'.format(order.id),
-        'item_name': 'Product 1',
-        'invoice': str(uuid.uuid4()),
-        'invoice': str(order.id),
-        'currency_code': 'USD',
-        'notify_url': f'http://{host}{reverse("paypal-ipn")}',
-        'return_url': f'http://{host}{reverse("paypal-return")}',
-        'cancel_return': f'http://{host}{reverse("paypal-cancel")}',
-         }
-    form = PayPalPaymentsForm(initial=paypal_dict)
-    print("paypal", form)
-    paypal_context = {'form':form}
-    return render(request, 'paypalhome.html', paypal_context )
-
-def paypal_return(request):
-    messages.success(request, 'You have successfully made a payment')
-    return redirect('paypal_home')
-
-def paypal_cancel(request):
-    messages.success(request, 'Your order has been cancelled')
-    return redirect('paypal_home')
-
-# stripe.api_key = settings.API_SECRET_KEY
-
-# class CreateCheckoutSessionView(View):
-
-#     def post(self, request, *args, **kwargs):
-#         price = Price.objects.get(id=self.kwargs["pk"])
-#         print("price ---- ",price)
-#         checkout_session = stripe.checkout.Session.create(
-#             payment_method_types=['card'],
-#             line_items=[
-#                 {
-#                     'price': price.stripe_price_id,
-#                     'quantity': 1,
-#                 },
-#             ],
-            
-#             mode='payment',
-#             success_url=settings.BASE_URL + '/success/',
-#             cancel_url=settings.BASE_URL + '/cancel/',
-#         )
-#         return redirect(checkout_session.url)
-
-# class SuccessView(TemplateView):
-#     template_name = "success.html"
-
-# class CancelView(TemplateView):
-#     template_name = "cancel.html"  
-
-# class HomePageView(TemplateView):
-#     template_name = "home.html"
-
-#     def get_context_data(self, **kwargs):
-#         product = stripe_Product.objects.get(name="testing")
-#         print(product)
-#         prices = Price.objects.filter(product=product)
-#         context = super(HomePageView, self).get_context_data(**kwargs)
-#         context.update({
-#             "product": product,
-#             "prices": prices
-#         })
-#         return context
-
- 
- #In views.py
-# from django.conf import settings # new
-
-# PaymentIntent stipe
-
-from rest_framework.decorators import api_view, APIView, action
-from rest_framework.response import Response
-from rest_framework import status
-
-class PaymentView(APIView):
-    @action(detail=False, methods=['post','get'])
-    def post(self, request, *args, **kwargs):
-     try:
-        amount = request.body
-        paymentIntent = stripe.PaymentIntent.create(
-            amount = 200,
-            currency = "usd",
-            payment_method_types=['card'],
-            capture_method='manual',
-            metadata={'integration_check': 'accept_a_payment'},
-        ) 
-        data = paymentIntent.client_secret
-
-        return Response(data,status=status.HTTP_200_OK)
-     except :
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-# WEBHOOK STRIPE
-
-# from django.views.decorators.csrf import csrf_exempt
-# from django.http.response import JsonResponse, HttpResponse
-
-# # This is your Stripe CLI webhook secret for testing your endpoint locally.
-# endpoint_secret = 'whsec_y3qCLGvpYRxrmGeM7awuoCHG3DXccI2a'
-
-# @csrf_exempt
-# def stripe_webhook(request):
-#     stripe.api_key = settings.STRIPE_SECRET_KEY
-#     endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
-#     payload = request.body
-#     sig_header = request.META['HTTP_STRIPE_SIGNATURE']
-#     event = None
-
-#     try:
-#         event = stripe.Webhook.construct_event(
-#             payload, sig_header, endpoint_secret
-#         )
-#     except ValueError as e:
-#         # Invalid payload
-#         return HttpResponse(status=400)
-#     except stripe.error.SignatureVerificationError as e:
-#         # Invalid signature
-#         return HttpResponse(status=400)
-
-#     # Handle the checkout.session.completed event
-#     if event['type'] == 'checkout.session.completed':
-#         print("Payment was successful.")
-#         # TODO: run some custom code here
-
-#     return HttpResponse(status=200)
-
-# @csrf_exempt
-# def webhook_view(request):
-#     payload = request.body
-#     print ("payload" ,  payload)
-#     return HttpResponse(status = 200)
-
-
-
-# 21.09.2022
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
+client_id = settings.CLIENT_ID
+client_secret = settings.CLIENT_SECRET
 
 @csrf_exempt
-def webhook(request):
+@api_view(['POST'])
+def tok(request):
+    global paypal_access_token
     if request.method == 'POST':
-        print("Data received from Webhook is: ", request.body)
-        return HttpResponse("Webhook received!")
+        url = "https://api-m.sandbox.paypal.com/v1/oauth2/token"
+        payload='grant_type=client_credentials&ignoreCache=true&return_authn_schemes=true&return_client_metadata=true&return_unconsented_scopes=true'
+        headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Basic QVpiU2JlczFIbHdtaUktN3dHT05KS0lBOFhUcHRSSXhrS3JaMUhTaGE3bVZTdEJoVHI5OE9WaWZKeEVlMmRZak90eE5vM2xhSGxNRnplZzE6RVBhZU1TaVF0WjIyT1dPZDR5OGNERE9TaDNkU2dLbHZFN2tXWGRjb3dkTzBJYkZmNF8xX2lIbHJOT1FuU2plOHZMNktmMWxoeFdtT2M0ZjY=',
+        'Content-Type': 'application/x-www-form-urlencoded'
+        }
 
-# class call(object):
-#     def __init__(self, path='/home/gurpreet/Desktop/GK/E-COMMERCE-PROJECT/ecom_project/product_app/views.py'):
-#         self.path= path
-
-#     def callfile(self):
-#         call(['python3','{}'.format(self.path)])
-
-# if __name__ == "__main__":
-#     c = call()
-#     c.callfile()
-
+        response = requests.request("POST", url, headers=headers, data=payload)
+        response = response.json()
+        paypal_access_token = response['access_token']
+    return Response(response)
 
 
+@csrf_exempt
+@api_view(['POST'])
+def create_order(request):
+    if request.method == 'POST':
+        url = "https://api-m.sandbox.paypal.com/v2/checkout/orders"
+        payload = json.dumps({
+        "intent": "CAPTURE",
+        "purchase_units": [
+            {
+            "items": [
+                {
+                "name": "T-Shirt",
+                "description": "Green XL",
+                "quantity": "1",
+                "unit_amount": {
+                    "currency_code": "USD",
+                    "value": "200.00"
+                }
+                }
+            ],
+            "amount": {
+                "currency_code": "USD",
+                "value": "200.00",
+                "breakdown": {
+                "item_total": {
+                    "currency_code": "USD",
+                    "value": "200.00"
+                }
+                }
+            }
+            }
+        ],
+        "application_context": {
+            "return_url": "https://example.com/return",
+            "cancel_url": "https://example.com/cancel"
+        }
+        })
+        headers = {
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation',
+        'PayPal-Request-Id': 'b0b38785-bd3a-4394-ac28-2ac500419f2b',
+        'PayPal-Client-Metadata-Id': '',
+        'PayPal-Partner-Attribution-Id': 'TEST_ATTRIBUTION_ID',
+        'PayPal-Auth-Assertion': '',
+        'Authorization': 'Bearer A21AAJSktKFofgIKKJFst_biyfcwF9XUwhmuJ1CB0wYf31vgprirqMJvIMydZjFrc5Zu3R9gLVzHCJrDQ0DOU67GSxjPVbUyw'
+        }
 
-# https://raturi.in/blog/django-stripe-integration-fully-explained-example/      
+        response = requests.request("POST", url, headers=headers, data=payload)
+
+        r = requests.request("POST", url, headers=headers, data=payload)
+        response = r.json()
+        # aprroval_link = response['links'][1]['href']
+        # print(aprroval_link)
+    return Response(response)
+
+
+@csrf_exempt
+@api_view(['POST'])
+def capture_payment(request):
+    url = "https://api-m.sandbox.paypal.com/v2/checkout/orders/70203260R3854615X/capture"
+    payload={}
+    headers = {
+    'Content-Type': 'application/json',
+    'Prefer': 'return=representation',
+    'PayPal-Request-Id': '927d4d86-5113-4486-a3ea-59b012f01151',
+    'Authorization': 'Bearer A21AAINAnFQq7GhwUBxdOMrQ1PM1rsb5Co6YBmgdM20EYZu7KH0d_PnnjfWqxACoDp_FPC4Ps7oWv8TSvuU379oSjBXPDrmIA'
+    }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    print(response.text)
+    return Response(123)
+
+

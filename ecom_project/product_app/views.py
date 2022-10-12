@@ -128,8 +128,9 @@ class CalculatePriceViewSet(viewsets.ViewSet):
                         stand_offs_quantity = 5 + 5 
                 
                 elif id == name[0]['id'] and name[0]['variant__element__element']  == 'Stand off':
-                    s_price = ProductAttribute.objects.filter(variant_type_name_id=name[0]['id'],category_id=category_id,product_id=product_id).values('price')
-                    stand_offs_price = stand_offs_quantity * s_price[0]['price']
+                    s_price = ProductAttribute.objects.filter(variant_type_name_id=name[0]['id'],category_id=category_id,product_id=product_id).values('price','unit')
+                    stand_offs_price = s_price[0]['price'] * s_price[0]['unit']
+                    stand_offs_price = stand_offs_quantity * stand_offs_price
             total = base_price + front_price + back_price + stand_offs_price
 
             return Response({"frame_length":frame_length,"frame_width":frame_width,
@@ -147,6 +148,7 @@ class OrderViewSet(viewsets.ViewSet):
     @csrf_exempt 
     @action(detail=False, methods=['post','get'])
     def post(self, request, format=None):
+        global order_id, product_name
         if request.method == 'POST':
             user_id = request.data.get('user_id')
             item = request.data.get('items')
@@ -164,30 +166,35 @@ class OrderViewSet(viewsets.ViewSet):
                 price = i['price']
                 quantity = i['quantity']
                 value = i['value']
+                product_name = i['product_name']
                 print("value", value)
-                order_data = Order.objects.create(item = i['value'], status = status, user_id = user_id,
+                order_items = Order_item.objects.create(user = user_id, item = value, status = status, product_name = product_name)
+                serializer = Order_itemSerializer(data=order_items)
+                order_items.save()
+                print('user id is this --', user_id)
+            order_data = Order.objects.create(item = i['value'], status = status, user_id = user_id,
                                                  email = email, contact=contact, quantity = quantity, 
                                                  name=name, street_address = street_address, 
                                                  apartment=apartment, city =city, state=state, 
                                                  zip_code=zip_code,total=total)
             serializer = OrderSerializer(data=order_data)
             order_data.save()  
+            order_id = Order.objects.filter(user_id = user_id).values('id')
+            order_id = order_id[0]['id']
             return JsonResponse({"item":item, "status":status, "user_id":user_id, "email":email, "contact":contact,
                                  "quantity":1, "name":name, "street_address":street_address,
-                                 "apartment":apartment, "city":city, "state":state,"zip_code":zip_code})
+                                     "apartment":apartment, "city":city, "state":state,"zip_code":zip_code})
+        return order_id
+    
 
 class ShippingViewSet(viewsets.ViewSet):
     @csrf_exempt 
     @action(detail=False, methods=['post'])
-    def ship(self, request, *args, **kwargs):
+    def post (self, request, *args, **kwargs):
         global total_price
         if request.method == 'POST':
             percentage = Shipping.objects.all().values('percentage')
             total_price =  total + percentage[0]['percentage']
-            total_price
-            data = Shipping.objects.create(total_price = total_price)
-            serializer = ShippingSerializer(data= data)
-            data.save()
             return Response(total_price)
         return total_price
 
@@ -207,6 +214,14 @@ class DashboardViewSet(viewsets.ViewSet):
             print(email)
             return Response(email)
 
+#Total orders
+    @csrf_exempt
+    @action(detail=False, methods=['post'])
+    def order(self, request, *args, **kwargs):
+        total_orders = Order.objects.all().values('item').count()
+        print('order items', total_orders)
+        return Response(total_orders)
+
     @csrf_exempt 
     @action(detail=False, methods=['post'])
     def pending(self, request, *args, **kwargs):
@@ -214,16 +229,18 @@ class DashboardViewSet(viewsets.ViewSet):
             print(pending_order)
             return Response(pending_order)
 
-    @csrf_exempt
+    @csrf_exempt 
     @action(detail=False, methods=['post'])
-    def order(self, request, *args, **kwargs):
-        order = Order.objects.all().values('item')
-        print('order items', order)
-        return Response(order)
+    def success(self, request, *args, **kwargs):
+            pending_order = Order.objects.all().filter(status = 'success').values('item').count()
+            print(pending_order)
+            return Response(pending_order)
 
-    @csrf_exempt
+    @csrf_exempt 
     @action(detail=False, methods=['post'])
-    def order(self, request, *args, **kwargs):
-        order = Order.objects.all().values('item')
-        print('order items', order)
-        return Response(order)
+    def failed(self, request, *args, **kwargs):
+            pending_order = Order.objects.all().filter(status = 'failed').values('item').count()
+            print(pending_order)
+            return Response(pending_order)
+
+    # https://github.com/OkothPius/Masoko-Ecommerce/blob/main/ecommerce/models.py

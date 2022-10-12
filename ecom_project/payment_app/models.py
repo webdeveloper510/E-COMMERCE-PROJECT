@@ -2,7 +2,7 @@ from django.db import models
 
 class stripe_Product(models.Model):
     name = models.CharField(max_length=100)
-    stripe_product_id = models.CharField(max_length=100)
+    stripe_product_id = models.CharField(max_length=150)
 
     def __str__(self):
         return self.name
@@ -31,3 +31,4 @@ class stripe_charge(models.Model):
     status = models.CharField(max_length=90, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
