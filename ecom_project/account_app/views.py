@@ -2,19 +2,17 @@ from distutils import errors
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from account_app.renderer import UserRenderer
 from rest_framework.permissions import IsAuthenticated
-
-
 from rest_framework import generics
 from django.core.mail import send_mail
 from .models import *
 from .serializers import *
 
-
+from django.utils.encoding import smart_str,force_bytes, DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 #Creating tokens manually
 def get_tokens_for_user(user):
@@ -30,7 +28,8 @@ class UserRegistrationView(APIView):
     serializer=UserRegistrationSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
         user=serializer.save()
-        return Response({'msg':'Registation successful'},status=status.HTTP_201_CREATED)
+        user_id = serializer.data['id']
+        return Response({'msg':'Registation successful', "user_id": user_id},status=status.HTTP_201_CREATED)
     return Response({errors:serializer.errors},status=status.HTTP_400_BAD_REQUEST)
 
 class UserLoginView(APIView):
@@ -53,7 +52,9 @@ class UserProfileView(APIView):
      renderer_classes=[UserRenderer]
      permission_classes=[IsAuthenticated]
      def post(self,request,format=None):
+       print(request.headers)
        serializer=UseProfileSerializer(request.user)
+       print(request.user)
        return Response(serializer.data,status=status.HTTP_201_CREATED)
 
 class UserChangePasswordView(generics.UpdateAPIView):
@@ -117,13 +118,13 @@ class UpdateProfileView(generics.UpdateAPIView):
     serializer_class = UpdateUserSerializer
 
     def get_queryset(self):
-       data = User.objects.all()
+       data = User.objects.all()  #getting all users from user model
        return data
 
     def post(self, request, *args, **kwargs):
-       partial = kwargs.pop('partial', False)
+       partial = kwargs.pop('partial', True)
        instance = self.get_object()
-       serializer = self.get_serializer(instance, data=request.data, partial=partial)
+       serializer = self.get_serializer(instance, data=request.data, partial=True)
        serializer.is_valid(raise_exception=True)
        self.perform_update(serializer)
        result = {

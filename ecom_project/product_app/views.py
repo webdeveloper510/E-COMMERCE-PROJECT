@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.authentication import BasicAuthentication
+from product_app.models import *
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().order_by('id')
@@ -70,10 +71,11 @@ class Send_listViewSet(viewsets.ViewSet):
 total = 0
 class CalculatePriceViewSet(viewsets.ViewSet):
     @csrf_exempt 
-    @action(detail=False, methods=['post','get'])
+    @action(detail=False, methods=['POST'])
     def price(self, request, format=None):
         global total
         if request.method == 'POST':
+            user_id = request.data.get('user_id')
             attributes = request.data.get('attributes')
             category_id = request.data.get('category_id')
             product_id = request.data.get('product_id')
@@ -81,7 +83,6 @@ class CalculatePriceViewSet(viewsets.ViewSet):
             for x in attributes:
                 id = x['variant_type_id']
                 value = x['value']
-
                 name = Variant_type.objects.filter(id=id).values('variant_type_name', 'variant_id','id','variant','variant__variant_name','variant__element','variant__element__element')
                 
                 if id == name[0]['id'] and name[0]['variant__element__element']  == 'Frame length':
@@ -132,24 +133,25 @@ class CalculatePriceViewSet(viewsets.ViewSet):
                     stand_offs_price = s_price[0]['price'] * s_price[0]['unit']
                     stand_offs_price = stand_offs_quantity * stand_offs_price
             total = base_price + front_price + back_price + stand_offs_price
+            total = total * quantity
 
             return Response({"frame_length":frame_length,"frame_width":frame_width,
             "picture_length":picture_length,"picture_width":picture_width,"frame_feet_length":frame_feet_length,
             "frame_feet_width":frame_feet_width,"frame_feet_size":frame_feet_size,
             "base_price":(b__price[0]['price'],base_price),"front_price":(f_price[0]['price'],front_price),
             "back_price":(bck_price[0]['price'],back_price),"stand_offs_quantity":stand_offs_quantity,
-            "stand_offs_price":(s_price[0]['price'],stand_offs_price),"Total":total
+            "stand_offs_price":(s_price[0]['price'],stand_offs_price),"Total":total, 
             })
         return total
-    # def list(self, request, format=None):
-    #     return Response()
+    
 
 class OrderViewSet(viewsets.ViewSet):
     @csrf_exempt 
-    @action(detail=False, methods=['post','get'])
+    @action(detail=False, methods=['post'])
     def post(self, request, format=None):
         global order_id, product_name
         if request.method == 'POST':
+            # image= request.FILES['image']
             user_id = request.data.get('user_id')
             item = request.data.get('items')
             status = request.data.get('status')
@@ -167,11 +169,6 @@ class OrderViewSet(viewsets.ViewSet):
                 quantity = i['quantity']
                 value = i['value']
                 product_name = i['product_name']
-                print("value", value)
-                order_items = Order_item.objects.create(user = user_id, item = value, status = status, product_name = product_name)
-                serializer = Order_itemSerializer(data=order_items)
-                order_items.save()
-                print('user id is this --', user_id)
             order_data = Order.objects.create(item = i['value'], status = status, user_id = user_id,
                                                  email = email, contact=contact, quantity = quantity, 
                                                  name=name, street_address = street_address, 
@@ -181,10 +178,10 @@ class OrderViewSet(viewsets.ViewSet):
             order_data.save()  
             order_id = Order.objects.filter(user_id = user_id).values('id')
             order_id = order_id[0]['id']
-            return JsonResponse({"item":item, "status":status, "user_id":user_id, "email":email, "contact":contact,
+            return JsonResponse({"user_id": user_id, "order_id": order_id, "item":item, "status":status, "user_id":user_id, "email":email, "contact":contact,
                                  "quantity":1, "name":name, "street_address":street_address,
                                      "apartment":apartment, "city":city, "state":state,"zip_code":zip_code})
-        return order_id
+        
     
 
 class ShippingViewSet(viewsets.ViewSet):
@@ -192,6 +189,8 @@ class ShippingViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['post'])
     def post (self, request, *args, **kwargs):
         global total_price
+        user_id = 0
+        order_id = 0
         if request.method == 'POST':
             percentage = Shipping.objects.all().values('percentage')
             total_price =  total + percentage[0]['percentage']

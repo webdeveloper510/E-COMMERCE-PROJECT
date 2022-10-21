@@ -1,6 +1,5 @@
 from django.contrib import admin
 from .models import *
 
-admin.site.register(stripe_Product)
-admin.site.register(Price)
-admin.site.register(stripe_charge)
+admin.site.register(stripe_payment)
+admin.site.register(paypal_payment)

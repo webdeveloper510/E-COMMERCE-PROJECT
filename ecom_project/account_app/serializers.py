@@ -1,13 +1,12 @@
 from tokenize import TokenError
 from account_app.utils import Util
-from unittest.util import _MAX_LENGTH
 from wsgiref.validate import validator
 from rest_framework import serializers
 from account_app.models import User
 from django.utils.encoding import smart_str,force_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-
+from ecom_project.settings import BASE_URL
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -32,7 +31,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
       password2=attrs.get('password2')
       if password!=password2:
         raise serializers.ValidationError('password and confirm password doesnot match')
-
       return attrs
 
     def create(self, validated_data):
@@ -85,7 +83,7 @@ class SendChangePasswordEmailSerializer(serializers.Serializer):
     else:
       raise serializers.ValidationError('You are not a Registered User')
 
-
+#reset password email
 class SendPasswordResetEmailSerializer(serializers.Serializer):
   email = serializers.EmailField(max_length=255)
   class Meta:
@@ -96,11 +94,10 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
     if User.objects.filter(email=email).exists():
       user = User.objects.get(email = email)
       uid = urlsafe_base64_encode(force_bytes(user.id))#Encoding is the process of converting data into a format required for a number of information processing needs
-      print(user.id)
-      print('Encoded UID', uid)
       token = PasswordResetTokenGenerator().make_token(user)
       print('Password Reset Token', token)
-      link = 'http://localhost:3000/reset/'+uid+'/'+token #password reset link
+      # link = 'http://localhost:3000/reset/'+uid+'/'+token #password reset link
+      link = BASE_URL+'/reset-password/'+uid+'/'+token+'/' #password reset link
       print('Password Reset Link', link)
       # Send EMail
       body = 'Click Following Link to Reset Your Password '+link
@@ -141,28 +138,32 @@ class UserPasswordResetSerializer(serializers.Serializer):
         raise serializers.ValidationError('Token is not Valid or Expired')
 
 class UpdateUserSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(required=True)
+    email = serializers.EmailField(required=False)
     class Meta:
         model = User
         fields = ('First_name', 'Last_name', 'email')
         extra_kwargs = {
-            'First_name': {'required': True},
-            'Last_name': {'required': True},
+            'First_name': {'required': False},
+            'Last_name': {'required': False},
         }
 
-    def validate_email(self, value):
+    if email:
+      def validate_email(self, value):
         user = self.context['request'].user
         if User.objects.exclude(pk=user.pk).filter(email=value).exists():
             raise serializers.ValidationError({"email": "This email is already in use."})
         return value
     
+      def update(self, instance, validated_data):
+          instance.email = validated_data['email']
+          instance.save()
+          return instance
+ 
     def update(self, instance, validated_data):
-        instance.First_name = validated_data['First_name']
-        instance.Last_name = validated_data['Last_name']
-        instance.email = validated_data['email']
-
-        instance.save()
-
-        return instance
-
+          instance.First_name = validated_data['First_name']
+          instance.Last_name = validated_data['Last_name']
+          # instance.email = validated_data['email']
+          instance.save()
+          return instance
+   
 

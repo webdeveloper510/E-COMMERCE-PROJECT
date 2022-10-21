@@ -75,12 +75,3 @@ class Shipping(models.Model):
     def __str__(self):
         return "{} - {} -".format(self.percentage)
 
-class Order_item(models.Model):
-    user = models.CharField(max_length=200)
-    product_name = models.CharField(max_length= 90)
-    item = models.TextField(max_length=900)
-    status = models.CharField(max_length=90)
-
-      
-    def __str__(self):
-        return "{} - {} -".format(self.user, self.item, self.product_name, self.status)
