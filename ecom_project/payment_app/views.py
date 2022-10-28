@@ -20,9 +20,10 @@ from account_app.utils import Util
 from product_app.serializers import *
 from product_app.models import *
 from django.core.mail import send_mail
+from django.http import HttpResponse
+from xhtml2pdf import pisa
 
 #stripe
-
 stripe.api_key = settings.API_SECRET_KEY
 
 #create card token to use it in charge and name to create customer id
@@ -40,8 +41,6 @@ def card_token(request):
             exp_year = request.data.get('exp_year')
             cvc = request.data.get('cvc')
             price = str(int(round(total, 2) * 100))
-            print(total)
-            
             try:
                 token_data = stripe.Token.create(
                 card={
@@ -115,8 +114,7 @@ def card_token(request):
 @csrf_exempt
 @api_view(['POST'])
 def get_paypal_access_token(request):
-    global total, paypal_access_token, aprroval_link, capture_url, paypal_order_id, user_id, order_id
-    
+    global total, order_id, paypal_access_token, aprroval_link, capture_url, paypal_order_id, user_id, order_id
     user_id = request.data.get('user_id')
     order_id = request.data.get('order_id')
     total = request.data.get('total')
@@ -161,6 +159,10 @@ def get_paypal_access_token(request):
         print(paypal_access_token)
     return Response(aprroval_link)
 
+from django.template import Context
+from django.template.loader import render_to_string, get_template
+from django.core.mail import EmailMessage
+
 
 @csrf_exempt
 @api_view(['POST'])
@@ -182,30 +184,58 @@ def capture_payment(request):
     country = response['payer']['address']['country_code']     
     currency = response['purchase_units'][0]['payments']['captures'][0]['amount']['currency_code']
     amount = response['purchase_units'][0]['payments']['captures'][0]['amount']['value']
+    paypal_order_id = response['purchase_units'][0]['payments']['captures'][0]['id']
     create_time = response['purchase_units'][0]['payments']['captures'][0]['create_time']
     update_time = response['purchase_units'][0]['payments']['captures'][0]['update_time']
-    # paypal_order_id= paypal_order_id
-    print("account id is --", paypal_account_id)
-    if status == "COMPLETED":
-        body = "Your order has been confirmed"
-        data = {
-                'subject':'Paypal Payment Receipt',
-                'body':body,
-                'to_email': "gurpreet@codenomad.net" 
-            }
-        Util.send_email(data)
-        paypal_data = paypal_payment.objects.create( name = name, user_id = user_id, email = email,
-            amount_received = amount, capture_payment_id = capture_payment_id,
-            create_time = create_time, update_time = update_time,
-            country = country, currency = currency, payer_id = payer_id )
-        paypal_data.save()
     
+    url_2 = "https://api-m.sandbox.paypal.com/v2/invoicing/generate-next-invoice-number"
+    headers = { 'Authorization': 'Bearer '+paypal_access_token }
+    invoice_number = requests.request("POST", url_2, headers=headers)
+    invoice_number = invoice_number.json()
+    invoice_number = invoice_number['invoice_number']
+    print(invoice_number)
+    if status == "COMPLETED":
+        paypal_data = paypal_payment.objects.create( name = name, user_id = user_id, email = email,
+            amount_received = amount, capture_payment_id = capture_payment_id, order_id = order_id,
+            create_time = create_time, update_time = update_time, paypal_order_id = paypal_order_id,
+            country = country, currency = currency, payer_id = payer_id )
+        paypal_data.save()    
+        order_data = Order.objects.filter(user_id=user_id).update(status='completed')
     else:
         return Response("Payment failed")
-    return Response(response)
+    return render(request, 'paypalreceipt.html', {'paypal_data':paypal_data, 'invoice_number':invoice_number})
+    
+
+def generate_pdf(request):
+    payment = capture_payment(request)
+    template_path = 'paypalreceipt.html'
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="Receipt.pdf"'
+    html = render_to_string(template_path, {'report': 123})
+    pisaStatus = pisa.CreatePDF(html, dest=response)
+    return response
+
+from django.core.mail import EmailMultiAlternatives, message
+@csrf_exempt
+@api_view(['GET'])
+def mail(request):
+    subject, from_email, to = 'Receipt', 'fgurpreet@codenomad.net', 'gurpreet@codenomad.net'
+    text_content = 'This is an important message.'
+    html_content = '<p>Download your paypal payment receipt<br>http://127.0.0.1:8000/generate/</p>'
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+    return Response("mail sent")
+       
+        # data = {
+        #         'subject':'Paypal Payment Receipt',
+        #         'body': 'http://127.0.0.1:8000/generate/',
+        #         'to_email': "gurpreet@codenomad.net" 
+        #     }
+        # Util.send_email(data)
+        # return Response("mail sent")
 
 from time import gmtime, strftime
-
 @csrf_exempt
 @api_view(['GET'])
 def transaction(request):
@@ -232,86 +262,11 @@ def transaction(request):
             print(transaction_email)
             print(account_id, "info", payer_info, cart_info)
 
-        #     if transaction_email == payer_email:
-        #         details = {transaction_info['transaction_id'],transaction_info['paypal_reference_id'],
-        #               transaction_info['paypal_reference_id_type'],transaction_info['transaction_event_code'],
-        #               transaction_info['transaction_initiation_date'],transaction_info['transaction_updated_date'],
-        #               transaction_info['transaction_amount'],payer_info,response['cart_info']}
-        #         print(details)
-        #         break
+            if transaction_email == payer_email:
+                details = {transaction_info['transaction_id'],transaction_info['paypal_reference_id'],
+                      transaction_info['paypal_reference_id_type'],transaction_info['transaction_event_code'],
+                      transaction_info['transaction_initiation_date'],transaction_info['transaction_updated_date'],
+                      transaction_info['transaction_amount'],payer_info,response['cart_info']}
+                print(details)
+                break
     return Response(response)
-
-@csrf_exempt
-@api_view(['GET'])
-def test(request):
-    
-         
-    return Response({123})
-
-from paypalrestsdk import CreditCard
-from paypalrestsdk import Payment
-import paypalrestsdk
-
-def card_payemnt(request):
-    try:
-        paypalrestsdk.configure({
-            "mode": "sandbox",  # sandbox or live
-            'client_id' : settings.CLIENT_ID,
-            'client_secret': settings.CLIENT_SECRET,
-        })
-
-        credit_card = CreditCard({
-            "type": "visa",
-            "number": "4024007185826731",
-            "expire_month": "12",
-            "expire_year": "2022",
-            "cvv2": "874",
-            "first_name": "Joe",
-            "last_name": "Shopper",
-        })
-
-        if credit_card.create():
-            print("CreditCard[%s] created successfully" % (credit_card.id ))
-            return Response('good')
-        else:
-            print("Error while creating CreditCard:")
-            print(credit_card.error)
-    except Exception as e:
-        print(str(e))
-        return Response("Hello")
-
-def credit_card_payment(request):
-            paypalrestsdk.configure({
-                "mode": "sandbox",  # sandbox or live
-               'client_id' : settings.CLIENT_ID,
-               'client_secret': settings.CLIENT_SECRET,
-            })
-            payment = paypalrestsdk.Payment(
-                {
-                    "intent": "sale",
-                    "payer": {
-                        "payment_method": "credit_card",
-                        "funding_instruments": [
-                            {
-                                "credit_card_token": {
-                                    "credit_card_id": "CARD-7MH68586JW7132142LXWASJI",
-
-                                }
-                            }]
-                    },
-                    "transactions": [
-                        {
-                            "amount": {
-                                "total": "6.70",
-                                "currency": "USD"
-                            },
-                            "description": "Payment by vaulted credit card."
-                        }]
-                }
-            )
-            if payment.create():
-                print(payment.id)
-
-                print("Payment created successfully")
-            else:
-                print(payment.error)

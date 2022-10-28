@@ -25,10 +25,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('account_app.urls')),
     path('', include('payment_app.urls')),
+    path('', include('adminpanel_app.urls')),
     path('',include(router.urls)),
     path('paypal/', include('paypal.standard.ipn.urls')),
     path('', include(router.urls)),
     path('auth/', include('rest_framework.urls')),
-    # path('webhook/', webhook),
-
 ]

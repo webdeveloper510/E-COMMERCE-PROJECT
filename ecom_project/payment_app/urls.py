@@ -15,19 +15,16 @@ urlpatterns = [
     path('stripe/', views.card_token),
     path('paypal/', views.get_paypal_access_token),
     path('paypal/capturepayment/', views.capture_payment),
-    path('transaction/', views.transaction),
-    path('test/', views.test),
-    path('card/', views.card_payemnt),
-
-    path('abc/', views.credit_card_payment),
-
-
-
-
-
+    # path('transaction/', views.transaction),
+    # path('test/', views.test),
+    path('mail/',views.mail),
+    path('generate/', views.generate_pdf),
+    # path('test/', views.test),
+    # path('test/', views.test),
+    # path('test/', views.test),
+    # path('test/', views.test),
     # path('create-checkout-session/', StripeCheckoutView.as_view()),
     # path('pay/', StripeView.as_view()),
-    # path('token/', views.token),
     # path('paypalorder/', views.create_order),
     # path('paypalorder/', views.payment_create),
 
