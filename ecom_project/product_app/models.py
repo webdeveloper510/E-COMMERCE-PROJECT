@@ -49,6 +49,7 @@ class ProductAttribute(models.Model):
 
 class Order(models.Model):
     user_id = models.CharField(max_length=200)
+    product = models.CharField(max_length=250)
     item = models.TextField(max_length=500)
     status = models.CharField(max_length=90)
     quantity = models.IntegerField()
@@ -64,7 +65,7 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     total = models.FloatField(default=0.0)
     def __str__(self):
-         return "{} -{}-{}-{}-{}-{} ".format(self.user_id,self.item,self.status,self.quantity,self.name,
+         return "{} -{}-{}-{}-{}-{} ".format(self.user_id,self.product,self.item,self.status,self.quantity,self.name,
                                              self.email,self.contact,self.street_address,
                                              self.apartment,self.zip_code,self.state,self.city,
                                               self.created_at,self.updated_at, self.total)

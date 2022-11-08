@@ -29,7 +29,7 @@ class ProductAttributeModelAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderModelAdmin(admin.ModelAdmin):
-  list_display = ('id','item','status','quantity','user_id','name','email','contact','street_address','apartment',
+  list_display = ('id','product','item','status','quantity','user_id','name','email','contact','street_address','apartment',
   'zip_code','state','city','total')
 
 @admin.register(Shipping)

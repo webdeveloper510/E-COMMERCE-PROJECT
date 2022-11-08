@@ -2,10 +2,10 @@ from rest_framework import serializers
 from .models import *
 
 class LogoSerializer(serializers.ModelSerializer):
-     class Meta:
-        model= Logo
+    class Meta:
+        model = Logo
         fields = '__all__'
-           
+          
 class HeaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Header
@@ -21,22 +21,9 @@ class ServicesSerializer(serializers.ModelSerializer):
         model = Services
         fields = "__all__"
 
-class CarouselSerializer(serializers.ModelSerializer):
+class FAQSerializer(serializers.ModelSerializer):
      class Meta:
-        model= Carousel
+        model= FAQ
         fields = '__all__'
-           
-class TestimonialSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Testimonial
-        fields = "__all__"
-
-class HeadingcategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = HeadingCategory
-        fields = "__all__"
-
-class HeadingsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Headings
-        fields = "__all__"
+ 
+  

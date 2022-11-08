@@ -32,8 +32,8 @@ class paypal_payment(models.Model):
     create_time = models.CharField(max_length=90)
     update_time = models.CharField(max_length=90, null=True, blank=True)
     paypal_order_id = models.TextField(max_length=350, null=True, blank=True)
-    country = models.CharField(max_length=90, null=True, blank=True)
     currency = models.CharField(max_length=90,null=True, blank=True)
     payer_id = models.TextField(max_length=350, null=True, blank=True)
-    
+    receipt_id = models.TextField(max_length=350, null=True, blank=True)
+
    

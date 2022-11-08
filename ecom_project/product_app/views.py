@@ -169,7 +169,7 @@ class OrderViewSet(viewsets.ViewSet):
                 quantity = i['quantity']
                 value = i['value']
                 product_name = i['product_name']
-            order_data = Order.objects.create(item = i['value'], status = status, user_id = user_id,
+            order_data = Order.objects.create(item = i['value'], product = product_name, status = status, user_id = user_id,
                                                  email = email, contact=contact, quantity = quantity, 
                                                  name=name, street_address = street_address, 
                                                  apartment=apartment, city =city, state=state, 

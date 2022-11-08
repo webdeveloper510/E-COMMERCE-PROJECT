@@ -1,93 +1,95 @@
-<html>
-<head>
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-</head>
-<style>
-    body {
-    margin-top: 20px;
-}
-</style>
-<body>
-<div class="container">
-<div class="row">
-<div class="well col-xs-10 col-sm-10 col-md-6 col-xs-offset-1 col-sm-offset-1 col-md-offset-3">
-<div class="row">
-<div class="col-xs-6 col-sm-6 col-md-6">
-<address>
-<strong>Frame Art</strong>
-<br>
-2135 Sunset Blvd
-<br>
-Los Angeles, CA 90026
-<br>
-<abbr title="Phone">P:</abbr> (213) 484-6829
-</address>
-</div>
-<div class="col-xs-6 col-sm-6 col-md-6 text-right">
-<p>
-<em>Date: 1st November, 2013</em>
-</p>
-<p>
-<em>Receipt #: {{invoice_number}}</em>
-</p>
-</div>
-</div>
-<div class="row">
-<div class="text-center">
-<h1>Receipt</h1>
-</div>
-</span>
-<table class="table table-hover">
-<thead>
-<tr>
-<th>Summary</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="col-md-9"><em>Payment to Frame Art</em></h4></td>
-<td class="col-md-1" style="text-align: center">  </td>
-<td class="col-md-1 text-center">{{paypal_data.amount}}</td>
-<td class="col-md-1 text-center"></td>
-</tr>
-<tr>
-<td class="col-md-9"><em><b>Amount paid</b></em></h4></td>
-<td class="col-md-1" style="text-align: center"></td>
-<td class="col-md-1 text-center">{{paypal_data.amount}}</td>
-<td class="col-md-1 text-center"></td>
-</tr>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+		<title>Document</title>
+		<style>
+			.summary {
+				font-size: 28px;
+			}
 
-<tr>
-<td>  </td>
-<td> </td>
-<td class="text-right">
-<p>
-<strong>Subtotal:</strong>
-</p>
-<p>
-<strong>Tax:</strong>
-</p></td>
-<td class="text-center">
-<p>
-<strong>$6.94</strong>
-</p>
-<p>
-<strong>$6.94</strong>
-</p></td>
-</tr>
-<tr>
-<td>  </td>
-<td>  </td>
-<td class="text-right"><h4><strong>Total:{{paypal_data.amount}}</strong></h4></td>
-<td class="text-center text-danger"><h4><strong>{{paypal_data.amount}}</strong></h4></td>
-</tr>
-</tbody>
-</table>
-</td>
-</div>
-</div>
-</div>
-</body>
+			table {
+			  font-family: arial, sans-serif;
+			  border-collapse: collapse;
+			  width: 100%;
+			}
+			
+			td, th {
+			  border: 1px solid #dddddd;
+			  text-align: left;
+			  padding: 8px;
+			}
+			
+			tr:nth-child(even) {
+			  background-color: #dddddd;
+			}
+			</style>
+	</head>
+	<body>
+		
+		
+		<div class="card">
+		<div class="card-body mx-4">
+		<div class="container">
+			<div class="row"><img src="http://18.207.228.126:8000/media/Logo/frame-art_Pms8oGs.png" height="50px" width="60px"></div>
+			<div class="row">
+				<p style="font-size:12px;">
+					<b>Bill To:</b><br>
+				   331<br>
+				   5153<br>
+				   123 street, India</p>
+			</div>
+			<p class="my-5" style="font-size: 22px; margin-top:26px; margin-bottom:-120px; text-align: center;"><i>Payment Receipt From Frame-Art</i></p>
+			<p class="my-5" style="font-size: 15px; text-align: center; margin-top: 0px; margin-bottom:-5px;">Receipt #65651</p>
+			<p class="my-5" style="font-size: 15px; text-align: center; margin-top:-15px;"><b>Order id:</b> #3125151</p>
+
+			<table>
+			<tr>
+				<th>Amount Paid</th>
+				<th>Date Paid</th>
+				<th>Payment Method</th>
+			</tr>
+			<tr>
+				<td>$123</td>
+				<td>32132</td>
+				<td>Paypal</td>
+			</tr>
+			</table>
+			<div class="row">
+			<p style="font-size:12px; text-align:left; margin-top:30px; margin-bottom:-70px;">Description</p>
+			<hr>
+			</div>
+
+			<table>
+			  <tr>
+				<th style="width:400px;">Product</th>
+				<th>Quantity</th>
+				<th>Price</th>
+			  </tr>
+			  <tr>
+				<td>Customized Frame</td>
+				<td>1</td>
+				<td>$1904</td>
+			  </tr>
+			  <tr>
+				<td colspan="3" style="text-align:right; font-size:12px; font-weight:bold; padding-right:60px;">Total: $16512</p> </td>
+			  </tr>
+			  </table>
+			<hr>
+			</div>
+			<div class="text-left" style="margin-top: 50px; text-align:center; font-size:15px;">
+			<p class="text-left">If you have any questions, contact us at <u>test@gmail.com</u> or call at <u>+1 202-555-0153</u>.	
+			</p>
+			</div>
+	
+		</div>
+		</div>
+	</div>
+	</body>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 </html>

@@ -1,0 +1,647 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8" />
+	<title>A simple, clean, and responsive HTML invoice template</title>
+
+	<style>
+	.invoice-box {
+		max-width: 800px;
+		margin: auto;
+		padding: 30px;
+		border: 1px solid #eee;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+		font-size: 16px;
+		line-height: 24px;
+		font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+		color: #555;
+	}
+
+	.invoice-box table {
+		width: 100%;
+		line-height: inherit;
+		text-align: left;
+	}
+
+	.invoice-box table td {
+		padding: 5px;
+		vertical-align: top;
+	}
+
+	.invoice-box table tr td:nth-child(2) {
+		text-align: right;
+	}
+
+	.invoice-box table tr.top table td {
+		padding-bottom: 20px;
+	}
+
+	.invoice-box table tr.top table td.title {
+		font-size: 45px;
+		line-height: 45px;
+		color: #333;
+	}
+
+	.invoice-box table tr.information table td {
+		padding-bottom: 40px;
+		margin-bottom: 40px;
+	}
+
+	.invoice-box table tr.heading td {
+		background: #eee;
+		border-bottom: 1px solid #ddd;
+		font-weight: bold;
+	}
+
+	.invoice-box table tr.details td {
+		padding-bottom: 20px;
+	}
+
+	.invoice-box table tr.item td {
+		border-bottom: 1px solid #eee;
+	}
+
+	.invoice-box table tr.item.last td {
+		border-bottom: none;
+	}
+
+	.invoice-box table tr.total td:nth-child(2) {
+		border-top: 2px solid #eee;
+		font-weight: bold;
+	}
+
+	@media only screen and (max-width: 600px) {
+		.invoice-box table tr.top table td {
+			width: 100%;
+			display: block;
+			text-align: center;
+		}
+
+		.invoice-box table tr.information table td {
+			width: 100%;
+			display: block;
+			text-align: center;
+		}
+	}
+
+	/** RTL **/
+	.invoice-box.rtl {
+		direction: rtl;
+		font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+	}
+
+	.invoice-box.rtl table {
+		text-align: right;
+	}
+
+	.invoice-box.rtl table tr td:nth-child(2) {
+		text-align: left;
+	}
+	</style>
+	</head>
+
+	<body>
+		<div class="invoice-box">
+			<table class="st-Background" cellpadding="0" cellspacing="0" width="100%" style="border: 0; margin: 0; padding: 0; ">
+				<tbody>
+				  <tr>
+					<td class="st-Spacer st-Spacer--kill st-Spacer--height" height="64">
+					  <div class="st-Spacer st-Spacer--kill">&nbsp;</div>
+					</td>
+				  </tr>
+		
+				  <tr>
+					<td style="border: 0; margin: 0; padding: 0;">
+					  <!-- Wrapper -->
+					  <table class="st-Wrapper" cellpadding="0" cellspacing="0" width="600" style="border-top-left-radius: 16px; border-top-right-radius: 16px; margin: 0 auto; min-width: 600px;">
+						<tbody>
+						  <tr>
+							<td style="border: 0; margin: 0; padding: 0;">
+							  
+		
+		  <table class="st-Preheader st-Width st-Width--mobile" cellpadding="0" cellspacing="0" width="600" style="min-width: 600px;">
+		  <tbody>
+			<tr>
+			  <td height="0" style="border: 0; margin: 0; padding: 0; color: #ffffff; display: none !important; font-size: 1px; line-height: 1px; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; visibility: hidden;">
+				<span class="st-Delink st-Delink--preheader" style="color: #ffffff; text-decoration: none;">
+		
+				  
+			Receipt from dreamwork [#1010-7554] Amount paid $2.00 Date paid Oct 14, 2022, 11:02:29 AM
+		  
+		
+				  <!-- Prevents elements showing up in email client preheader text -->
+				  ‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;‌&nbsp;
+				  <!-- /Prevents elements showing up in email client preheader text -->
+		
+				</span>
+			  </td>
+			</tr>
+		  </tbody>
+		</table>
+		
+		
+		 
+		  <table class="st-Copy st-Copy--caption st-Width st-Width--mobile" cellpadding="0" cellspacing="0" width="600" style="min-width: 600px; background: gray; padding: 5px 20px">
+			<tbody>
+			  <tr>
+				<td class="Content Title-copy Font Font--title" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;width: 472px;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif;mso-line-height-rule: exactly;vertical-align: middle;color: #32325d;font-size: 24px;line-height: 32px;">
+					Receipt from dreamwork<br>
+					{{data.receipt_id}}
+				</td>
+			  </tr>
+			  <tr>
+				<td class="st-Spacer st-Spacer--stacked" colspan="3" height="12" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
+				  <div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+				</td>
+			  </tr>
+			</tbody>
+		  </table>
+		
+		  <table class="st-Copy st-Copy--caption st-Width st-Width--mobile" cellpadding="0" cellspacing="0" width="600" style="min-width: 600px; background: blue">
+			<tbody>
+			  <tr>
+				<td class="Content Title-copy Font Font--title" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;width: 472px;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif;mso-line-height-rule: exactly;vertical-align: middle;color: #8898aa;font-size: 15px;line-height: 18px;">
+				  Receipt #1010-7554
+				</td>
+			  </tr>
+			  <tr>
+				<td class="st-Spacer st-Spacer--stacked" colspan="3" height="12" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
+				  <div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+				</td>
+			  </tr>
+			</tbody>
+		  </table>
+		
+		  <table class="st-Spacer st-Spacer--standalone st-Width st-Width--mobile" cellpadding="0" cellspacing="0" width="100% background: blue">
+		  <tbody>
+			<tr>
+			  <td height="20" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; max-height: 1px; mso-line-height-rule: exactly;">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+		  </tbody>
+		</table>
+		
+		  <table class="st-Copy st-Copy--standalone st-Copy--caption" cellpadding="0" cellspacing="0" width="100% background: blue">
+		  <tbody>
+			<tr>
+			  <td class="st-Font st-Font--caption" style="border: 0; margin: 0; padding: 0; color: #687385; font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'Helvetica', sans-serif; font-size: 12px; font-weight: bold; line-height: 16px; text-transform: uppercase;">
+		
+			  
+			</td>
+		<td width="64" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td>
+			<td class="DataBlocks-item" valign="top" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;">
+			<table style="border: 0;border-collapse: collapse;margin: 0;padding: 0;">
+			  <tbody>
+			  <tr>
+				<td class="Font Font--caption Font--uppercase Font--mute Font--noWrap" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif;mso-line-height-rule: exactly;vertical-align: middle;color: #8898aa;font-size: 12px;line-height: 16px;white-space: nowrap;font-weight: bold;text-transform: uppercase;">
+				  Amount paid
+				</td>
+			  </tr>
+			  <tr>
+				<td class="Font Font--body Font--noWrap" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif;mso-line-height-rule: exactly;vertical-align: middle;color: #525f7f;font-size: 15px;line-height: 24px;white-space: nowrap;">
+				  
+			   $2.00
+			
+				</td>
+			  </tr>
+			  </tbody>
+			</table>
+		  </td>
+			<td width="20" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td>
+			<td class="DataBlocks-item" valign="top" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;">
+			<table style="border: 0;border-collapse: collapse;margin: 0;padding: 0;">
+			  <tbody>
+			  <tr>
+				<td class="Font Font--caption Font--uppercase Font--mute Font--noWrap" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif;mso-line-height-rule: exactly;vertical-align: middle;color: #8898aa;font-size: 12px;line-height: 16px;white-space: nowrap;font-weight: bold;text-transform: uppercase;">
+				  Date paid
+				</td>
+			  </tr>
+			  <tr>
+				<td class="Font Font--body Font--noWrap" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif;mso-line-height-rule: exactly;vertical-align: middle;color: #525f7f;font-size: 15px;line-height: 24px;white-space: nowrap;">
+				  
+			   Oct 14, 2022, 11:02:29 AM
+			
+				</td>
+			  </tr>
+			  </tbody>
+			</table>
+		  </td>
+			<td width="20" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td>
+			  <td class="DataBlocks-item" valign="top" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;">
+			<table style="border: 0;border-collapse: collapse;margin: 0;padding: 0;">
+			  <tbody>
+			  <tr>
+				<td class="Font Font--caption Font--uppercase Font--mute Font--noWrap" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif;mso-line-height-rule: exactly;vertical-align: middle;color: #8898aa;font-size: 12px;line-height: 16px;white-space: nowrap;font-weight: bold;text-transform: uppercase;">
+				  Payment method
+				</td>
+			  </tr>
+			  <tr>
+				<td class="Font Font--body Font--noWrap" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif;mso-line-height-rule: exactly;vertical-align: middle;color: #525f7f;font-size: 15px;line-height: 24px;white-space: nowrap;">
+				  
+				<span>
+			<img alt="Visa" height="16" src="https://stripe-images.s3.amazonaws.com/emails/receipt_assets/card/visa-dark@2x.png" style="border: 0; margin: 0; padding: 0; vertical-align: text-bottom;" width="36">
+		  </span>
+		  <span>
+			- 4242
+		  </span>
+			  
+				</td>
+			  </tr>
+			  </tbody>
+			</table>
+		  </td>
+			<td width="64" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td>
+		  
+		
+			  
+			</tr>
+		  </tbody>
+		</table>
+		
+		  <table class="st-Spacer st-Spacer--standalone st-Width st-Width--mobile" cellpadding="0" cellspacing="0" width="100% background: blue">
+		  <tbody>
+			<tr>
+			  <td height="32" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; max-height: 1px; mso-line-height-rule: exactly;">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+		  </tbody>
+		</table>
+		
+		  <table class="st-Copy st-Copy--caption st-Width st-Width--mobile" cellpadding="0" cellspacing="0" width="600" style="min-width: 600px; background: blue">
+		  <tbody>
+			<tr>
+			  <td class="st-Spacer st-Spacer--stacked" colspan="3" height="8" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="48">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			  <td class="st-Font st-Font--caption" style="border: 0; margin: 0; padding: 0; color: #687385; font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'Helvetica', sans-serif; font-weight:400; font-size: 12px; line-height: 16px; text-transform: uppercase;">
+		
+			  
+			  <span class="st-Delink" style="border: 0; margin: 0; padding: 0; font-weight: bold;">
+				Summary
+			  </span>
+			
+		
+			  </td>
+			  <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="48">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="st-Spacer st-Spacer--stacked" colspan="3" height="8" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+		  </tbody>
+		</table>
+		  <table class="st-Blocks st-Width st-Width--mobile" cellpadding="0" cellspacing="0" width="600" style="min-width: 600px; background: blue">
+		  <tbody>
+			<tr>
+			  <td class="st-Spacer st-Spacer--stacked" colspan="3" height="24" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="st-Spacer st-Spacer--kill" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="48">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			  <td style="border: 0; margin: 0; padding: 0;">
+				<table class="st-Blocks-inner" cellpadding="0" cellspacing="0" style="border-radius: 8px;" width="100%">
+				  <tbody>
+					
+		  <tr>
+		  <td style="border: 0; margin: 0; padding: 0;">
+			<table class="st-Blocks-item" cellpadding="0" cellspacing="0" width="100%">
+			  <tbody>
+				<tr>
+				  <td class="st-Spacer st-Spacer--blocksItemEnds" colspan="3" height="12" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
+					<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+				  </td>
+				</tr>
+				<tr>
+				  <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="16">
+					<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+				  </td>
+				  <td class="st-Blocks-item-cell st-Font st-Font--body" style="border: 0; margin: 0; padding: 0; color: #414552; font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'Helvetica', sans-serif; font-size: 16px; line-height: 24px;">
+		
+					
+			<table style="padding-left: 5px; padding-right:5px;" width="100%">
+			<tbody><tr>
+			  <td>
+				
+			  
+				</td>
+		</tr>
+		<tr>
+			<td class="Table-description Font Font--body" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif;mso-line-height-rule: exactly;vertical-align: middle;color: #525f7f;font-size: 15px;line-height: 24px; width: 100%; ">
+				Payment to dreamwork
+			</td>
+			<td class="Spacer Table-gap" width="8" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td>
+			<td class="Table-amount Font Font--body" valign="top" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif;mso-line-height-rule: exactly;vertical-align: middle;color: #525f7f;font-size: 15px;line-height: 24px;">
+				  $2.00
+			</td>
+		  </tr>
+		  <tr>
+			<td class="Table-divider Spacer" colspan="3" height="6" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td>
+		  </tr>
+			<tr>
+			<td class="Table-divider Spacer" colspan="3" height="6" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td>
+		  </tr>
+		
+		  <tr>
+			<td class="Spacer" colspan="3" height="1" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td>
+		  </tr>
+		
+		  <tr>
+			<td class="Table-divider Spacer" colspan="3" height="8" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td>
+		  </tr>
+		
+			  <tr>
+			<td class="Table-description Font Font--body" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif;mso-line-height-rule: exactly;vertical-align: middle;color: #525f7f;font-size: 15px;line-height: 24px; width: 100%; ">
+				<strong>Amount charged</strong>
+			</td>
+			<td class="Spacer Table-gap" width="8" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td>
+			<td class="Table-amount Font Font--body" valign="top" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif;mso-line-height-rule: exactly;vertical-align: middle;color: #525f7f;font-size: 15px;line-height: 24px;">
+				  <strong>$2.00</strong>
+			</td>
+		  </tr>
+		  <tr>
+			<td class="Table-divider Spacer" colspan="3" height="6" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td>
+		  </tr>
+		  
+			
+			  
+			
+		  </tbody></table>
+		  
+		
+				  </td>
+				  <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="16">
+					<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+				  </td>
+				</tr>
+				<tr>
+				  <td class="st-Spacer st-Spacer--blocksItemEnds" colspan="3" height="12" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
+					<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+				  </td>
+				</tr>
+			  </tbody>
+			</table>
+		  </td>
+		</tr>
+		
+				  </tbody>
+				</table>
+			  </td>
+			  <td class="st-Spacer st-Spacer--kill" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="48">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="st-Spacer st-Spacer--stacked" colspan="3" height="24" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+		  </tbody>
+		</table>
+		
+		  <table class="st-Divider st-Width st-Width--mobile" cellpadding="0" cellspacing="0" width="600" style="min-width: 600px; background: blue">
+		  <tbody>
+			<tr>
+			  <td class="st-Spacer st-Spacer--divider" colspan="3" height="24" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; max-height: 1px; mso-line-height-rule: exactly;">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; max-height: 1px; mso-line-height-rule: exactly;" width="48">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			  <td height="1" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; max-height: 1px; mso-line-height-rule: exactly;">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			  <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; max-height: 1px; mso-line-height-rule: exactly;" width="48">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="st-Spacer st-Spacer--divider" colspan="3" height="24" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; max-height: 1px; mso-line-height-rule: exactly;">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+		  </tbody>
+		</table>
+		
+		  <table class="st-Copy st-Width st-Width--mobile" cellpadding="0" cellspacing="0" width="600" style="min-width: 600px; background: blue">
+		  <tbody>
+			<tr>
+			  <td class="st-Spacer st-Spacer--stacked" colspan="3" height="8" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="48">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			  <td style="border: 0; margin: 0; padding: 0; color: #414552 !important; font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'Helvetica', sans-serif; font-weight:400; font-size: 16px; line-height: 24px;">
+		
+			  If you have any questions, contact us at <a style="border: 0; margin: 0; padding: 0; color: #625afa !important; font-weight: bold; text-decoration: none;  " href="mailto:preetdhiman022@gmail.com">preetdhiman022@gmail.com</a> or call at <a style="border: 0; margin: 0; padding: 0; color: #625afa !important; font-weight: bold; text-decoration: none;  " href="tel:+12025550153">+1 202-555-0153</a>.
+		
+			  </td>
+			  <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;" width="48">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="st-Spacer st-Spacer--stacked" colspan="3" height="8" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+		  </tbody>
+		</table>
+		  <table class="st-Divider st-Width st-Width--mobile" cellpadding="0" cellspacing="0" width="600" style="min-width: 600px; background: blue">
+		  <tbody>
+			<tr>
+			  <td class="st-Spacer st-Spacer--divider" colspan="3" height="24" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; max-height: 1px; mso-line-height-rule: exactly;">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; max-height: 1px; mso-line-height-rule: exactly;" width="48">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			  <td height="1" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; max-height: 1px; mso-line-height-rule: exactly;">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			  <td class="st-Spacer st-Spacer--gutter" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; max-height: 1px; mso-line-height-rule: exactly;" width="48">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+			<tr>
+			  <td class="st-Spacer st-Spacer--divider" colspan="3" height="24" style="border: 0; margin: 0; padding: 0; font-size: 1px; line-height: 1px; max-height: 1px; mso-line-height-rule: exactly;">
+				<div class="st-Spacer st-Spacer--filler">&nbsp;</div>
+			  </td>
+			</tr>
+		  </tbody>
+		</table>
+		  <table class="Section Copy" style="border: 0;border-collapse: collapse;margin: 0;padding: 0; background: blue">
+			<tbody>
+			<tr>
+			  <td class="Spacer Spacer--gutter" width="64" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td>
+			  <td class="Content Footer-legal Font Font--caption Font--mute" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;width: 472px;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif;mso-line-height-rule: exactly;vertical-align: middle;color: #8898aa;font-size: 12px;line-height: 16px;">
+				Something wrong with the email? <a class="browser-link" href="https://dashboard.stripe.com/receipts/payment/CAcQARoXChVhY2N0XzFMaXhaaUpUdkJxYmlPS24omuT-mgYyBqQN3iWb3jovFq5hcWY9XUSuk-6mvFCcyrpMHZPypY-aEkBMnGiQogQydK-lsgZWLTn9KZaYliY" style="border: 0; margin: 0; padding: 0; color: #556cd6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif; text-decoration: none;" target="_blank" rel="noreferrer"><span style="border: 0; margin: 0; padding: 0; color: #556cd6; text-decoration: none;">View it in your browser.</span></a>
+			  </td>
+			  <td class="Spacer Spacer--gutter" width="64" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td>
+			</tr>
+			</tbody>
+		  </table>
+		
+		<table class="Section Divider Divider--small" width="100%" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;background-color: #ffffff;"><tbody><tr><td class="Spacer Spacer--divider" height="20" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td></tr></tbody></table>
+		
+		<table class="Section Copy" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;background-color: #ffffff;">
+		<tbody>
+		<tr>
+		  <td class="Spacer Spacer--gutter" width="64" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td>
+		  <td class="Content Footer-legal Font Font--caption Font--mute" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;width: 472px;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif;mso-line-height-rule: exactly;vertical-align: middle;color: #8898aa;font-size: 12px;line-height: 16px;">
+			  You're receiving this email because you made a purchase at dreamwork, which partners with <a style="border: 0; margin: 0; padding: 0; color: #556cd6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Ubuntu, sans-serif; text-decoration: none;" target="_blank" rel="noreferrer" href="https://stripe.com/">Stripe</a> to provide invoicing and payment processing.
+		</td>
+		</tr>
+		</tbody>
+		</table>
+		<table class="Section Divider Divider--small" width="100%" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;background-color: #ffffff;"><tbody><tr><td class="Spacer Spacer--divider" height="20" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td></tr></tbody></table>
+		
+		
+		<table class="Section Section--last Divider Divider--large" width="100%" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;background-color: #ffffff;border-bottom-left-radius: 5px;border-bottom-right-radius: 5px;"><tbody><tr><td class="Spacer Spacer--divider" height="64" style="border: 0;border-collapse: collapse;margin: 0;padding: 0;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;color: #ffffff;font-size: 1px;line-height: 1px;mso-line-height-rule: exactly;">&nbsp;</td></tr></tbody></table>
+							</td>
+						  </tr>
+						  </tbody>
+					  </table>
+					  <!-- /Wrapper -->
+					</td>
+				  </tr>
+				</tbody>
+			  </table>
+		</div>
+	</body>
+</html>
+
+
+
+<!-- <!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="utf-8" />
+	<title>A simple, clean, and responsive HTML invoice template</title>
+
+	<style>
+	.invoice-box {
+		max-width: 800px;
+		margin: auto;
+		padding: 30px;
+		border: 1px solid #eee;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+		font-size: 16px;
+		line-height: 24px;
+		font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+		color: #555;
+	}
+
+	.invoice-box table {
+		width: 100%;
+		line-height: inherit;
+		text-align: left;
+	}
+
+	.invoice-box table td {
+		padding: 5px;
+		vertical-align: top;
+	}
+
+	.invoice-box table tr td:nth-child(2) {
+		text-align: right;
+	}
+
+	.invoice-box table tr.top table td {
+		padding-bottom: 20px;
+	}
+
+	.invoice-box table tr.top table td.title {
+		font-size: 45px;
+		line-height: 45px;
+		color: #333;
+	}
+
+	.invoice-box table tr.information table td {
+		padding-bottom: 40px;
+		margin-bottom: 40px;
+	}
+
+	.invoice-box table tr.heading td {
+		background: #eee;
+		border-bottom: 1px solid #ddd;
+		font-weight: bold;
+	}
+
+	.invoice-box table tr.details td {
+		padding-bottom: 20px;
+	}
+
+	.invoice-box table tr.item td {
+		border-bottom: 1px solid #eee;
+	}
+
+	.invoice-box table tr.item.last td {
+		border-bottom: none;
+	}
+
+	.invoice-box table tr.total td:nth-child(2) {
+		border-top: 2px solid #eee;
+		font-weight: bold;
+	}
+
+	@media only screen and (max-width: 600px) {
+		.invoice-box table tr.top table td {
+			width: 100%;
+			display: block;
+			text-align: center;
+		}
+
+		.invoice-box table tr.information table td {
+			width: 100%;
+			display: block;
+			text-align: center;
+		}
+	}
+
+	/** RTL **/
+	.invoice-box.rtl {
+		direction: rtl;
+		font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+	}
+
+	.invoice-box.rtl table {
+		text-align: right;
+	}
+
+	.invoice-box.rtl table tr td:nth-child(2) {
+		text-align: left;
+	}
+	</style>
+	</head>
+
+	<body>
+		<div class="invoice-box">
+			<table class="st-Background" cellpadding="0" cellspacing="0" width="100%" style="border: 0; margin: 0; padding: 0;">
+				<tbody>
+					<h1>Receipt from Paypal</h1>
+				</tbody>
+			  </table>
+		</div>
+	</body>
+</html> -->

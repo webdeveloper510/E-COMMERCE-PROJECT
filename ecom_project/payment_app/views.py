@@ -9,6 +9,7 @@ from paypal.standard.forms import PayPalPaymentsForm
 from django.conf import settings
 from payment_app.models import *
 from product_app.views import *
+from product_app.models import *
 from base64 import b64encode
 import base64
 import requests
@@ -22,6 +23,12 @@ from product_app.models import *
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from xhtml2pdf import pisa
+from django.core.mail import EmailMultiAlternatives, message
+from django.template import Context
+from django.template.loader import render_to_string, get_template
+from django.core.mail import EmailMessage
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import smart_str,force_bytes, DjangoUnicodeDecodeError
 
 #stripe
 stripe.api_key = settings.API_SECRET_KEY
@@ -30,7 +37,7 @@ stripe.api_key = settings.API_SECRET_KEY
 @csrf_exempt
 @api_view(['POST'])
 def card_token(request):
-            global card_id, card_token, name 
+            global card_id, card_token, name , receipt_url
             user_id = request.data.get('user_id')
             order_id = request.data.get('order_id')
             total = request.data.get('total')
@@ -95,6 +102,7 @@ def card_token(request):
                 payment_method =  payment_intent['charges']['data'][0]['payment_method_details']['card'],
                 created_id = payment_intent['charges']['data'][0]['created'],
                 )
+                receipt_url = urlsafe_base64_encode(force_bytes(receipt_url))
                 charge_data.save()
                 if status == "succeeded":
                     body = receipt_url
@@ -109,49 +117,47 @@ def card_token(request):
             return Response(card_id)      
 
 
+def s_pdf(request):
+    payment = capture_payment(request)
+    template_path = receipt_url
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="Receipt.pdf"'
+    html = render_to_string(template_path, {'report': 123})
+    pisaStatus = pisa.CreatePDF(html, dest=response)
+    return response
 
 #paypal
 @csrf_exempt
 @api_view(['POST'])
 def get_paypal_access_token(request):
-    global total, order_id, paypal_access_token, aprroval_link, capture_url, paypal_order_id, user_id, order_id
+    global total, user_id, order_id, paypal_access_token, aprroval_link, capture_url, paypal_order_id, user_id, order_id
     user_id = request.data.get('user_id')
     order_id = request.data.get('order_id')
     total = request.data.get('total')
     name = request.data.get('name')
     email = request.data.get('email')
 
-    url = "https://api.sandbox.paypal.com/v1/oauth2/token"
-    payload = 'grant_type=client_credentials'
     encoded_auth = base64.b64encode((settings.CLIENT_ID + ':' + settings.CLIENT_SECRET).encode())
-    headers = {
-      'Authorization': f'Basic {encoded_auth.decode()}',
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-    access_token_r = requests.request("POST", url, headers=headers, data=payload)
-    access_token_r = access_token_r.json()
-    paypal_access_token = access_token_r['access_token']
+    headers = { 'Authorization': f'Basic {encoded_auth.decode()}', 'Content-Type': 'application/json'  }
+    paypal_access_token = requests.request("POST", "https://api.sandbox.paypal.com/v1/oauth2/token", headers=headers, data='grant_type=client_credentials')
+    paypal_access_token = paypal_access_token.json()
+    paypal_access_token = paypal_access_token['access_token']
 
-    if paypal_access_token ==  paypal_access_token:
-        url = "https://api-m.sandbox.paypal.com/v2/checkout/orders"
+    if paypal_access_token:
         payload = json.dumps({
         "intent": "CAPTURE",
-        "purchase_units": [
-            {
+        "purchase_units": [ {
             "amount": {
                 "currency_code": "USD",
                 "value": total,
                 "order_id": order_id
-             }
-            }
-        ],
+             } } ],
         "application_context": {
-            "return_url": "https://example.com/return",
-            "cancel_url": "https://example.com/cancel"
-        }
-        })
+            "return_url": "http://127.0.0.1:8000/paypal/",
+            "cancel_url": "http://127.0.0.1:8000/paypal/"
+        } })
         headers = {"Content-Type": "application/json", "Authorization": 'Bearer '+paypal_access_token}
-        create_order_response = requests.request("POST", url, headers=headers, data=payload)
+        create_order_response = requests.request("POST", "https://api-m.sandbox.paypal.com/v2/checkout/orders", headers=headers, data=payload)
         create_order_response = create_order_response.json()
         aprroval_link = create_order_response['links'][1]['href']
         paypal_order_id = create_order_response['id']
@@ -159,17 +165,11 @@ def get_paypal_access_token(request):
         print(paypal_access_token)
     return Response(aprroval_link)
 
-from django.template import Context
-from django.template.loader import render_to_string, get_template
-from django.core.mail import EmailMessage
-
-
 @csrf_exempt
 @api_view(['POST'])
 def capture_payment(request):
-    global payer_email
-    headers = {'Content-Type': 'application/json',
-    'Authorization': 'Bearer '+paypal_access_token    }
+    global payer_email, paypal_data
+    headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer '+paypal_access_token    }
     response = requests.request("POST", capture_url, headers=headers)
     response = response.json()
     status = response['status']
@@ -188,85 +188,42 @@ def capture_payment(request):
     create_time = response['purchase_units'][0]['payments']['captures'][0]['create_time']
     update_time = response['purchase_units'][0]['payments']['captures'][0]['update_time']
     
-    url_2 = "https://api-m.sandbox.paypal.com/v2/invoicing/generate-next-invoice-number"
-    headers = { 'Authorization': 'Bearer '+paypal_access_token }
-    invoice_number = requests.request("POST", url_2, headers=headers)
-    invoice_number = invoice_number.json()
-    invoice_number = invoice_number['invoice_number']
-    print(invoice_number)
+    receipt_id = requests.request("POST", "https://api-m.sandbox.paypal.com/v2/invoicing/generate-next-invoice-number", headers={ 'Authorization': 'Bearer '+paypal_access_token })
+    receipt_id = receipt_id.json()
+    receipt_id = receipt_id['invoice_number']
+    data = {'invoice_number':receipt_id,'create_time':create_time,'amount':amount,'paypal_order_id':paypal_order_id,'name':name}
     if status == "COMPLETED":
-        paypal_data = paypal_payment.objects.create( name = name, user_id = user_id, email = email,
-            amount_received = amount, capture_payment_id = capture_payment_id, order_id = order_id,
-            create_time = create_time, update_time = update_time, paypal_order_id = paypal_order_id,
-            country = country, currency = currency, payer_id = payer_id )
+        paypal_data = paypal_payment.objects.create(receipt_id=receipt_id, name= given_name + surname, user_id=user_id, email=email, amount_received=amount, capture_payment_id=capture_payment_id, order_id = order_id, create_time = create_time, update_time = update_time, paypal_order_id = paypal_order_id, currency=currency, payer_id = payer_id )
         paypal_data.save()    
         order_data = Order.objects.filter(user_id=user_id).update(status='completed')
     else:
         return Response("Payment failed")
-    return render(request, 'paypalreceipt.html', {'paypal_data':paypal_data, 'invoice_number':invoice_number})
-    
+    # order_details = Order.objects.filter(user_id=user_id).values('quantity','total','product')
+    return render(request, 'paypalreceipt.html', {"paypal_data": paypal_data})
 
+@api_view(['GET']) 
 def generate_pdf(request):
-    payment = capture_payment(request)
+    # report = Order.objects.filter(user_id=user_id).values('quantity','total','product')
     template_path = 'paypalreceipt.html'
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="Receipt.pdf"'
     html = render_to_string(template_path, {'report': 123})
     pisaStatus = pisa.CreatePDF(html, dest=response)
-    return response
+    return response 
 
-from django.core.mail import EmailMultiAlternatives, message
 @csrf_exempt
 @api_view(['GET'])
 def mail(request):
-    subject, from_email, to = 'Receipt', 'fgurpreet@codenomad.net', 'gurpreet@codenomad.net'
+    subject, from_email, to = 'Receipt', 'gurpreet@codenomad.net', 'gurpreet@codenomad.net'
     text_content = 'This is an important message.'
-    html_content = '<p>Download your paypal payment receipt<br>http://127.0.0.1:8000/generate/</p>'
+    html_content = '<p>Download your paypal payment receipt<br>http://127.0.0.1:8000/receipt/</p>'
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
     msg.attach_alternative(html_content, "text/html")
     msg.send()
     return Response("mail sent")
        
-        # data = {
-        #         'subject':'Paypal Payment Receipt',
-        #         'body': 'http://127.0.0.1:8000/generate/',
-        #         'to_email': "gurpreet@codenomad.net" 
-        #     }
-        # Util.send_email(data)
-        # return Response("mail sent")
-
-from time import gmtime, strftime
 @csrf_exempt
 @api_view(['GET'])
-def transaction(request):
-    # time = str(datetime.datetime.now())
-    # showtime = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-    # showtime = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-    # print(time, showtime)
-    URL = "https://api-m.sandbox.paypal.com/v1/reporting/transactions?fields=transaction_info,payer_info,auction_info,cart_info,&start_date=2022-10-19T01:05:00.999Z&end_date=2022-10-20T11:40:00.999Z"
-    headers = {'Content-Type': 'application/json',
-    'Authorization': 'Bearer '+paypal_access_token    }
-    response = requests.request("GET", URL, headers=headers)
-    response = response.json()
-    i = 0
-    for x in response:
-        transaction_info = response['transaction_details'][i]['transaction_info']
-        payer_info = response['transaction_details'][i]['payer_info']
-        cart_info = response['transaction_details'][i]['cart_info']
-        payer_name = payer_info['payer_name']
-        i = i+1
-        print(i, cart_info)
-        if payer_name:
-            transaction_email = payer_info['email_address']
-            account_id = payer_info['account_id']
-            print(transaction_email)
-            print(account_id, "info", payer_info, cart_info)
-
-            if transaction_email == payer_email:
-                details = {transaction_info['transaction_id'],transaction_info['paypal_reference_id'],
-                      transaction_info['paypal_reference_id_type'],transaction_info['transaction_event_code'],
-                      transaction_info['transaction_initiation_date'],transaction_info['transaction_updated_date'],
-                      transaction_info['transaction_amount'],payer_info,response['cart_info']}
-                print(details)
-                break
-    return Response(response)
+def test(request):
+    
+    return Response(1123)

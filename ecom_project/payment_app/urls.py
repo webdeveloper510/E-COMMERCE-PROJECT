@@ -15,10 +15,10 @@ urlpatterns = [
     path('stripe/', views.card_token),
     path('paypal/', views.get_paypal_access_token),
     path('paypal/capturepayment/', views.capture_payment),
-    # path('transaction/', views.transaction),
-    # path('test/', views.test),
+    path('test/', views.test),
+    path('spdf/', views.s_pdf),
     path('mail/',views.mail),
-    path('generate/', views.generate_pdf),
+    path('receipt/', views.generate_pdf),
     # path('test/', views.test),
     # path('test/', views.test),
     # path('test/', views.test),
@@ -29,22 +29,6 @@ urlpatterns = [
     # path('paypalorder/', views.payment_create),
 
     
-    
 
-
-
-
-    # path('stripe/', HomePageView.as_view(), name='home'),
-    # path('charge/', views.charge, name='charge'),
-    # # path('test-payment/$', views.test_payment),
-    # # path('webhook/', views.stripe_webhook), 
-    # path('paymentintent/', PaymentView.as_view(), name='payment'),
-    # path('paypal/', views.paypal_home, name="paypal_home"),
-    # path('paypal-return', views.paypal_return, name="paypal-return"),
-    # path('paypal-cancel', views.paypal_cancel, name="paypal-cancel"),
-    # path('stripe/', HomePageView.as_view(), name='home'),
-    # path('test/', views.create_checkout_session, name='test'),
-    # path('paypaltest/', views.paypal_head, name= "PaypalToken"),
-    
 
  ]

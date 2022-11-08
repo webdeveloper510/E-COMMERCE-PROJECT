@@ -138,32 +138,28 @@ class UserPasswordResetSerializer(serializers.Serializer):
         raise serializers.ValidationError('Token is not Valid or Expired')
 
 class UpdateUserSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(required=False)
+    email = serializers.EmailField(required=True)
     class Meta:
         model = User
         fields = ('First_name', 'Last_name', 'email')
         extra_kwargs = {
-            'First_name': {'required': False},
-            'Last_name': {'required': False},
+            'First_name': {'required': True},
+            'Last_name': {'required': True},
         }
 
-    if email:
-      def validate_email(self, value):
+    def validate_email(self, value):
         user = self.context['request'].user
         if User.objects.exclude(pk=user.pk).filter(email=value).exists():
             raise serializers.ValidationError({"email": "This email is already in use."})
         return value
     
-      def update(self, instance, validated_data):
-          instance.email = validated_data['email']
-          instance.save()
-          return instance
- 
     def update(self, instance, validated_data):
-          instance.First_name = validated_data['First_name']
-          instance.Last_name = validated_data['Last_name']
-          # instance.email = validated_data['email']
-          instance.save()
-          return instance
+        instance.First_name = validated_data['First_name']
+        instance.Last_name = validated_data['Last_name']
+        instance.email = validated_data['email']
+
+        instance.save()
+
+        return instance
    
 

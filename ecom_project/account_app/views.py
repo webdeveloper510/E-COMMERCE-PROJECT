@@ -118,20 +118,19 @@ class UpdateProfileView(generics.UpdateAPIView):
     serializer_class = UpdateUserSerializer
 
     def get_queryset(self):
-       data = User.objects.all()  #getting all users from user model
+       data = User.objects.all()
        return data
 
-    def post(self, request, *args, **kwargs):
-       partial = kwargs.pop('partial', True)
+    def update(self, request, *args, **kwargs):
+       partial = kwargs.pop('partial', False)
        instance = self.get_object()
-       serializer = self.get_serializer(instance, data=request.data, partial=True)
+       serializer = self.get_serializer(instance, data=request.data, partial=partial)
        serializer.is_valid(raise_exception=True)
        self.perform_update(serializer)
        result = {
         "message": "Your Profile is successfully Updated",
         "details": serializer.data,
         "status": status.HTTP_200_OK,
-
        }
        return Response(result)
 

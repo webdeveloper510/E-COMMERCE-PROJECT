@@ -3,8 +3,14 @@ __pycache__/
 *.py[cod]
 *$py.class
 account_app/migrations/
+account_app/migrations/__pycache__/
 payment_app/migrations/
+payment_app/migrations/__pycache__/
 product_app/migrations/
+product_app/migrations/__pycache__/
+adminpanel_app/migrations/
+adminpanel_app/migrations/__pycache__/
+
 ecom_project/settings.py
 # C extensions
 *.so
