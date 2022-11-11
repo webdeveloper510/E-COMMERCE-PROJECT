@@ -8,6 +8,10 @@ class Category(models.Model):
       def __str__(self):
         return self.name
 
+      class Meta:
+           verbose_name_plural = "Category"
+        
+
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=250)
@@ -15,19 +19,23 @@ class Product(models.Model):
     
     def __str__(self):
         return self.name
-
+    
 class Elements(models.Model):
     element = models.CharField(max_length=250)
 
     def __str__(self):
          return "{}".format(self.element)
+    class Meta:
+           verbose_name_plural = "Elements"
         
 class Variant(models.Model):
         element = models.ForeignKey(Elements, on_delete=models.CASCADE)
         variant_name = models.CharField(max_length=250)
         field_type = models.CharField(max_length=250)
         def __str__(self):
-         return "{} -{}".format(self.variant_name,self.element)
+           return "{} -{}".format(self.variant_name,self.element)
+        class Meta:
+           verbose_name_plural = "Variant"
 
 class Variant_type(models.Model):
     variant = models.ForeignKey(Variant, on_delete=models.CASCADE)
@@ -35,7 +43,9 @@ class Variant_type(models.Model):
 
     def __str__(self):
          return "{} - {} -".format(self.variant, self.variant_type_name)
-        
+    class Meta:
+        verbose_name_plural = "Variant_type"
+
 class ProductAttribute(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -46,6 +56,8 @@ class ProductAttribute(models.Model):
     def __str__(self):
         return "{} - {} -".format(self.category,self.product,self.variant_type_name,
                                     self.unit, self.price)
+    class Meta:
+        verbose_name_plural = "Product_Attribute"
 
 class Order(models.Model):
     user_id = models.CharField(max_length=200)
@@ -69,10 +81,25 @@ class Order(models.Model):
                                              self.email,self.contact,self.street_address,
                                              self.apartment,self.zip_code,self.state,self.city,
                                               self.created_at,self.updated_at, self.total)
-        
+    class Meta:
+        verbose_name_plural = "Order"
+
 class Shipping(models.Model):
     percentage = models.FloatField(default=0)
      
     def __str__(self):
         return "{} - {} -".format(self.percentage)
 
+    class Meta:
+        verbose_name_plural = "Shipping"
+
+class Frame_Image(models.Model):
+    image = models.ImageField(upload_to ='frame-image')
+    user_id = models.CharField(max_length=200)
+    order_id = models.CharField(max_length=200)
+
+    def __str__(self):
+        return "{} -{}-{}".format(self.image, self.user_id, self.order_id)
+
+    class Meta:
+        verbose_name_plural = "Frame_Image"

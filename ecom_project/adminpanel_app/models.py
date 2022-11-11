@@ -16,7 +16,7 @@ class Banner(models.Model):
     description = models.TextField()
     button_text = models.CharField(max_length=300)
     def __str__(self):
-        return "{}-{}-{}-{}".format(self.title, self.description, self.button_text)
+        return "{}-{}-{}".format(self.title, self.description, self.button_text)
 
 class Services(models.Model):
     image = models.ImageField(upload_to ='Services_images')
@@ -29,7 +29,7 @@ class FAQ(models.Model):
     title = models.CharField(max_length=350)
     description = models.TextField()
     def __str__(self):
-        return "{}-{}-{}".format(self.title, self.description)
+        return "{}-{}".format(self.title, self.description)
 
 
 

@@ -21,6 +21,7 @@ router.register('product_list', views.product_listViewSet, basename = 'product_l
 router.register('order', views.OrderViewSet, basename = 'list_OrderViewSet')
 router.register('shipping', views.ShippingViewSet, basename = 'ShippingViewSet')
 router.register('dashboard', views.DashboardViewSet, basename = 'DashboardViewSet')
+router.register('image', views.Frame_ImageViewSet, basename = 'Frame_ImageViewSet')
 
 
 urlpatterns = [
@@ -35,3 +36,7 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+admin.site.site_header = "UMSRA Admin"
+admin.site.site_title = "UMSRA Admin Portal"
+admin.site.index_title = "Welcome to Frame-Art "

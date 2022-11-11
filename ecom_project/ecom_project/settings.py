@@ -13,12 +13,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-bl636s$-t%s&%7qt547_t7g(8qv#ij0%nnvpfl8l8w0y-&o=q!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
+    'admin_interface',
+    "colorfield",
     'paypal.standard.ipn',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -33,8 +35,10 @@ INSTALLED_APPS = [
     'payment_app',
     'product_app',
     'adminpanel_app',
-       
+    'ckeditor',
+    
 ]
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
@@ -158,7 +162,7 @@ EMAIL_PORT = 587 #465#
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
 EMAIL_HOST_PASSWORD =   os.environ.get('EMAIL_PASS')
 EMAIL_USE_TLS = True
-PASSWORD_RESET_TIMEOUT= 900  #900 sec=15 minutes
+PASSWORD_RESET_TIMEOUT= 7200  #900 sec=15 minutes, 7200=2hr
 
 #JWT settings
 SIMPLE_JWT = {
@@ -206,13 +210,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR,"static"
 ]
-MEDIA_ROOT = BASE_DIR /"media/"
+MEDIA_ROOT = BASE_DIR /"static/media/"
 MEDIA_URL = "/media/"
-
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-     BASE_DIR,"static"
-]
 
 SITE_URL = 'http://localhost:3000'

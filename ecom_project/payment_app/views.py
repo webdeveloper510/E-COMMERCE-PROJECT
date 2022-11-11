@@ -112,7 +112,6 @@ def card_token(request):
                         'to_email': email
                     }
                     Util.send_email(data)
-                    print(body)
                     order_data = Order.objects.filter(user_id=user_id).update(status='completed')
             return Response(card_id)      
 
@@ -130,7 +129,7 @@ def s_pdf(request):
 @csrf_exempt
 @api_view(['POST'])
 def get_paypal_access_token(request):
-    global total, user_id, order_id, paypal_access_token, aprroval_link, capture_url, paypal_order_id, user_id, order_id
+    global total, email, user_id, order_id, paypal_access_token, aprroval_link, capture_url, paypal_order_id, user_id, order_id
     user_id = request.data.get('user_id')
     order_id = request.data.get('order_id')
     total = request.data.get('total')
@@ -153,8 +152,8 @@ def get_paypal_access_token(request):
                 "order_id": order_id
              } } ],
         "application_context": {
-            "return_url": "http://127.0.0.1:8000/paypal/",
-            "cancel_url": "http://127.0.0.1:8000/paypal/"
+              "return_url": "http://127.0.0.1:8000/paypal/capturepayment/",
+              "cancel_url": "https://example.com/cancel"
         } })
         headers = {"Content-Type": "application/json", "Authorization": 'Bearer '+paypal_access_token}
         create_order_response = requests.request("POST", "https://api-m.sandbox.paypal.com/v2/checkout/orders", headers=headers, data=payload)
@@ -178,7 +177,7 @@ def capture_payment(request):
     given_name = response['payer']['name']['given_name'] 
     surname = response['payer']['name']['surname']
     name = given_name  +  surname
-    email = response['payer']['email_address']     
+    payer_email = response['payer']['email_address']     
     payer_id = response['payer']['payer_id']     
     payer_email = response['payer']['email_address']     
     country = response['payer']['address']['country_code']     
@@ -191,15 +190,21 @@ def capture_payment(request):
     receipt_id = requests.request("POST", "https://api-m.sandbox.paypal.com/v2/invoicing/generate-next-invoice-number", headers={ 'Authorization': 'Bearer '+paypal_access_token })
     receipt_id = receipt_id.json()
     receipt_id = receipt_id['invoice_number']
-    data = {'invoice_number':receipt_id,'create_time':create_time,'amount':amount,'paypal_order_id':paypal_order_id,'name':name}
     if status == "COMPLETED":
-        paypal_data = paypal_payment.objects.create(receipt_id=receipt_id, name= given_name + surname, user_id=user_id, email=email, amount_received=amount, capture_payment_id=capture_payment_id, order_id = order_id, create_time = create_time, update_time = update_time, paypal_order_id = paypal_order_id, currency=currency, payer_id = payer_id )
+        paypal_data = paypal_payment.objects.create(receipt_id=receipt_id, name= given_name + surname, user_id=user_id, email=payer_email, amount_received=amount, capture_payment_id=capture_payment_id, order_id = order_id, create_time = create_time, update_time = update_time, paypal_order_id = paypal_order_id, currency=currency, payer_id = payer_id )
         paypal_data.save()    
-        order_data = Order.objects.filter(user_id=user_id).update(status='completed')
+        order_data = Order.objects.filter(id=order_id).update(status='completed')
+        subject, from_email, to = 'Receipt', settings.EMAIL_HOST_USER, email
+        text_content = 'This is an important message.'
+        html_content = '<p>Download your paypal payment receipt<br>http://127.0.0.1:8000/receipt/</p>'
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
     else:
         return Response("Payment failed")
-    # order_details = Order.objects.filter(user_id=user_id).values('quantity','total','product')
-    return render(request, 'paypalreceipt.html', {"paypal_data": paypal_data})
+    order_details = Order.objects.filter(user_id=user_id).values('quantity','total','product')
+    data = order_details, paypal_data
+    return render(request, 'paypalreceipt.html', {"data": paypal_data})
 
 @api_view(['GET']) 
 def generate_pdf(request):
@@ -214,7 +219,7 @@ def generate_pdf(request):
 @csrf_exempt
 @api_view(['GET'])
 def mail(request):
-    subject, from_email, to = 'Receipt', 'gurpreet@codenomad.net', 'gurpreet@codenomad.net'
+    subject, from_email, to = 'Receipt', settings.EMAIL_HOST_USER, email
     text_content = 'This is an important message.'
     html_content = '<p>Download your paypal payment receipt<br>http://127.0.0.1:8000/receipt/</p>'
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to])

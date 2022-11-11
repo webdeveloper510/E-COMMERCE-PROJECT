@@ -1,7 +1,5 @@
-
 from django.contrib import admin
 from .models import *
-
 
 @admin.register(Category)
 class CategoryModelAdmin(admin.ModelAdmin):
@@ -14,6 +12,12 @@ class ProductModelAdmin(admin.ModelAdmin):
 @admin.register(Elements)
 class ElementsModelAdmin(admin.ModelAdmin):
   list_display = ('id','element')
+
+  def has_add_permission(self, request):
+    return False
+
+  def has_delete_permission(self, request, obj=None):
+    return False
 
 @admin.register(Variant)
 class VariantModelAdmin(admin.ModelAdmin):
@@ -36,3 +40,6 @@ class OrderModelAdmin(admin.ModelAdmin):
 class ShippingModelAdmin(admin.ModelAdmin):
   list_display = ('id','percentage')
 
+@admin.register(Frame_Image)
+class Frame_ImageModelAdmin(admin.ModelAdmin):
+  list_display = ('id','image','user_id','order_id')

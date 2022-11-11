@@ -84,5 +84,9 @@ class ShippingSerializer(serializers.ModelSerializer):
         model= Shipping
         fields="__all__"
 
+class Frame_ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Frame_Image
+        fields="__all__"
 
 

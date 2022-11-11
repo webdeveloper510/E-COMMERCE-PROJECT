@@ -26,5 +26,12 @@ class UserModelAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 
-# Now register the new UserModelAdmin...
-admin.site.register(User, UserModelAdmin)
+# # Now register the new UserModelAdmin...
+# admin.site.register(User, UserModelAdmin)
+
+# class AdminUserPermissionMixin:
+#     # def has_view_permission(self, request, obj=None):
+#     #     return request.user.is_admin
+
+#     def has_add_permission(self, request):
+#         return False

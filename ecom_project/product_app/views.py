@@ -32,6 +32,22 @@ class ProductAttributeViewSet(viewsets.ModelViewSet):
     queryset = ProductAttribute.objects.all().order_by('id')
     serializer_class = ProductAttributeSerializer
 
+# class Frame_ImageViewSet(viewsets.ModelViewSet):
+#     queryset = Frame_Image.objects.all().order_by('id')
+#     serializer_class = Frame_ImageSerializer
+
+class Frame_ImageViewSet(viewsets.ViewSet):
+    @csrf_exempt 
+    @action(detail=False, methods=['post'])
+    def post(self, request, format=None):
+        if request.method == "POST":
+            image =  request.data.get('image')
+            user_id = request.data.get('user_id')
+            order_id = request.data.get('order_id')
+            data =  Frame_Image.objects.create(user_id=user_id, order_id=order_id, image=image)
+            print(image)
+        return Response({user_id, order_id, image})
+
 class product_listViewSet(viewsets.ViewSet):
     # permission_classes = [IsAuthenticated]
     @csrf_exempt 

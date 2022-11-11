@@ -96,10 +96,8 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
       uid = urlsafe_base64_encode(force_bytes(user.id))#Encoding is the process of converting data into a format required for a number of information processing needs
       token = PasswordResetTokenGenerator().make_token(user)
       print('Password Reset Token', token)
-      # link = 'http://localhost:3000/reset/'+uid+'/'+token #password reset link
       link = BASE_URL+'/reset-password/'+uid+'/'+token+'/' #password reset link
       print('Password Reset Link', link)
-      # Send EMail
       body = 'Click Following Link to Reset Your Password '+link
       data = {
         'subject':'Reset Your Password',
@@ -114,7 +112,7 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
 
 class UserPasswordResetSerializer(serializers.Serializer):
    password = serializers.CharField(max_length=255, style={'input_type':'password'}, write_only=True)
-   password2 = serializers.CharField(max_length=255, style={'input_type':'password'}, write_only=True)
+   password2 = serializers.CharField(max_length=255, style={'input_type':'password2'}, write_only=True)
    class Meta:
     fields = ['password', 'password2']
 

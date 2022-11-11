@@ -58,7 +58,6 @@ class UserProfileView(APIView):
        return Response(serializer.data,status=status.HTTP_201_CREATED)
 
 class UserChangePasswordView(generics.UpdateAPIView):
-    
     serializer_class = UserChangePasswordSerializer
     model = User
     permission_classes = (IsAuthenticated,)
@@ -81,9 +80,7 @@ class UserChangePasswordView(generics.UpdateAPIView):
                 'code': status.HTTP_200_OK,
                 'message': 'Password updated successfully',
                 }
-
             return Response(response)
-
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # changed password email view      
@@ -95,7 +92,6 @@ class SendChangePasswordEmailView(APIView):
       return Response({'msg':'You have changed your password','status':'status.HTTP_200_OK'})
      return Response({errors:serializer.errors},status=status.HTTP_400_BAD_REQUEST)
            
-
 class SendPasswordResetEmailView(APIView):
     renderer_classes=[UserRenderer]
     def post(self, request, format=None):
@@ -141,3 +137,12 @@ class LogoutUser(APIView):
     #serializer = LogoutUserSerializer(data=request.data)
     #serializer.is_valid(raise_exception=True)
     return Response({'msg':'Logout Successfully'},status=status.HTTP_200_OK)
+
+from django.shortcuts import render
+from .forms import *
+
+# Create your views here.
+def home_view(request):
+	context ={}
+	context['form']= ResetPasswordForm()
+	return render(request, "resetpassword.html", context)
