@@ -5,7 +5,12 @@ class LogoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Logo
         fields = '__all__'
-          
+
+class URLSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= URL
+        fields = '__all__'
+      
 class HeaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Header

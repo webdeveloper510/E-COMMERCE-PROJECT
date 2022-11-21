@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 
 router = DefaultRouter()
 router.register('logo', views.LogoViewSet,basename="Logo")
+router.register('url', views.URLViewSet,basename="url")
 router.register('header', views.HeaderViewSet,basename="header")
 router.register('banner', views.BannerViewSet,basename="banner")
 router.register('services', views.ServicesViewSet,basename="services")

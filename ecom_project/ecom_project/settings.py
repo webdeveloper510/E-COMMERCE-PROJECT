@@ -19,9 +19,6 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
-    'admin_interface',
-    "colorfield",
-    'paypal.standard.ipn',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -31,6 +28,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework',
     'corsheaders',
+    'paypal.standard.ipn',
     'account_app',
     'payment_app',
     'product_app',
@@ -162,11 +160,11 @@ EMAIL_PORT = 587 #465#
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
 EMAIL_HOST_PASSWORD =   os.environ.get('EMAIL_PASS')
 EMAIL_USE_TLS = True
-PASSWORD_RESET_TIMEOUT= 7200  #900 sec=15 minutes, 7200=2hr
+PASSWORD_RESET_TIMEOUT= 900 #sec=15 minutes, 
 
 #JWT settings
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,

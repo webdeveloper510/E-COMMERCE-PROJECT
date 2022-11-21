@@ -1,9 +1,6 @@
-from django.shortcuts import render
-from rest_framework import viewsets
+from ecom_project.library import *
 from .models import *
 from .serializers import *
-from rest_framework.response import Response
-from rest_framework import viewsets
 
 class LogoViewSet(viewsets.ViewSet):
     def create(self, request):
@@ -18,6 +15,10 @@ class LogoViewSet(viewsets.ViewSet):
             return Response(serializer.data)
         return Response(serializer.errors)
 
+class URLViewSet(viewsets.ModelViewSet):
+    queryset = URL.objects.all().order_by('id')
+    serializer_class = URLSerializer
+    
 class HeaderViewSet(viewsets.ModelViewSet):
     queryset = Header.objects.all().order_by('id')
     serializer_class = HeaderSerializer

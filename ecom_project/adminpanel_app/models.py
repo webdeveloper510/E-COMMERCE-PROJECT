@@ -5,11 +5,16 @@ class Logo(models.Model):
     def __str__(self):
         return "{} -".format(self.image)
 
+class URL(models.Model):
+    url = models.CharField(max_length=250)
+    def __str__(self):
+        return "{}".format(self.url)
+
 class Header(models.Model):
     menu = models.CharField(max_length=250)
-    url = models.URLField(max_length = 300)
+    url = models.ForeignKey(URL, on_delete=models.CASCADE)
     def __str__(self):
-        return "{} -{}".format(self.menu, self.url)
+        return "{}-{}".format(self.menu, self.url)
 
 class Banner(models.Model):
     title = models.CharField(max_length=350)

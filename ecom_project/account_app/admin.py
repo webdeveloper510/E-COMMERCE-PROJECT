@@ -18,7 +18,7 @@ class UserModelAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email','password1', 'password2' 'First_name','Last_name')
+            'fields': ('email','password', 'password2' 'First_name','Last_name')
         }),
     )
     search_fields = ('email','First_name','Last_name',)
@@ -26,12 +26,14 @@ class UserModelAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 
-# # Now register the new UserModelAdmin...
+# Now register the new UserModelAdmin...
+admin.site.register(User, UserModelAdmin)
+
 # admin.site.register(User, UserModelAdmin)
 
 # class AdminUserPermissionMixin:
-#     # def has_view_permission(self, request, obj=None):
-#     #     return request.user.is_admin
+#     def has_view_permission(self, request, obj=None):
+#         return request.user.is_admin
 
 #     def has_add_permission(self, request):
 #         return False

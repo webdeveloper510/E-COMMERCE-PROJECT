@@ -46,7 +46,8 @@ class UserLoginSerializer(serializers.ModelSerializer):
         'password': {'error_messages': {'required': "password is required",'blank':'please Enter a email'}}
         
     }
-class UseProfileSerializer(serializers.ModelSerializer):
+
+class UserProfileSerializer(serializers.ModelSerializer):
   class Meta:
      model=User
      fields=['id','First_name','Last_name','email']
@@ -67,11 +68,6 @@ class SendChangePasswordEmailSerializer(serializers.Serializer):
       user = User.objects.get(email = email)
       uid = urlsafe_base64_encode(force_bytes(user.id))#Encoding is the process of converting data into a format required for a number of information processing needs
       print('Encoded UID', uid)
-      #token = PasswordResetTokenGenerator().make_token(user)
-      #print('Password Reset Token', token)
-      #link = 'http://localhost:3000/api/user/reset/'+uid+'/'+token #password reset link
-      #print('Password Reset Link', link)
-      # Send EMail
       body = 'You recently changed the password associated with your account'
       data = {
         'subject':'Your password has been changed',
@@ -109,8 +105,7 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
     else:
       raise serializers.ValidationError('You are not a Registered User')
 
-
-class UserPasswordResetSerializer(serializers.Serializer):
+class UserPasswordResetSerializer(serializers.ModelSerializer):
    password = serializers.CharField(max_length=255, style={'input_type':'password'}, write_only=True)
    password2 = serializers.CharField(max_length=255, style={'input_type':'password2'}, write_only=True)
    class Meta:
@@ -122,6 +117,7 @@ class UserPasswordResetSerializer(serializers.Serializer):
       password2 = attrs.get('password2')
       uid = self.context.get('uid')
       token = self.context.get('token')
+      print(password, password2)
       if password != password2:
          raise serializers.ValidationError("Password and Confirm Password doesn't match")
       id = smart_str(urlsafe_base64_decode(uid))#convert encoded Data into origional string
@@ -134,7 +130,7 @@ class UserPasswordResetSerializer(serializers.Serializer):
     except DjangoUnicodeDecodeError as identifier:
         PasswordResetTokenGenerator().check_token(user, token)
         raise serializers.ValidationError('Token is not Valid or Expired')
-
+      
 class UpdateUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     class Meta:

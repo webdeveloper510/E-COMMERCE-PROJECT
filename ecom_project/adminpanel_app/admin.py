@@ -20,19 +20,22 @@ class LogoModelAdmin(admin.ModelAdmin):
   def display(self, obj):
      return format_html(f'<img src="/media/{obj.image}" style="height:30px;">')
 
+@admin.register(URL)
+class URLAdmin(admin.ModelAdmin):
+  list_display = ('id','url')
 
 @admin.register(Header)
 class HeaderAdmin(admin.ModelAdmin):
   exclude=()
-  # list_display = ('id','menu','url')
-  list_display = ('id','content','click_me','menu','url')
+  list_display = ('id','menu')
+  # list_display = ('id','content','click_me','menu')
 
-  def content(self, obj):
-     print(obj)
-     return format_html(f'<span style="color:red">{obj.menu[:100]}</span>')
+  # def content(self, obj):
+  #    print(obj)
+  #    return format_html(f'<span style="color:red">{obj.menu[:100]}</span>')
   
-  def click_me(self, obj):
-    return format_html('<a href="#">View</a>')
+  # def click_me(self, obj):
+  #   return format_html('<a href="#">View</a>')
 
   
 admin.site.register(Banner)

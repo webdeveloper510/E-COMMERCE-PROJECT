@@ -1,11 +1,5 @@
+from ecom_project.library import *
 from .serializers import *
-from rest_framework import viewsets
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
-from rest_framework.authentication import BasicAuthentication
 from product_app.models import *
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -167,7 +161,6 @@ class OrderViewSet(viewsets.ViewSet):
     def post(self, request, format=None):
         global order_id, product_name
         if request.method == 'POST':
-            # image= request.FILES['image']
             user_id = request.data.get('user_id')
             item = request.data.get('items')
             status = request.data.get('status')
@@ -185,7 +178,7 @@ class OrderViewSet(viewsets.ViewSet):
                 quantity = i['quantity']
                 value = i['value']
                 product_name = i['product_name']
-            order_data = Order.objects.create(item = i['value'], product = product_name, status = status, user_id = user_id,
+            order_data = Order.objects.create(item = item, product = product_name, status = status, user_id = user_id,
                                                  email = email, contact=contact, quantity = quantity, 
                                                  name=name, street_address = street_address, 
                                                  apartment=apartment, city =city, state=state, 
